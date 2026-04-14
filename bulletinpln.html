@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board Bulletin — Kajian Lingkungan, Sosial & Ketahanan Air PLN</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue-900: #00234E;
+  --blue-700: #003F8A;
+  --blue-500: #0055A4;
+  --blue-300: #3A7EC6;
+  --blue-100: #CCDFF3;
+  --blue-50:  #EEF5FC;
+  --yellow:   #F5C400;
+  --yellow-lt:#FFF8DC;
+  --white:    #FFFFFF;
+  --ink:      #0C1A2E;
+  --ink-soft: #3A4F66;
+  --rule:     #CBD8E8;
+  --red:      #C0392B;
+  --green:    #1A7A4E;
+  --amber:    #C87700;
+}
+
+body {
+  font-family: 'Montserrat', Arial, sans-serif;
+  background: #DDE6F0;
+  color: var(--ink);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+/* ── PAGE ── */
+.page {
+  max-width: 920px;
+  margin: 32px auto;
+  background: var(--white);
+  box-shadow: 0 8px 48px rgba(0,35,78,.18);
+}
+
+/* ── HEADER ── */
+.hdr {
+  background: var(--blue-900);
+  position: relative;
+  overflow: hidden;
+}
+.hdr-stripe { height: 5px; background: var(--yellow); }
+.hdr-body {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 0;
+  padding: 34px 48px 30px;
+  align-items: start;
+}
+.hdr-kicker {
+  font-size: 8px; font-weight: 800;
+  letter-spacing: .3em; text-transform: uppercase;
+  color: var(--yellow); margin-bottom: 8px;
+}
+.hdr-title {
+  font-size: 24px; font-weight: 900;
+  color: var(--white); line-height: 1.15;
+  letter-spacing: -.2px;
+}
+.hdr-title em { color: var(--yellow); font-style: normal; }
+.hdr-sub {
+  font-size: 10px; color: #8AAED0; margin-top: 10px;
+  font-weight: 400; letter-spacing: .04em;
+}
+.hdr-right { text-align: right; }
+.hdr-badge {
+  display: inline-block;
+  background: var(--yellow); color: var(--blue-900);
+  font-size: 7.5px; font-weight: 900; letter-spacing: .2em;
+  text-transform: uppercase; padding: 3px 9px; margin-bottom: 10px;
+}
+.hdr-date { font-size: 9.5px; color: #8AAED0; line-height: 1.8; }
+/* swiss diagonal accent */
+.hdr-geo {
+  position: absolute; right: 0; top: 0;
+  width: 0; height: 0;
+  border-left: 120px solid transparent;
+  border-top: 120px solid var(--blue-700);
+  opacity: .5;
+}
+.hdr-geo2 {
+  position: absolute; right: 0; top: 0;
+  width: 0; height: 0;
+  border-left: 60px solid transparent;
+  border-top: 60px solid var(--yellow);
+  opacity: .25;
+}
+
+/* ── NAV ── */
+.nav {
+  background: var(--blue-700);
+  display: flex;
+  border-bottom: 3px solid var(--yellow);
+}
+.nav a {
+  padding: 8px 16px;
+  font-size: 8px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: #8AAED0; text-decoration: none;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.nav a:hover { background: var(--yellow); color: var(--blue-900); }
+
+/* ── BODY ── */
+.body { padding: 40px 48px 48px; }
+
+/* ── SECTION HEADER ── */
+.sec {
+  display: flex; align-items: center;
+  gap: 10px; margin: 36px 0 16px;
+}
+.sec:first-child { margin-top: 0; }
+.sec-num {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  background: var(--yellow); color: var(--blue-900);
+  font-size: 10px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+}
+.sec h2 {
+  font-size: 12.5px; font-weight: 800;
+  color: var(--blue-900); text-transform: uppercase;
+  letter-spacing: .08em;
+  border-bottom: 2px solid var(--blue-100);
+  padding-bottom: 5px; flex: 1;
+}
+
+/* ── LEAD ── */
+.lead {
+  background: var(--blue-900);
+  padding: 24px 28px; margin-bottom: 28px;
+  position: relative; overflow: hidden;
+}
+.lead::after {
+  content: '';
+  position: absolute; right: -30px; bottom: -30px;
+  width: 120px; height: 120px;
+  border: 20px solid rgba(245,196,0,.15);
+  border-radius: 50%;
+}
+.lead p {
+  font-size: 13px; font-weight: 500;
+  color: #C8DCF0; line-height: 1.7;
+}
+.lead p strong { color: var(--yellow); font-weight: 700; }
+
+/* ── METRIC ROW ── */
+.metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-bottom: 28px; }
+.metric {
+  padding: 18px 20px;
+  background: var(--blue-50);
+  border-top: 4px solid var(--blue-500);
+}
+.metric.y { background: var(--yellow-lt); border-top-color: var(--yellow); }
+.metric.d { background: var(--blue-900); border-top-color: var(--yellow); }
+.metric.r { background: #FEF0EF; border-top-color: var(--red); }
+.m-lbl {
+  font-size: 7.5px; font-weight: 800;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--blue-500); margin-bottom: 6px;
+}
+.metric.y .m-lbl { color: var(--amber); }
+.metric.d .m-lbl { color: #7AADD0; }
+.metric.r .m-lbl { color: var(--red); }
+.m-val {
+  font-size: 30px; font-weight: 900;
+  color: var(--blue-900); line-height: 1; letter-spacing: -1px;
+}
+.metric.d .m-val { color: var(--yellow); }
+.metric.y .m-val { color: var(--blue-900); }
+.metric.r .m-val { color: var(--red); }
+.m-unit {
+  font-size: 10px; font-weight: 600;
+  color: var(--ink-soft); margin-top: 3px;
+}
+.metric.d .m-unit { color: #8AAED0; }
+.m-desc {
+  font-size: 10px; color: var(--ink-soft);
+  margin-top: 8px; line-height: 1.5; border-top: 1px solid var(--rule);
+  padding-top: 8px; margin-top: 8px;
+}
+.metric.d .m-desc { color: #7AADD0; border-top-color: #1A3A60; }
+.metric.r .m-desc { border-top-color: #F5C0BD; }
+
+/* ── TWO COL ── */
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.three { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
+
+/* ── CALLOUT ── */
+.box {
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--blue-500);
+  padding: 16px 18px; background: var(--blue-50);
+}
+.box.y { border-top-color: var(--yellow); background: var(--yellow-lt); }
+.box.r { border-top-color: var(--red); background: #FEF0EF; }
+.box.g { border-top-color: var(--green); background: #EEF8F2; }
+.box.dark { background: var(--blue-900); border: none; border-top: 3px solid var(--yellow); }
+.box h3 {
+  font-size: 9px; font-weight: 800; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--blue-500); margin-bottom: 8px;
+}
+.box.y h3 { color: var(--amber); }
+.box.r h3 { color: var(--red); }
+.box.g h3 { color: var(--green); }
+.box.dark h3 { color: var(--yellow); }
+.box p, .box ul { font-size: 11.5px; color: var(--ink-soft); line-height: 1.6; }
+.box ul { padding-left: 16px; }
+.box li { margin-bottom: 3px; }
+.box.dark p, .box.dark li { color: #8AAED0; }
+
+/* ── PULL QUOTE ── */
+.pq {
+  border-left: 4px solid var(--yellow);
+  background: var(--yellow-lt);
+  padding: 12px 18px; margin: 18px 0;
+  font-size: 12.5px; font-weight: 600;
+  color: var(--blue-900); font-style: italic; line-height: 1.6;
+}
+
+/* ── NATIVE TABLES ── */
+.t-wrap { margin: 16px 0 24px; overflow-x: auto; }
+.t-cap {
+  font-size: 9px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--blue-500);
+  margin-bottom: 6px;
+}
+table.dt {
+  width: 100%; border-collapse: collapse;
+  font-size: 11px; font-family: Arial, sans-serif;
+}
+table.dt th {
+  background: var(--blue-900); color: var(--white);
+  padding: 8px 10px; text-align: left;
+  font-size: 8.5px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  font-family: 'Montserrat', Arial, sans-serif;
+  border-right: 1px solid var(--blue-700);
+}
+table.dt th:last-child { border-right: none; }
+table.dt td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--blue-100);
+  vertical-align: top; line-height: 1.5;
+  color: var(--ink-soft);
+}
+table.dt tr:nth-child(even) td { background: var(--blue-50); }
+table.dt tr:hover td { background: #DCE8F5; }
+table.dt td.bold { font-weight: 700; color: var(--ink); }
+table.dt td.center { text-align: center; }
+
+/* risk badges */
+.H { display:inline-block; background:var(--red); color:#fff; font-size:7.5px; font-weight:800; letter-spacing:.1em; padding:2px 6px; text-transform:uppercase; }
+.M { display:inline-block; background:var(--yellow); color:var(--blue-900); font-size:7.5px; font-weight:800; letter-spacing:.1em; padding:2px 6px; text-transform:uppercase; }
+.L { display:inline-block; background:var(--green); color:#fff; font-size:7.5px; font-weight:800; letter-spacing:.1em; padding:2px 6px; text-transform:uppercase; }
+.N { display:inline-block; background:#C0C8D0; color:#444; font-size:7.5px; font-weight:800; letter-spacing:.08em; padding:2px 6px; text-transform:uppercase; }
+
+/* ── BAR CHART ── */
+.barchart { margin: 16px 0 24px; }
+.barchart-title {
+  font-size: 8px; font-weight: 800; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--blue-500); margin-bottom: 12px;
+}
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.bar-lbl { font-size: 9.5px; font-weight: 700; color: var(--ink); width: 120px; text-align: right; flex-shrink:0; }
+.bar-track { flex: 1; background: var(--blue-100); height: 24px; }
+.bar-fill { height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
+.bar-fill span { font-size: 8.5px; font-weight: 800; }
+.bar-fill.b1 { background: var(--green); }
+.bar-fill.b2 { background: var(--yellow); }
+.bar-fill.b3 { background: var(--blue-900); }
+.bar-fill.b4 { background: var(--red); }
+.bar-fill.b1 span, .bar-fill.b3 span { color: #fff; }
+.bar-fill.b2 span { color: var(--blue-900); }
+.bar-fill.b4 span { color: #fff; }
+
+/* ── TIMELINE ── */
+.tl { padding-left: 28px; position: relative; margin-bottom: 24px; }
+.tl::before {
+  content: ''; position: absolute;
+  left: 9px; top: 6px; bottom: 6px; width: 3px;
+  background: linear-gradient(to bottom, var(--blue-900), var(--blue-300), var(--yellow));
+}
+.tl-item {
+  position: relative; margin-bottom: 16px;
+  border: 1px solid var(--rule); padding: 14px 18px;
+  background: var(--white);
+}
+.tl-item::before {
+  content: ''; position: absolute;
+  left: -23px; top: 18px; width: 14px; height: 14px;
+  background: var(--blue-900); border: 3px solid var(--yellow);
+}
+.tl-period {
+  display: inline-block; background: var(--blue-900);
+  color: var(--yellow); font-size: 8px; font-weight: 800;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: 2px 10px; margin-bottom: 7px;
+}
+.tl-title { font-size: 12px; font-weight: 700; color: var(--blue-900); margin-bottom: 7px; }
+.tl-body { font-size: 11px; color: var(--ink-soft); line-height: 1.6; }
+.tl-body ul { padding-left: 14px; }
+.tl-body li { margin-bottom: 3px; }
+
+/* ── YELLOW STRIP ── */
+.strip {
+  background: var(--yellow);
+  margin: 24px -48px; padding: 11px 48px;
+  font-size: 11.5px; font-weight: 700; color: var(--blue-900);
+  letter-spacing: .01em;
+}
+.strip .dot { margin: 0 8px; opacity: .5; }
+
+/* ── REC LIST ── */
+.rec-list { list-style: none; margin-bottom: 20px; }
+.rec-list li {
+  display: flex; gap: 14px; padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 11.5px; line-height: 1.55;
+  align-items: flex-start;
+}
+.rec-n {
+  flex-shrink: 0; width: 22px; height: 22px;
+  background: var(--blue-900); color: var(--yellow);
+  font-size: 9px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.rec-list li strong { color: var(--blue-500); }
+
+/* ── PESTEL ── */
+.pestel {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 2px; margin-bottom: 24px;
+}
+.ps {
+  padding: 14px 14px;
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--blue-500);
+}
+.ps:nth-child(even) { border-top-color: var(--yellow); }
+.ps-l {
+  font-size: 28px; font-weight: 900;
+  color: var(--blue-100); line-height: 1; margin-bottom: 0;
+}
+.ps:nth-child(even) .ps-l { color: var(--yellow-lt); }
+.ps-n {
+  font-size: 8.5px; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--blue-700); margin-bottom: 6px;
+}
+.ps:nth-child(even) .ps-n { color: var(--amber); }
+.ps-b { font-size: 10.5px; color: var(--ink-soft); line-height: 1.55; }
+
+/* ── DIVIDER ── */
+.div { height: 1px; background: var(--rule); margin: 20px 0; }
+.div.y { height: 3px; background: var(--yellow); margin: 24px 0; }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--blue-900);
+  border-top: 4px solid var(--yellow);
+  padding: 14px 48px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-l { font-size: 8.5px; color: #6090B8; line-height: 1.7; }
+.footer-l strong { color: var(--yellow); }
+.footer-r { font-size: 8.5px; color: #6090B8; text-align: right; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-stripe"></div>
+  <div class="hdr-geo"></div>
+  <div class="hdr-geo2"></div>
+  <div class="hdr-body">
+    <div>
+      <div class="hdr-kicker">Board of Directors Bulletin &nbsp;·&nbsp; CESGS × PLN &nbsp;·&nbsp; Confidential</div>
+      <div class="hdr-title">Kajian Lingkungan, Sosial &amp;<br><em>Ketahanan Sumber Daya Air</em><br>Pembangkit EBT PLN</div>
+      <div class="hdr-sub">Laporan Kajian Tahap II &nbsp;·&nbsp; Analisis Risiko ESG &amp; Roadmap Strategis &nbsp;·&nbsp; Horizon 2025–2060<br>Tim Ahli: Prof. Iman Harymawan, S.E., M.B.A., Ph.D. &nbsp;|&nbsp; CESGS – Universitas Airlangga</div>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-badge">Confidential</div>
+      <div class="hdr-date">
+        Diserahkan: 20 Nov 2025<br>
+        Direvisi: 25 Nov 2025<br>
+        Diterima: 10 Des 2025<br>
+        168 halaman · CESGS
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <a href="#exec">Ringkasan</a>
+  <a href="#portofolio">Portofolio EBT</a>
+  <a href="#risiko-lingk">Risiko Lingkungan</a>
+  <a href="#risiko-sosial">Risiko Sosial</a>
+  <a href="#air">Ketahanan Air</a>
+  <a href="#roadmap">Roadmap</a>
+  <a href="#rekomendasi">Rekomendasi</a>
+</div>
+
+<!-- BODY -->
+<div class="body">
+
+<!-- LEAD -->
+<div id="exec" class="lead">
+  <p>PLN mengemban dua mandat strategis yang tidak bisa dikompromikan: <strong>elektrifikasi 100%</strong> dan <strong>Net Zero Emission 2060</strong>. RUPTL Hijau 2025–2034 menempatkan EBT sebagai pilar utama pasokan listrik — bukan lagi pelengkap. Namun ekspansi EBT yang masif membawa spektrum risiko lingkungan, sosial, dan finansial yang tidak bisa lagi dikelola secara <em>"project by project."</em> Kajian CESGS ini memetakan eksposur tersebut secara sistematis dan merumuskan roadmap mitigasi berbasis data — agar setiap keputusan investasi PLN dapat dipertanggungjawabkan kepada regulator, investor, dan publik.</p>
+</div>
+
+<!-- METRICS -->
+<div class="metrics">
+  <div class="metric d">
+    <div class="m-lbl">Proyeksi Biaya Air — Jangka Panjang</div>
+    <div class="m-val">Rp138,2M</div>
+    <div class="m-unit">Total biaya air 2031–2060</div>
+    <div class="m-desc">~40× lipat dari periode 2025–26. Investasi teknologi air 2020–24 baru Rp12,4 M — kesenjangan yang harus segera ditutup.</div>
+  </div>
+  <div class="metric y">
+    <div class="m-lbl">Target Bauran EBT — RUPTL Hijau</div>
+    <div class="m-val">34,3%</div>
+    <div class="m-unit">Porsi EBT pada 2034 (dari 15,9% kini)</div>
+    <div class="m-desc">76% dari total 69,5 GW tambahan kapasitas 2025–34 adalah EBT dan penyimpanan energi.</div>
+  </div>
+  <div class="metric r">
+    <div class="m-lbl">Kapasitas PLTU Batubara — 2024</div>
+    <div class="m-val">>56%</div>
+    <div class="m-unit">Porsi fosil dari total kapasitas nasional</div>
+    <div class="m-desc">EBT belum menembus 15% bauran saat ini — gap besar yang perlu diakselerasi dengan manajemen risiko yang matang.</div>
+  </div>
+</div>
+
+<!-- SECTION 1 — PORTOFOLIO EBT -->
+<div id="portofolio" class="sec">
+  <div class="sec-num">1</div>
+  <h2>Status Portofolio EBT PLN: Momentum Riil, Transisi Belum Tuntas</h2>
+</div>
+
+<p style="font-size:12px;color:var(--ink-soft);margin-bottom:16px;line-height:1.65;">Total kapasitas sistem kelistrikan PLN tumbuh dari <strong>72.032,9 MW (2023) menjadi 74.555,8 MW (2024)</strong>, namun pertumbuhan masih didominasi PLTU batubara yang naik dari 18.754,9 MW ke 19.441,9 MW. EBT berbasis air (PLTA/PLTM) tetap menjadi kontributor terbesar dalam portofolio hijau, sementara PLTS dan PLTBiomassa masih dalam skala terbatas. Komitmen nyata terletak pada RUPTL Hijau 2025–2034 dengan prinsip <em>"Green, Clean, and Affordable."</em></p>
+
+<div class="t-wrap">
+  <div class="t-cap">Tabel 2.1 — Realisasi Kapasitas Terpasang Pembangkit Indonesia (MW), Sumber: CESGS–PLN (2025)</div>
+  <table class="dt">
+    <thead>
+      <tr>
+        <th rowspan="2">Jenis Pembangkit</th>
+        <th colspan="3" style="text-align:center;background:#002060;">2023</th>
+        <th colspan="3" style="text-align:center;background:#00408A;">2024</th>
+      </tr>
+      <tr>
+        <th>Milik Sendiri (MW)</th>
+        <th>Sewa (MW)</th>
+        <th>IPP/Kerjasama (MW)</th>
+        <th>Milik Sendiri (MW)</th>
+        <th>Sewa (MW)</th>
+        <th>IPP/Kerjasama (MW)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#EEF8F2;">
+        <td class="bold">PLTA / PLTM ⚡</td>
+        <td>3.597,10</td><td>—</td><td>2.183,10</td>
+        <td>3.597,00</td><td>—</td><td>2.222,20</td>
+      </tr>
+      <tr style="background:#EEF8F2;">
+        <td class="bold">PLTP (Panas Bumi) ⚡</td>
+        <td>579,30</td><td>—</td><td>1.939,70</td>
+        <td>579,30</td><td>—</td><td>1.758,80</td>
+      </tr>
+      <tr style="background:#EEF8F2;">
+        <td class="bold">PLT Biomassa ⚡</td>
+        <td>0,50</td><td>—</td><td>116,70</td>
+        <td>0,50</td><td>—</td><td>152,20</td>
+      </tr>
+      <tr style="background:#EEF8F2;">
+        <td class="bold">PLTS (Surya) ⚡</td>
+        <td>313,10</td><td>0,80</td><td>209,70</td>
+        <td>32,60</td><td>0,80</td><td>209,10</td>
+      </tr>
+      <tr style="background:#EEF8F2;">
+        <td class="bold">PLTB (Bayu/Angin) ⚡</td>
+        <td>0,50</td><td>—</td><td>130,60</td>
+        <td>0,20</td><td>—</td><td>130,60</td>
+      </tr>
+      <tr>
+        <td class="bold">PLTG</td>
+        <td>2.764,00</td><td>119,00</td><td>816,50</td>
+        <td>2.798,70</td><td>119,00</td><td>809,00</td>
+      </tr>
+      <tr>
+        <td class="bold">PLTGU</td>
+        <td>11.953,80</td><td>—</td><td>1.820,60</td>
+        <td>12.797,70</td><td>—</td><td>2.700,60</td>
+      </tr>
+      <tr>
+        <td class="bold">PLTMG</td>
+        <td>2.045,10</td><td>299,60</td><td>156,60</td>
+        <td>2.045,10</td><td>253,60</td><td>156,60</td>
+      </tr>
+      <tr>
+        <td class="bold">PLTD</td>
+        <td>3.412,00</td><td>674,10</td><td>56,20</td>
+        <td>3.351,30</td><td>816,30</td><td>30,00</td>
+      </tr>
+      <tr style="background:#FEF0EF;">
+        <td class="bold">PLTU Batubara 🔴</td>
+        <td>18.754,90</td><td>105,00</td><td>18.737,90</td>
+        <td>19.441,90</td><td>105,00</td><td>18.892,90</td>
+      </tr>
+      <tr>
+        <td class="bold">PLTU Minyak/Gas</td>
+        <td>1.585,00</td><td>—</td><td>—</td>
+        <td>1.585,00</td><td>—</td><td>—</td>
+      </tr>
+      <tr style="background:var(--blue-900);color:white;">
+        <td style="font-weight:800;color:white;">TOTAL</td>
+        <td colspan="3" style="font-weight:900;color:var(--yellow);text-align:center;">72.032,90 MW</td>
+        <td colspan="3" style="font-weight:900;color:var(--yellow);text-align:center;">74.555,80 MW</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="strip">
+  <strong>Target RUPTL Hijau 2025–34</strong> <span class="dot">·</span> 52,9 GW (76%) dari EBT &amp; storage <span class="dot">·</span> JAMALI mendapat 19,6 GW EBT, didominasi surya 10,93 GW dan bayu 5,38 GW <span class="dot">·</span> Sumatera: +9,5 GW EBT
+</div>
+
+<!-- SECTION 2 — RISIKO LINGKUNGAN -->
+<div id="risiko-lingk" class="sec">
+  <div class="sec-num">2</div>
+  <h2>Profil Risiko Lingkungan: Setiap Teknologi, Setiap Fase Berbeda</h2>
+</div>
+
+<p style="font-size:12px;color:var(--ink-soft);margin-bottom:16px;line-height:1.65;">Kajian ini memetakan 14 aspek material risiko lingkungan untuk 9 jenis pembangkit EBT, mengacu pada GRI Standards (302–306), World Bank EHS Guidelines, dan IFC Performance Standards. Temuan utama: risiko bukan hanya bersifat ekologis — risiko ini juga finansial dan material bagi balance sheet PLN.</p>
+
+<div class="t-wrap">
+  <div class="t-cap">Tabel 2.3 — Pemetaan Tingkat Risiko Lingkungan per Jenis Pembangkit EBT (Metodologi: GRI, World Bank, IFC)</div>
+  <table class="dt">
+    <thead>
+      <tr>
+        <th style="width:22%;">Aspek Material</th>
+        <th>Fase Kritis</th>
+        <th>PLTBm</th>
+        <th>PLTBg</th>
+        <th>PLTSa</th>
+        <th>PLTS</th>
+        <th>PLTA</th>
+        <th>PLTB</th>
+        <th>PLTP</th>
+        <th>Pumped Storage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bold">Emisi udara (CO₂, NOₓ, partikulat)</td>
+        <td>Operasional</td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="L">Rendah</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Konsumsi &amp; pembuangan air</td>
+        <td>Operasional</td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Pengelolaan limbah B3 (oli, filter, sludge)</td>
+        <td>Operasional</td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="L">Rendah</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Penggunaan lahan &amp; keanekaragaman hayati</td>
+        <td>Konstruksi</td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="H">Tinggi</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Kebocoran gas CH₄</td>
+        <td>Operasional</td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Perubahan hidrologi &amp; sedimentasi</td>
+        <td>Konstruksi + Operasional</td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="H">Tinggi</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Emisi H₂S &amp; scaling (geotermal)</td>
+        <td>Operasional</td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="N">N/A</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Limbah akhir usia (blade, panel PV, katalis)</td>
+        <td>Dekomisioning</td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="pq">"Pembangkit EBT bukan bebas risiko. Risiko lingkungan yang tidak diinternalisasi hari ini akan berubah menjadi liabilitas finansial di kemudian hari — baik melalui tuntutan hukum, penghentian operasional, maupun hilangnya social license."</div>
+
+<!-- SECTION 3 — RISIKO SOSIAL -->
+<div id="risiko-sosial" class="sec">
+  <div class="sec-num">3</div>
+  <h2>Profil Risiko Sosial: PLTA &amp; Pumped Storage Memerlukan Atensi Paling Serius</h2>
+</div>
+
+<p style="font-size:12px;color:var(--ink-soft);margin-bottom:16px;line-height:1.65;">Risiko sosial paling material terkonsentrasi pada pembangkit berbasis air berskala besar. Tiga aspek — akuisisi lahan, Masyarakat Adat, dan keselamatan bendungan — memiliki profil risiko TINGGI pada PLTA dan Pumped Storage secara konsisten. Ini bukan isu CSR — ini adalah risiko proyek yang dapat menghentikan konstruksi atau mencabut izin operasional.</p>
+
+<div class="t-wrap">
+  <div class="t-cap">Tabel 2.5 — Pemetaan Tingkat Risiko Sosial per Jenis Pembangkit EBT (Metodologi: IFC PS, World Bank ESF)</div>
+  <table class="dt">
+    <thead>
+      <tr>
+        <th style="width:24%;">Aspek Sosial</th>
+        <th>Fase Kritis</th>
+        <th>PLTBm</th>
+        <th>PLTSa</th>
+        <th>PLTS</th>
+        <th>PLTA</th>
+        <th>PLTB</th>
+        <th>PLTP</th>
+        <th>PLTAL</th>
+        <th>Pumped Storage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bold">Akuisisi lahan &amp; pemukiman kembali</td>
+        <td>Persiapan &amp; Konstruksi</td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Masyarakat Adat &amp; FPIC</td>
+        <td>Persiapan</td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Warisan budaya &amp; situs arkeologis</td>
+        <td>Konstruksi</td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Keselamatan bendungan &amp; risiko hilir</td>
+        <td>Operasional</td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="N">N/A</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="H">Tinggi</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Gangguan mata pencaharian lokal</td>
+        <td>Konstruksi + Operasional</td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Kebisingan, debu &amp; kualitas udara lokal</td>
+        <td>Konstruksi</td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="H">Tinggi</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="L">Rendah</span></td>
+        <td><span class="M">Sedang</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Kesetaraan gender &amp; ketenagakerjaan</td>
+        <td>Konstruksi + Operasional</td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+        <td><span class="M">Sedang</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Studi Kasus -->
+<div class="two" style="margin-top:8px;">
+  <div class="box r">
+    <h3>⚠ PLTA Batang Toru — Alarm Aktif</h3>
+    <p>Berlokasi di habitat orangutan Tapanuli yang kritis. Pada 2025, tiga perusahaan di hulu DAS (termasuk NSHE) dihentikan sementara dan wajib audit lingkungan pasca banjir-longsor. <strong>Implikasi:</strong> lokasi di kawasan ekologis sensitif = liabilitas operasional dan reputasional yang berkelanjutan, bukan insiden tunggal.</p>
+  </div>
+  <div class="box r">
+    <h3>⚠ PLTP Dieng — Risiko Gas Beracun</h3>
+    <p>Semburan H₂S Maret 2021 mengancam keselamatan komunitas pegunungan. Eksplorasi panas bumi di ekosistem pegunungan membutuhkan buffer zone yang ketat dan sistem monitoring real-time. <strong>Implikasi:</strong> beyond-compliance monitoring adalah prasyarat operasional, bukan opsi.</p>
+  </div>
+  <div class="box y">
+    <h3>⚡ PLTS Terapung Cirata — Konflik Akses</h3>
+    <p>Proyek PLTS terbesar di Asia Tenggara (192 MWp), namun sebagian nelayan kehilangan akses perairan sebagai sumber mata pencaharian. <strong>Implikasi:</strong> social impact assessment dan kompensasi livelihood harus berjalan paralel dengan komisioning teknis — bukan afterthought.</p>
+  </div>
+  <div class="box g">
+    <h3>✅ PLTB Sidrap — Model Positif</h3>
+    <p>Proyek angin komersial pertama Indonesia berjalan dengan pengelolaan lingkungan lokal yang terstruktur. Menunjukkan bahwa dengan site selection tepat dan community engagement yang dimulai sejak awal perencanaan, risiko sosial bisa dikelola secara efektif.</p>
+  </div>
+</div>
+
+<!-- SECTION 4 — KETAHANAN AIR -->
+<div id="air" class="sec">
+  <div class="sec-num">4</div>
+  <h2>Ketahanan Sumber Daya Air: Dari Input Operasional ke Risiko Strategis</h2>
+</div>
+
+<div class="two" style="margin-bottom:20px;">
+  <div>
+    <p style="font-size:12px;color:var(--ink-soft);line-height:1.65;margin-bottom:14px;">Air bukan sekadar input proses bagi PLN — air adalah faktor penentu keberlangsungan PLTA, PLTGU, PLTU, dan PLTP. Kajian menganalisis eksposur finansial biaya air secara kuantitatif menggunakan metode proyeksi ETS (Exponential Smoothing), dan hasilnya mengejutkan: <strong>kenaikan biaya air hampir eksponensial</strong> dari jangka pendek ke jangka panjang.</p>
+    <div class="box g">
+      <h3>💧 Pencapaian PLN — Fondasi yang Kuat</h3>
+      <ul>
+        <li>Penghematan air <strong>7.961 juta m³</strong> pada 2023</li>
+        <li>Program 3R air berjalan di <strong>39 unit</strong> pembangkit</li>
+        <li><strong>20 PROPER Emas</strong> KLHK (2023), naik dari 15</li>
+        <li>Anggota <strong>Alliance for Water Stewardship (AWS)</strong> sejak April 2024</li>
+        <li>CDP Water Security Questionnaire aktif sejak 2023</li>
+        <li>ISO 46001:2019 Water Efficiency Management</li>
+      </ul>
+    </div>
+  </div>
+  <div>
+    <div class="metric" style="margin-bottom:10px;">
+      <div class="m-lbl">2025–2026 — Jangka Pendek</div>
+      <div class="m-val" style="font-size:24px;">Rp 3,60 M</div>
+      <div class="m-unit">Rp 856 jt pengambilan + Rp 2,75 M treatment</div>
+    </div>
+    <div class="metric y" style="margin-bottom:10px;">
+      <div class="m-lbl">2027–2030 — Jangka Menengah</div>
+      <div class="m-val" style="font-size:24px;">Rp 8,57 M</div>
+      <div class="m-unit">+138% dari 2025–26 · Rp 1,82 M + Rp 6,75 M</div>
+    </div>
+    <div class="metric r">
+      <div class="m-lbl">2031–2060 — Jangka Panjang</div>
+      <div class="m-val" style="font-size:24px;">Rp 138,17 M</div>
+      <div class="m-unit">~40× dari 2025–26 · Rp 19,95 M + Rp 118,22 M</div>
+      <div class="m-desc">Investasi teknologi air &amp; konservasi 2020–24 = Rp 12,4 M. Kesenjangan antara investasi dan proyeksi eksposur adalah sinyal yang tidak boleh diabaikan.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bar Chart Water Cost -->
+<div class="barchart">
+  <div class="barchart-title">Proyeksi Biaya Air PLN vs. Investasi Eksisting — Perbandingan Horizon (Rp Miliar)</div>
+  <div class="bar-row">
+    <div class="bar-lbl">Investasi 2020–24</div>
+    <div class="bar-track">
+      <div class="bar-fill b1" style="width:9%;">
+        <span>Rp 12,4 M</span>
+      </div>
+    </div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-lbl">Biaya 2025–26</div>
+    <div class="bar-track">
+      <div class="bar-fill b1" style="width:2.6%;">
+        <span></span>
+      </div>
+    </div>
+    <span style="font-size:10px;font-weight:700;color:var(--green);margin-left:6px;">Rp 3,60 M</span>
+  </div>
+  <div class="bar-row">
+    <div class="bar-lbl">Biaya 2027–30</div>
+    <div class="bar-track">
+      <div class="bar-fill b2" style="width:6.2%;">
+        <span>Rp 8,57 M</span>
+      </div>
+    </div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-lbl">Biaya 2031–60</div>
+    <div class="bar-track">
+      <div class="bar-fill b3" style="width:100%;">
+        <span>Rp 138,17 M — ~40× dari baseline</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Water withdrawal table -->
+<div class="t-wrap">
+  <div class="t-cap">Tabel 3.6 — Biaya Pengambilan Air per Pembangkit (Juta Rupiah), Sumber: PLN (2025)</div>
+  <table class="dt">
+    <thead>
+      <tr>
+        <th>Jenis</th>
+        <th>Nama Pembangkit</th>
+        <th class="center">2020</th>
+        <th class="center">2021</th>
+        <th class="center">2022</th>
+        <th class="center">2023</th>
+        <th class="center">2024</th>
+        <th class="center">Tren</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PLTA &amp; PLTM</td>
+        <td class="bold">UBP Saguling</td>
+        <td class="center">15.028</td><td class="center">14.549</td><td class="center">55.935</td><td class="center">36.370</td><td class="center">43.561</td>
+        <td class="center"><span style="color:var(--amber);font-weight:700;">↑ Volatil</span></td>
+      </tr>
+      <tr>
+        <td>PLTA, PLTM, PLTMH</td>
+        <td class="bold">UBP Mrica</td>
+        <td class="center">26.907</td><td class="center">35.931</td><td class="center">36.683</td><td class="center">30.441</td><td class="center">64.895</td>
+        <td class="center"><span style="color:var(--red);font-weight:700;">↑↑ Naik Tajam</span></td>
+      </tr>
+      <tr>
+        <td>PLTA, PLTD, PLTG</td>
+        <td class="bold">UBP Barito</td>
+        <td class="center">806</td><td class="center">950</td><td class="center">2.486</td><td class="center">1.783</td><td class="center">2.323</td>
+        <td class="center"><span style="color:var(--amber);font-weight:700;">↑ Sedang</span></td>
+      </tr>
+      <tr>
+        <td>PLTA</td>
+        <td class="bold">UBP Bengkulu</td>
+        <td class="center">6.202</td><td class="center">6.366</td><td class="center">6.912</td><td class="center">8.509</td><td class="center">8.090</td>
+        <td class="center"><span style="color:var(--amber);font-weight:700;">↑ Konsisten</span></td>
+      </tr>
+      <tr>
+        <td>PLTA</td>
+        <td class="bold">UBP Bukittinggi</td>
+        <td class="center">6.728</td><td class="center">5.892</td><td class="center">5.043</td><td class="center">6.954</td><td class="center">9.019</td>
+        <td class="center"><span style="color:var(--amber);font-weight:700;">↑ Volatil</span></td>
+      </tr>
+      <tr>
+        <td>PLTU</td>
+        <td class="bold">Suralaya</td>
+        <td class="center">30</td><td class="center">32</td><td class="center">34</td><td class="center">37</td><td class="center">39</td>
+        <td class="center"><span style="color:var(--green);font-weight:700;">→ Stabil</span></td>
+      </tr>
+      <tr>
+        <td>PLTU</td>
+        <td class="bold">Pelabuhan Ratu</td>
+        <td class="center">398</td><td class="center">281</td><td class="center">282</td><td class="center">285</td><td class="center">287</td>
+        <td class="center"><span style="color:var(--green);font-weight:700;">→ Stabil</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PESTEL -->
+<div class="sec" style="margin-top:28px;">
+  <div class="sec-num" style="background:var(--blue-500);color:white;font-size:8px;">P·E·S·T·E·L</div>
+  <h2 style="font-size:12px;">Analisis PESTEL Ketahanan Air — Enam Dimensi Tekanan Eksternal</h2>
+</div>
+
+<div class="pestel">
+  <div class="ps">
+    <div class="ps-l">P</div>
+    <div class="ps-n">Politik</div>
+    <div class="ps-b">PP 22/2021 dan PROPER KLHK bukan sekadar aturan teknis — ini instrumen politik yang menetapkan baseline kepatuhan sekaligus sinyal reputasional. Warna PROPER memengaruhi license to operate, akses lahan dan air, serta relasi PLN dengan pemerintah daerah dan komunitas.</div>
+  </div>
+  <div class="ps">
+    <div class="ps-l">E</div>
+    <div class="ps-n">Ekonomi</div>
+    <div class="ps-b">Biaya air diproyeksikan naik eksponensial. Teknologi AI-based water management dan efisiensi berbasis data menawarkan peluang penekan biaya yang konkret. <strong>Investasi adaptasi sekarang jauh lebih murah dari membayar biaya risiko di kemudian hari.</strong></div>
+  </div>
+  <div class="ps">
+    <div class="ps-l">S</div>
+    <div class="ps-n">Sosial</div>
+    <div class="ps-b">Pengelolaan DAS lintas batas melibatkan komunitas adat, nelayan, dan petani yang kepentingannya berpotensi konflik dengan operasional pembangkit. Pendekatan multi-stakeholder berbasis watershed partnership adalah keharusan, bukan program CSR opsional.</div>
+  </div>
+  <div class="ps">
+    <div class="ps-l">T</div>
+    <div class="ps-n">Teknologi</div>
+    <div class="ps-b">Dry Cooling System, Condensate Recovery, Zero-Liquid Discharge (ZLD), Smart Leak Detection, dan AI-based water management sudah proven secara global. PLN memiliki preseden implementasi di UBP Suralaya (reuse efluen WWTP, penghematan air 10%).</div>
+  </div>
+  <div class="ps">
+    <div class="ps-l">E</div>
+    <div class="ps-n">Lingkungan</div>
+    <div class="ps-b">Pemanasan global 1,5°C mengubah pola curah hujan dan debit sungai secara nyata. Sedimentasi waduk PLTA meningkat. Pada skenario water stress pesimistik 2050, pembangkit di Jawa dan Bali mulai bergeser ke zona medium-to-high risk — ini <strong>present operational risk</strong>, bukan future risk.</div>
+  </div>
+  <div class="ps">
+    <div class="ps-l">L</div>
+    <div class="ps-n">Hukum</div>
+    <div class="ps-b">Regulasi air semakin ketat: baku mutu efluen, perizinan IUPTL berbasis lingkungan, tuntutan CDP Water Security disclosure, dan standar AWS internasional. Kepatuhan aktif adalah prasyarat ekspansi portofolio — bukan opsi pasif.</div>
+  </div>
+</div>
+
+<!-- SECTION 5 — ROADMAP -->
+<div id="roadmap" class="sec">
+  <div class="sec-num">5</div>
+  <h2>Roadmap Strategis: Tiga Horizon, Satu Sistem Terintegrasi</h2>
+</div>
+
+<p style="font-size:12px;color:var(--ink-soft);margin-bottom:18px;line-height:1.65;">Kajian ini mengusulkan roadmap berjenjang — bukan respons silo per proyek. Tujuannya: beralih dari mode <em>"project by project"</em> menuju sistem manajemen risiko EBT dan air yang terukur, terintegrasi, dan dapat dipertanggungjawabkan dari RKAP 2026 hingga NZE 2060.</p>
+
+<div class="tl">
+  <div class="tl-item">
+    <div class="tl-period">Jangka Pendek · 2025–2026 · RKAP 2026</div>
+    <div class="tl-title">Bangun Fondasi Data, Sistem Screening, dan Integrasi Awal ESMS</div>
+    <div class="tl-body">
+      <ul>
+        <li><strong>Penguatan pencatatan data air</strong> — integrasi flow meter, monitoring digital, dan pelaporan ke CDP Water Security Questionnaire secara terstruktur</li>
+        <li><strong>Pengetatan environmental-social screening</strong> untuk semua proyek EBT baru di pipeline RUPTL, termasuk penilaian water stress lokasi dan proximity ke kawasan kritis</li>
+        <li><strong>Integrasi awal ESMS</strong> berbasis framework Kemenkeu sebagai alat kuantifikasi finansial risiko lingkungan-sosial (konversi dampak ke nilai moneter)</li>
+        <li>Baseline audit water stress: identifikasi dan ranking pembangkit dengan eksposur tertinggi berdasarkan peta WWF Water Risk Filter</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-period">Jangka Menengah · 2027–2030 · NDC &amp; RJPP</div>
+    <div class="tl-title">Investasi Teknologi Efisiensi Air &amp; Kolaborasi Multi-Stakeholder DAS</div>
+    <div class="tl-body">
+      <ul>
+        <li><strong>Pilot dan skalasi teknologi efisiensi air</strong>: Dry Cooling System, Condensate Recovery, dan Water Recycling Network di pembangkit dengan eksposur biaya air tertinggi</li>
+        <li><strong>Watershed Partnership Program</strong> — kolaborasi formal dengan KLHK, BRIN, BBWS, dan komunitas DAS strategis (Bengawan Solo, Jratunseluna, Citarum-Saguling)</li>
+        <li><strong>Penyesuaian portofolio EBT</strong> di area high water stress: preferensi teknologi low-water consumption (PLTB, PLTS) vs. PLTA di lokasi yang water-stressed</li>
+        <li>Implementasi <strong>AI-Based Water Management System</strong> di seluruh rantai operasional pembangkit dengan volume pengambilan air terbesar</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-period">Jangka Panjang · 2031–2060 · NZE &amp; ARED</div>
+    <div class="tl-title">Portofolio Adaptif Iklim &amp; ESG Governance yang Kredibel</div>
+    <div class="tl-body">
+      <ul>
+        <li><strong>Desain portofolio pembangkitan adaptif iklim</strong> — setiap keputusan site selection mempertimbangkan proyeksi water stress 2050 per lokasi secara eksplisit</li>
+        <li><strong>Circular Water Industrial Park</strong> di cluster pembangkit berdekatan — zero liquid discharge sebagai standar operasional, bukan aspirasi</li>
+        <li><strong>Penguatan metrik ESG yang kredibel</strong>: air, biodiversitas, dan sosial yang dapat diverifikasi oleh rating agency, investor, dan regulator internasional</li>
+        <li>Penautan eksplisit antara <strong>keputusan investasi, risiko air, dan target NZE 2060</strong> dalam setiap dokumen perencanaan strategis PLN</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6 — REKOMENDASI -->
+<div id="rekomendasi" class="sec">
+  <div class="sec-num">6</div>
+  <h2>Rekomendasi untuk Board of Directors</h2>
+</div>
+
+<div class="box" style="margin-bottom:20px;">
+  <h3>📋 Konteks Pengambilan Keputusan</h3>
+  <p>Kajian ini dirancang sebagai <em>decision-support tool</em> — bukan audit kepatuhan. Setiap rekomendasi berakar pada data historis PLN, proyeksi kuantitatif menggunakan model ETS, dan benchmark internasional (GRI, IFC, World Bank, CDP). Board diminta mempertimbangkan dalam konteks RKAP 2026, RJPP, dan agenda ESG PLN.</p>
+</div>
+
+<ul class="rec-list">
+  <li>
+    <div class="rec-n">01</div>
+    <div><strong>Tetapkan Water Risk sebagai Material Issue dalam Sustainability Report dan CDP Disclosure.</strong> Proyeksi biaya air Rp 138 M (2031–60) adalah angka yang akan menjadi pertanyaan pertama investor ESG dan rating agency. Kuantifikasi dulu, disclose setelah ada strategi mitigasinya — bukan menunggu dipaksa regulator.</div>
+  </li>
+  <li>
+    <div class="rec-n">02</div>
+    <div><strong>Wajibkan ESMS-Based Financial Risk Assessment untuk semua proyek EBT baru di atas 50 MW.</strong> Framework Kemenkeu yang diusulkan kajian ini mengkonversi dampak lingkungan-sosial ke nilai moneter — bahasa yang dipahami decision-maker finansial dan bankabilitas proyek IPP.</div>
+  </li>
+  <li>
+    <div class="rec-n">03</div>
+    <div><strong>Alokasikan budget riil teknologi efisiensi air dalam RKAP 2026.</strong> Investasi Rp 12,4 M selama 5 tahun terakhir tidak proporsional terhadap proyeksi eksposur Rp 138 M. Minimal: pilot Dry Cooling System dan AI Water Management di 3–5 pembangkit bereksposur tinggi sebagai proof-of-concept.</div>
+  </li>
+  <li>
+    <div class="rec-n">04</div>
+    <div><strong>Bentuk Tim Pengelolaan DAS Lintas Batas dengan mandate dan anggaran yang jelas.</strong> DAS Bengawan Solo, Jratunseluna, dan Citarum adalah aset strategis yang ketahanannya bergantung pada kolaborasi lintas institusi. PLN perlu berperan sebagai anchor partner, bukan penerima pasif kondisi hidrologi.</div>
+  </li>
+  <li>
+    <div class="rec-n">05</div>
+    <div><strong>Integrasikan proyeksi water stress 2050 ke dalam proses site selection RUPTL.</strong> Pembangkit yang dibangun hari ini akan beroperasi hingga 2060. Lokasi yang "aman" hari ini dapat masuk zona high water stress pada skenario pesimistik 2050. Ini harus menjadi salah satu kriteria go/no-go yang terukur.</div>
+  </li>
+  <li>
+    <div class="rec-n">06</div>
+    <div><strong>Standardisasi Grievance Redress Mechanism (GRM) sebagai prosedur wajib di seluruh proyek EBT PLN.</strong> Kasus Cirata dan Batang Toru menunjukkan bahwa biaya sosial yang tidak diantisipasi jauh lebih mahal dari investasi social impact assessment di awal. GRM yang berfungsi mencegah eskalasi menjadi sengketa hukum atau penghentian proyek.</div>
+  </li>
+</ul>
+
+<div class="div y"></div>
+
+<div class="two" style="margin-top:4px;">
+  <div class="box g">
+    <h3>✅ Apa yang Sudah Berjalan Baik</h3>
+    <p>PLN memiliki fondasi yang kuat: CDP disclosure aktif, keanggotaan AWS, 20 PROPER Emas, penghematan air 7.961 M m³, program 3R di 39 unit, dan sertifikasi ISO 46001. Ini bukan titik nol — ini titik tolak yang sudah di atas rata-rata perusahaan utilitas regional. <strong>Masalahnya: masih di level kepatuhan, belum ke manajemen risiko strategis terintegrasi.</strong></p>
+  </div>
+  <div class="box r">
+    <h3>🔴 Kesenjangan yang Harus Ditutup Segera</h3>
+    <p>Gap terbesar: <strong>investasi teknologi air terlalu kecil</strong> dibandingkan proyeksi eksposur biaya (rasio 1:11 untuk jangka menengah, 1:111 untuk jangka panjang). Gap kedua: belum ada sistem tunggal yang menghubungkan risiko air, risiko lingkungan-sosial EBT, dan keputusan investasi portofolio secara real-time. ESMS dan water risk database harus terhubung.</p>
+  </div>
+</div>
+
+</div><!-- /body -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-l">
+    <strong>Center for Environmental, Social, and Governance Studies (CESGS)</strong><br>
+    Universitas Airlangga · ASEEC Tower Lt. 11 · Jl. Airlangga 4–6, Surabaya 60286<br>
+    Kajian atas penugasan PT PLN (Persero) · Desember 2025 · © Hak Cipta dilindungi UU
+  </div>
+  <div class="footer-r">
+    Board Bulletin ini adalah ringkasan eksekutif dari<br>
+    Laporan Kajian Tahap II (168 hal.) untuk deliberasi BoD.<br>
+    Tidak untuk publikasi atau distribusi eksternal.
+  </div>
+</div>
+
+</div><!-- /page -->
+</body>
+</html>
