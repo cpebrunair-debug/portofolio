@@ -1,0 +1,2388 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PLTS Terapung Indonesia</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Swiss Design Color System */
+  --bg:#F5F5F0;--surface:#FFFFFF;--surface2:#F0F0EB;
+  --border:#DDDDD8;--border2:#C8C8C2;
+  --text:#0A0A0A;--text2:#3A3A3A;--text3:#8A8A85;
+  --accent:#00539B;--accent-s:#E8F0F8;--accent-light:#4A8FC0;
+  --green:#1A7A4A;--amber:#CC7700;--red:#CC2200;
+  --yellow:#FFD700;
+  --c-sum:#0077B6;--c-jaw:#2D9E5F;--c-kal:#E07B00;--c-sul:#7B5EA7;
+  --sidebar-w:290px;
+  /* Swiss Typography — Helvetica */
+  --font-ui:'Helvetica Neue',Helvetica,'Arial',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+html,body{height:100%;overflow:hidden;font-family:var(--font-ui);background:var(--bg);font-size:13px}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:0}
+
+/* ── Swiss Grid Layout ── */
+#app{display:flex;flex-direction:column;height:100%;}
+#topbar{
+  height:44px;flex-shrink:0;
+  background:var(--text);
+  border-bottom:3px solid var(--accent);
+  display:flex;align-items:center;padding:0 14px;gap:8px;
+  z-index:500;overflow:hidden;
+}
+#main{display:flex;flex:1;overflow:hidden;position:relative}
+
+/* ── Sidebar — single scroll ── */
+#sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--surface);border-right:2px solid var(--text);
+  display:block;
+  overflow-y:auto;
+  overflow-x:hidden;
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+  position:relative;z-index:300;
+}
+#sidebar.hidden{transform:translateX(calc(-1 * var(--sidebar-w)));width:0;min-width:0;overflow:hidden}
+
+/* ── Sidebar toggle — vertical text, hugging sidebar right edge ── */
+#sidebarToggle{
+  position:absolute;
+  top:50%;
+  left:var(--sidebar-w);
+  transform:translateY(-50%);
+  z-index:750;
+  background:var(--text);
+  border:none;
+  border-top:2px solid var(--accent);
+  border-bottom:2px solid var(--accent);
+  border-right:2px solid var(--accent);
+  color:#fff;
+  padding:12px 4px;
+  font-size:.44rem;font-weight:700;cursor:pointer;
+  letter-spacing:.12em;white-space:nowrap;text-transform:uppercase;
+  writing-mode:vertical-rl;
+  text-orientation:mixed;
+  display:flex;align-items:center;gap:5px;
+  transition:left .28s cubic-bezier(.4,0,.2,1), background .15s;
+}
+#sidebarToggle:hover{background:var(--accent)}
+#sidebarToggle:hover{background:var(--accent)}
+
+
+/* Leaflet zoom — Swiss style */
+.leaflet-control-zoom {
+  border: 2px solid var(--text) !important;
+  border-radius: 0 !important;
+  box-shadow: 3px 3px 0 var(--text) !important;
+}
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  font-family: var(--font-ui) !important;
+  font-weight: 700 !important;
+  color: var(--text) !important;
+  background: var(--surface) !important;
+  border-radius: 0 !important;
+}
+.leaflet-control-zoom-in:hover,
+.leaflet-control-zoom-out:hover {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+.leaflet-control-zoom-in { border-bottom: 1px solid var(--border) !important; }
+
+#mapWrap{flex:1;position:relative;overflow:hidden}
+#map{width:100%;height:100%}
+
+/* ── Swiss Topbar Brand ── */
+.brand-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand-icon{width:26px;height:26px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.brand-text{font-weight:700;font-size:.75rem;color:#fff;white-space:nowrap;letter-spacing:.02em}
+.brand-sub{font-size:.52rem;color:rgba(255,255,255,.45);font-family:var(--font-mono);white-space:nowrap;letter-spacing:.08em}
+.tb-div{width:1px;height:20px;background:rgba(255,255,255,.15);flex-shrink:0}
+.tb-lbl{font-size:.5rem;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;flex-shrink:0}
+
+/* Pills — Swiss segmented control */
+.pill-group{display:flex;gap:1px;background:rgba(255,255,255,.08);padding:2px;border-radius:2px;border:1px solid rgba(255,255,255,.12);flex-shrink:0}
+.pill{padding:2px 8px;border-radius:1px;border:none;background:transparent;color:rgba(255,255,255,.45);font-size:.56rem;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap;font-family:var(--font-ui);display:flex;align-items:center;gap:3px;letter-spacing:.02em}
+.pill:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8)}
+.pill.active{background:var(--accent);color:#fff}
+.if-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+
+/* Icon btns — Swiss style */
+.icon-btn{
+  display:flex;align-items:center;gap:3px;padding:3px 9px;
+  border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.5);
+  font-family:var(--font-ui);font-size:.54rem;font-weight:700;cursor:pointer;
+  white-space:nowrap;flex-shrink:0;transition:all .12s;
+  text-transform:uppercase;letter-spacing:.06em;
+}
+.icon-btn:hover{border-color:var(--yellow);color:var(--yellow);background:rgba(255,215,0,.08)}
+.icon-btn.active{background:rgba(255,215,0,.15);border-color:var(--yellow);color:var(--yellow)}
+.export-btn{
+  display:flex;align-items:center;gap:4px;padding:4px 12px;
+  background:var(--yellow);border:none;color:var(--text);
+  font-family:var(--font-ui);font-size:.56rem;font-weight:800;cursor:pointer;
+  white-space:nowrap;flex-shrink:0;text-transform:uppercase;letter-spacing:.06em;
+  transition:opacity .12s;
+}
+.export-btn:hover{opacity:.88}
+
+/* ── Swiss Sidebar internals ── */
+.s-section{padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.s-label{font-size:.5rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.filter-chips{display:flex;gap:3px;flex-wrap:wrap}
+.chip{
+  padding:3px 8px;border:1px solid var(--border);
+  background:transparent;color:var(--text2);
+  font-size:.58rem;font-weight:600;cursor:pointer;
+  transition:all .12s;font-family:var(--font-ui);
+  text-transform:uppercase;letter-spacing:.04em;
+}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+input[type="range"]{width:100%;height:2px;appearance:none;background:var(--border);outline:none;margin:5px 0}
+input[type="range"]::-webkit-slider-thumb{appearance:none;width:10px;height:10px;background:var(--accent);cursor:pointer}
+
+/* ── Swiss Floating Search (moved below zoom) ── */
+#mapSearch{
+  position:absolute;
+  top:10px; left:10px;
+  z-index:500;
+  width:230px;
+  transition:left .28s cubic-bezier(.4,0,.2,1);
+}
+
+/* Leaflet zoom below search */
+.leaflet-top.leaflet-left {
+  top: 52px !important;
+  left: 10px !important;
+  transition: left .28s cubic-bezier(.4,0,.2,1);
+}
+#mapSearch .ms-inner{
+  display:flex;align-items:center;gap:0;
+  background:var(--surface);
+  border:2px solid var(--text);
+  box-shadow:3px 3px 0 var(--text);
+}
+#mapSearch .ms-icon{
+  width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--accent);color:#fff;
+  font-size:.75rem;flex-shrink:0;
+}
+#mapSearch input{
+  flex:1;
+  padding:7px 10px;
+  border:none;
+  font-size:.68rem;
+  background:transparent;
+  color:var(--text);
+  outline:none;
+  font-family:var(--font-ui);
+  font-weight:500;
+}
+#mapSearch input::placeholder{color:var(--text3);font-weight:400}
+#mapSearch .ms-clear{
+  width:26px;height:32px;
+  display:none;align-items:center;justify-content:center;
+  background:transparent;border:none;cursor:pointer;
+  color:var(--text3);font-size:.75rem;flex-shrink:0;
+}
+#mapSearch .ms-clear:hover{color:var(--red)}
+#mapSearch .ms-clear.show{display:flex}
+#searchSuggest{
+  position:absolute;top:calc(100% + 2px);left:0;right:0;z-index:999;
+  background:var(--surface);
+  border:2px solid var(--text);
+  box-shadow:3px 3px 0 var(--text);
+  display:none;max-height:220px;overflow-y:auto;
+}
+#searchSuggest.show{display:block}
+.suggest-item{
+  padding:7px 12px;cursor:pointer;
+  font-size:.66rem;
+  border-bottom:1px solid var(--border);
+  transition:background .1s;
+}
+.suggest-item:last-child{border-bottom:none}
+.suggest-item:hover,.suggest-item.active{background:var(--accent-s)}
+.suggest-kode{font-size:.56rem;color:var(--text3);font-family:var(--font-mono);margin-top:2px;letter-spacing:.04em}
+.suggest-hl{color:var(--accent);font-weight:700}
+
+/* Island overview cards */
+.iov-card{padding:8px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s}
+.iov-card:hover{background:var(--surface2)}
+.iov-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.iov-dot{width:3px;height:16px;flex-shrink:0}
+.iov-name{font-weight:700;font-size:.7rem;flex:1;text-transform:uppercase;letter-spacing:.04em}
+.iov-cnt{font-family:var(--font-mono);font-size:.56rem;color:var(--text3)}
+.iov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.iov-cell{background:var(--surface2);border:1px solid var(--border);padding:3px 5px;}
+.iov-cv{font-size:.66rem;font-weight:700;font-family:var(--font-mono);color:var(--accent)}
+.iov-cl{font-size:.5rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
+.iov-bar{margin-top:4px}
+.iov-track{height:2px;background:var(--border);overflow:hidden;margin-bottom:1px}
+.iov-fill{height:100%}
+.iov-barlbl{font-size:.5rem;color:var(--text3)}
+
+/* Island detail */
+.is-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:5px}
+.is-card{background:var(--surface2);border:1px solid var(--border);padding:4px 6px}
+.ic-val{font-size:.72rem;font-weight:700;font-family:var(--font-mono);color:var(--accent)}
+.ic-lbl{font-size:.52rem;color:var(--text3);margin-top:1px;text-transform:uppercase;letter-spacing:.05em}
+.pot-row{display:flex;align-items:center;gap:4px;margin-bottom:3px}
+.pot-label{font-size:.54rem;width:60px;flex-shrink:0;color:var(--text2)}
+.pot-track{flex:1;height:3px;background:var(--surface2);overflow:hidden;border:1px solid var(--border)}
+.pot-fill{height:100%}
+.pot-num{font-size:.56rem;font-family:var(--font-mono);width:14px;text-align:right;flex-shrink:0}
+
+/* Detail panel — Swiss card */
+#detailPanel{display:none;border-top:3px solid var(--accent);flex-shrink:0}
+#detailPanel.show{display:block}
+.dp-head{padding:8px 12px;background:var(--accent);border-bottom:1px solid var(--border)}
+.dp-name{font-weight:700;font-size:.78rem;margin-bottom:1px;color:#fff;text-transform:uppercase;letter-spacing:.03em}
+.dp-meta{font-size:.54rem;color:rgba(255,255,255,.65);font-family:var(--font-mono);margin-bottom:4px;letter-spacing:.06em}
+.dp-badges{display:flex;gap:3px;flex-wrap:wrap}
+.badge{font-size:.54rem;font-weight:700;padding:2px 6px;text-transform:uppercase;letter-spacing:.04em}
+.dp-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:7px 12px;border-bottom:1px solid var(--border)}
+.dm{background:var(--surface2);border:1px solid var(--border);padding:5px 6px;text-align:center}
+.dv{font-size:.7rem;font-weight:700;font-family:var(--font-mono);color:var(--accent)}
+.dl{font-size:.5rem;color:var(--text3);margin-top:1px;text-transform:uppercase;letter-spacing:.05em}
+.dp-scores{padding:7px 12px;border-bottom:1px solid var(--border)}
+.ds-item{margin-bottom:5px}.ds-item:last-child{margin-bottom:0}
+.ds-label{font-size:.56rem;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em}
+.ds-bar-track{height:3px;background:var(--surface2);overflow:hidden;margin-bottom:2px;border:1px solid var(--border)}
+.ds-bar-fill{height:100%}
+.ds-val{font-size:.62rem;font-weight:700;font-family:var(--font-mono)}
+
+/* Rank list */
+.rank-item{display:flex;align-items:center;gap:6px;padding:5px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.rank-item:hover{background:var(--surface2)}
+.rank-item.selected{background:var(--accent-s);border-left:3px solid var(--accent)}
+.ri-rank{font-size:.58rem;font-weight:700;font-family:var(--font-mono);width:22px;text-align:center;color:var(--text3)}
+.ri-rank.top3{color:var(--amber);font-size:.64rem}
+.ri-island-dot{width:3px;height:18px;flex-shrink:0}
+.ri-info{flex:1;min-width:0}
+.ri-name{font-size:.66rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ri-prov{font-size:.53rem;color:var(--text3)}
+.ri-skor{font-size:.56rem;font-weight:700;padding:2px 5px;flex-shrink:0;font-family:var(--font-mono)}
+#rankList{}
+
+/* ── Swiss Map Cards ── */
+.map-card{
+  position:absolute;
+  background:rgba(255,255,255,.97);
+  border:2px solid var(--text);
+  box-shadow:3px 3px 0 var(--text);
+  z-index:400;
+}
+#statsCard{top:10px;right:10px;padding:0;min-width:190px}
+#statsCard .sc-header{
+  background:var(--text);
+  padding:4px 10px;
+  font-size:.48rem;font-weight:700;color:#fff;
+  text-transform:uppercase;letter-spacing:1px;
+}
+.sc-row{display:flex;justify-content:space-between;align-items:center;padding:4px 10px}
+.sc-row+.sc-row{border-top:1px solid var(--border)}
+.sc-key{font-size:.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
+.sc-val{font-size:.64rem;font-weight:700;font-family:var(--font-mono);color:var(--accent)}
+#legendCard{bottom:8px;right:10px;padding:0;min-width:160px;transition:bottom .3s ease}
+#legendCard .lc-header{
+  background:var(--text);padding:4px 10px;
+  font-size:.48rem;font-weight:700;color:#fff;
+  text-transform:uppercase;letter-spacing:1px;
+}
+.lc-title{font-size:.48rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.8px}
+#legendCard .lc-body{padding:6px 10px}
+.lc-item{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.lc-dot{width:8px;height:8px;flex-shrink:0;border:1.5px solid rgba(0,0,0,.12)}
+.lc-label{font-size:.58rem;color:var(--text2)}
+
+/* Radiation legend */
+#radLegend{bottom:8px;left:10px;padding:0;display:none;transition:bottom .3s ease;min-width:220px}
+#radLegend .rad-header{
+  background:var(--text);padding:4px 10px;
+  display:flex;align-items:center;gap:5px;
+}
+.rad-title-text{font-size:.48rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1px;flex:1}
+#radLegend .rad-body{padding:8px 10px}
+.rad-contour-swatch{display:flex;gap:0;margin-bottom:3px;overflow:hidden;border:1px solid rgba(0,0,0,.15)}
+.rad-swatch-block{height:10px;flex:1}
+.rad-swatch-row{display:flex;justify-content:space-between;font-size:.46rem;color:var(--text3);margin-bottom:8px;font-family:var(--font-mono)}
+.rad-timeline{border-top:1px solid var(--border);padding-top:7px;margin-top:2px}
+.rad-tl-label{font-size:.5rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.rad-tl-months{display:flex;justify-content:space-between;font-size:.44rem;color:var(--text3);padding:0 1px;font-family:var(--font-mono);margin-top:3px}
+
+/* Tooltip */
+#mapTooltip{
+  position:absolute;z-index:900;
+  background:var(--surface);
+  border:2px solid var(--text);
+  box-shadow:3px 3px 0 var(--text);
+  padding:8px 11px;pointer-events:none;display:none;min-width:200px;
+}
+.mt-name{font-weight:700;font-size:.74rem;text-transform:uppercase;letter-spacing:.03em}
+.mt-sub{font-size:.56rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:5px;letter-spacing:.06em}
+.mt-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.mt-cell{display:flex;flex-direction:column}
+.mt-val{font-size:.64rem;font-weight:700;font-family:var(--font-mono);color:var(--accent)}
+.mt-lbl{font-size:.52rem;color:var(--text3);text-transform:uppercase;letter-spacing:.04em}
+.mt-div{height:1px;background:var(--border);margin:4px 0;grid-column:1/-1}
+
+/* ── Bottom Analytics Bar ── */
+#bottomBar{
+  position:absolute;bottom:0;left:0;right:0;z-index:700;
+  background:rgba(255,255,255,.98);
+  border-top:2px solid var(--text);
+  height:200px;transform:translateY(100%);transition:transform .3s ease;
+  display:grid;grid-template-columns:repeat(4,1fr)
+}
+#bottomBar.open{transform:translateY(0)}
+.bc-panel{padding:10px 14px;border-right:1px solid var(--border);position:relative;display:flex;flex-direction:column;overflow:hidden}
+.bc-panel:last-child{border-right:none}
+.bc-title{
+  font-size:.48rem;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:1px;
+  margin-bottom:6px;flex-shrink:0;
+  padding-bottom:4px;border-bottom:1px solid var(--border);
+}
+.bc-chart-wrap{flex:1;position:relative;min-height:0}
+.bc-chart-wrap canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
+
+/* Analitik toggle button — Swiss pill */
+#toggleBtn{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  z-index:750;
+  background:var(--text);border:none;border-top:2px solid var(--text);
+  color:#fff;padding:4px 16px;
+  font-size:.5rem;font-weight:700;cursor:pointer;
+  transition:all .15s;display:flex;align-items:center;gap:5px;
+  letter-spacing:.08em;white-space:nowrap;text-transform:uppercase;
+}
+#toggleBtn:hover{background:var(--accent)}
+#toggleBtn.open{bottom:200px}
+
+/* Map type badge */
+#mapTypeBadge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 9px;font-size:.54rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;
+  flex-shrink:0;
+}
+#mapTypeBadge.theoretical{background:var(--yellow);color:var(--text)}
+#mapTypeBadge.practical{background:var(--green);color:#fff}
+#mapTypeBadge.integrated{background:var(--accent);color:#fff}
+
+/* Export modal */
+#exportModal{display:none;position:fixed;inset:0;z-index:9000;background:rgba(10,10,10,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center}
+#exportModal.show{display:flex}
+.em-box{background:#fff;border:2px solid var(--text);box-shadow:5px 5px 0 var(--text);padding:22px 26px;width:390px}
+.em-title{font-size:.9rem;font-weight:700;margin-bottom:2px;text-transform:uppercase;letter-spacing:.03em}
+.em-sub{font-size:.66rem;color:var(--text3);margin-bottom:14px}
+.em-options{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}
+.em-opt{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid var(--border);cursor:pointer;transition:all .12s}
+.em-opt:hover,.em-opt.selected{border-color:var(--accent);background:var(--accent-s)}
+.em-opt-icon{font-size:1rem;width:24px;text-align:center}
+.eo-title{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.eo-desc{font-size:.58rem;color:var(--text3);margin-top:1px}
+.em-actions{display:flex;gap:7px;justify-content:flex-end}
+.em-cancel{padding:5px 12px;border:1px solid var(--border);background:#fff;color:var(--text2);font-size:.66rem;font-weight:600;cursor:pointer;font-family:var(--font-ui)}
+.em-confirm{padding:5px 14px;border:none;background:var(--text);color:#fff;font-size:.66rem;font-weight:700;cursor:pointer;font-family:var(--font-ui);text-transform:uppercase;letter-spacing:.06em}
+.em-confirm:disabled{opacity:.4;cursor:not-allowed}
+.em-progress{display:none;margin-top:10px}
+.em-progress.show{display:block}
+.ep-label{font-size:.6rem;color:var(--text3);margin-bottom:3px}
+.ep-track{height:3px;background:var(--border);overflow:hidden}
+.ep-fill{height:100%;background:var(--accent);transition:width .3s;width:0%}
+
+/* CSV notice */
+#csvNotice{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:7px 16px;font-size:.66rem;z-index:8000;display:none;box-shadow:3px 3px 0 var(--accent)}
+
+/* ESG mode note */
+#esgModeNote{display:none;padding:6px 12px;background:linear-gradient(135deg,rgba(5,150,105,.08),rgba(5,150,105,.04));border-bottom:1px solid rgba(5,150,105,.2);font-size:.56rem;color:#059669;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+
+/* ═══════════════════════════════════════
+   LANDING — SWISS DESIGN SYSTEM
+   Rules: Grid · Minimalism · Asymmetry
+          Helvetica · White Space
+   Palette: PLN Blue #00539B · Yellow #FFD700
+═══════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,700;0,900;1,300&display=swap');
+
+:root {
+  --pln-blue:   #00539B;
+  --pln-yellow: #FFD700;
+  --pln-red:    #E63B2E;
+  --sw-black:   #0A0A0A;
+  --sw-dark:    #1A1A1A;
+  --sw-mid:     #5A5A5A;
+  --sw-light:   #B0B0B0;
+  --sw-rule:    #D8D8D8;
+  --sw-bg:      #F5F5F0;
+  --sw-white:   #FFFFFF;
+  --grid-col:   80px;
+  --grid-gap:   20px;
+}
+
+#landing {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--sw-white);
+  font-family: 'Barlow', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  overflow: hidden;
+  display: grid;
+  /* Swiss asymmetric grid: narrow left column, wide right — no topbar/footer */
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: 1fr;
+}
+
+/* ── Top rule bar (full width) ── */
+#lp-topbar {
+  display: none;
+}
+.lp-topbar-brand {
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 32px;
+  border-right: 3px solid var(--sw-black);
+  background: var(--sw-white);
+  min-width: 320px;
+}
+.lp-pln-logo {
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+}
+.lp-brand-text {
+  display: flex; flex-direction: column;
+}
+.lp-brand-primary {
+  font-size: .72rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--pln-blue); line-height: 1;
+}
+.lp-brand-secondary {
+  font-size: .52rem; font-weight: 300; color: var(--sw-mid);
+  letter-spacing: .04em; margin-top: 3px;
+}
+.lp-topbar-nav {
+  display: flex; align-items: center; gap: 0;
+  padding: 0 32px; flex: 1;
+}
+.lp-nav-item {
+  font-size: .6rem; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--sw-mid);
+  padding: 0 20px; cursor: default;
+  border-right: 1px solid var(--sw-rule);
+  height: 100%; display: flex; align-items: center;
+}
+.lp-nav-item:first-child { border-left: 1px solid var(--sw-rule); }
+.lp-topbar-right {
+  display: flex; align-items: center;
+  padding: 0 32px; gap: 16px; margin-left: auto;
+  border-left: 1px solid var(--sw-rule);
+}
+.lp-cesgs-logo {
+  display: flex; align-items: center; gap: 10px;
+}
+.lp-cesgs-text {
+  font-size: .58rem; font-weight: 700; letter-spacing: .05em;
+  color: #2A7FC1; line-height: 1.3;
+}
+.lp-cesgs-sub { font-size: .48rem; font-weight: 300; color: var(--sw-light); }
+
+/* ── Left column — asymmetric hero text ── */
+#lp-left {
+  grid-column: 1; grid-row: 1;
+  background: var(--pln-blue);
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 36px 40px;
+  border-right: 3px solid var(--sw-black);
+  position: relative; overflow: hidden;
+}
+/* Subtle grid lines on blue panel */
+#lp-left::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.lp-left-inner { position: relative; z-index: 1; }
+.lp-issue {
+  font-size: .55rem; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--pln-yellow);
+  display: flex; align-items: center; gap: 10px; margin-bottom: 32px;
+}
+.lp-issue::after {
+  content: ''; flex: 1; height: 1px; background: var(--pln-yellow); opacity: .4;
+}
+.lp-main-title {
+  font-size: 3.2rem; font-weight: 900; line-height: .92;
+  color: var(--sw-white); letter-spacing: -.02em;
+  text-transform: uppercase; margin-bottom: 24px;
+}
+.lp-main-title em {
+  font-style: normal; color: var(--pln-yellow);
+  display: block;
+}
+.lp-subtitle-left {
+  font-size: .72rem; font-weight: 300; line-height: 1.8;
+  color: rgba(255,255,255,.65); margin-bottom: 40px;
+}
+/* Stats block */
+.lp-stats-block { display: flex; flex-direction: column; gap: 1px; }
+.lp-stat-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,.15);
+  padding: 10px 0;
+}
+.lp-stat-row:last-child { border-bottom: 1px solid rgba(255,255,255,.15); }
+.lp-stat-n {
+  font-size: 1.6rem; font-weight: 900; font-variant-numeric: tabular-nums;
+  color: var(--pln-yellow); line-height: 1;
+}
+.lp-stat-desc {
+  font-size: .55rem; font-weight: 300; color: rgba(255,255,255,.55);
+  letter-spacing: .06em; text-transform: uppercase; text-align: right;
+  max-width: 120px; line-height: 1.4;
+}
+
+/* Yellow accent bar at bottom of left col */
+.lp-left-foot {
+  position: relative; z-index: 1;
+  border-top: 3px solid var(--pln-yellow);
+  padding-top: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.lp-foot-label {
+  font-size: .52rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,.4);
+}
+.lp-foot-year {
+  font-size: 1rem; font-weight: 900; color: var(--pln-yellow);
+  margin-left: auto;
+}
+
+/* ── Right column — card grid ── */
+#lp-right {
+  grid-column: 2; grid-row: 1;
+  background: var(--sw-bg);
+  display: flex; flex-direction: column;
+  padding: 48px 52px;
+  overflow-y: auto;
+}
+.lp-right-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 36px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--sw-rule);
+}
+.lp-right-kicker {
+  font-size: .55rem; font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--pln-blue);
+  margin-bottom: 8px;
+}
+.lp-right-heading {
+  font-size: 1.6rem; font-weight: 900; color: var(--sw-black);
+  line-height: 1.05; letter-spacing: -.02em; text-transform: uppercase;
+}
+.lp-right-note {
+  font-size: .6rem; font-weight: 300; color: var(--sw-mid);
+  max-width: 200px; text-align: right; line-height: 1.6;
+}
+
+/* Cards — horizontal rule-based layout like Swiss editorial */
+.lp-cards {
+  display: flex; flex-direction: column; gap: 0; flex: 1;
+}
+.lp-card {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: start;
+  gap: 0 28px;
+  padding: 28px 0;
+  border-top: 2px solid var(--sw-rule);
+  cursor: pointer;
+  transition: background .2s;
+  position: relative;
+}
+.lp-card:last-child { border-bottom: 2px solid var(--sw-rule); }
+.lp-card::after {
+  content: '';
+  position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .35s cubic-bezier(.4,0,.2,1);
+}
+.lp-card.theoretical::after { background: var(--pln-blue); }
+.lp-card.practical::after   { background: #006B3F; }
+.lp-card.integrated::after  { background: #8B4F00; }
+.lp-card:hover::after { transform: scaleX(1); }
+.lp-card:hover { background: rgba(0,83,155,.03); }
+
+/* Card number — large swiss numeral */
+.lp-card-num-col {
+  display: flex; flex-direction: column; align-items: center; padding-top: 4px;
+}
+.lp-card-num {
+  font-size: 2.4rem; font-weight: 900; line-height: 1;
+  letter-spacing: -.04em;
+}
+.lp-card.theoretical .lp-card-num { color: var(--pln-blue); }
+.lp-card.practical   .lp-card-num { color: #006B3F; }
+.lp-card.integrated  .lp-card-num { color: #8B4F00; }
+.lp-card-num-rule {
+  width: 2px; flex: 1; margin-top: 6px; min-height: 32px;
+}
+.lp-card.theoretical .lp-card-num-rule { background: var(--pln-blue); opacity: .2; }
+.lp-card.practical   .lp-card-num-rule { background: #006B3F; opacity: .2; }
+.lp-card.integrated  .lp-card-num-rule { background: #8B4F00; opacity: .2; }
+
+/* Card body */
+.lp-card-body {}
+.lp-card-kicker {
+  font-size: .5rem; font-weight: 700; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--sw-light);
+  margin-bottom: 6px;
+}
+.lp-card-title {
+  font-size: 1.22rem; font-weight: 900; color: var(--sw-black);
+  letter-spacing: -.01em; text-transform: uppercase;
+  line-height: 1.05; margin-bottom: 10px;
+}
+.lp-card-desc {
+  font-size: .68rem; font-weight: 300; line-height: 1.75;
+  color: var(--sw-mid); max-width: 440px; margin-bottom: 14px;
+}
+.lp-card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.lp-tag {
+  font-size: .48rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; padding: 3px 8px;
+  border: 1px solid var(--sw-rule); color: var(--sw-mid);
+  background: transparent;
+}
+.lp-card:hover .lp-tag { border-color: currentColor; }
+.lp-card.theoretical:hover .lp-tag { color: var(--pln-blue); border-color: rgba(0,83,155,.25); background: rgba(0,83,155,.04); }
+.lp-card.practical:hover .lp-tag   { color: #006B3F; border-color: rgba(0,107,63,.25); background: rgba(0,107,63,.04); }
+.lp-card.integrated:hover .lp-tag  { color: #8B4F00; border-color: rgba(139,79,0,.25); background: rgba(139,79,0,.04); }
+
+/* Card CTA */
+.lp-card-cta {
+  display: flex; flex-direction: column; align-items: flex-end;
+  justify-content: center; gap: 8px; padding-top: 4px;
+  min-width: 120px;
+}
+.lp-card-btn {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .58rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; padding: 10px 18px;
+  border: 2px solid var(--sw-black); color: var(--sw-black);
+  background: transparent; cursor: pointer;
+  transition: all .2s; white-space: nowrap;
+  font-family: inherit;
+}
+.lp-card:hover .lp-card-btn {
+  background: var(--sw-black); color: var(--sw-white);
+}
+.lp-card.theoretical:hover .lp-card-btn { background: var(--pln-blue); border-color: var(--pln-blue); color: #fff; }
+.lp-card.practical:hover .lp-card-btn   { background: #006B3F; border-color: #006B3F; color: #fff; }
+.lp-card.integrated:hover .lp-card-btn  { background: #8B4F00; border-color: #8B4F00; color: #fff; }
+.lp-arrow { font-size: .8rem; transition: transform .2s; }
+.lp-card:hover .lp-arrow { transform: translateX(4px); }
+.lp-card-status {
+  font-size: .46rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; padding: 3px 8px;
+}
+.lp-card.theoretical .lp-card-status { color: var(--pln-blue); background: rgba(0,83,155,.08); }
+.lp-card.practical   .lp-card-status { color: #9CA3AF; background: rgba(0,0,0,.04); }
+.lp-card.integrated  .lp-card-status { color: #9CA3AF; background: rgba(0,0,0,.04); }
+
+/* ── Footer rule bar ── */
+#lp-footer { display: none; }
+.lp-footer-item { display: none; }
+
+/* Back/Forward nav buttons */
+#navBtnGroup { display: flex; align-items: center; gap: 1px; flex-shrink: 0; }
+.nav-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  border: 1px solid var(--border); background: var(--surface2);
+  color: var(--text2); cursor: pointer; font-size: .8rem;
+  transition: all .12s; font-family: inherit; line-height: 1;
+}
+.nav-btn:first-child { border-radius: 6px 0 0 6px; }
+.nav-btn:last-child  { border-radius: 0 6px 6px 0; border-left: none; }
+.nav-btn:hover { background: var(--accent-s); color: var(--accent); border-color: var(--accent); z-index:1; }
+.nav-btn[disabled] { opacity: .35; cursor: default; pointer-events: none; }
+
+/* Landing fade */
+#landing.fade-out { animation: landFade .5s ease forwards; }
+@keyframes landFade { to { opacity: 0; pointer-events: none; } }
+
+/* ── Bulletin: Potensi Teoretis ── */
+.pt-bulletin {
+  margin-top: 20px;
+  border: 1.5px solid rgba(0,83,155,.18);
+  background: linear-gradient(135deg, rgba(0,83,155,.03) 0%, rgba(0,83,155,.01) 100%);
+  overflow: hidden;
+}
+.pt-bulletin-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px 0;
+}
+.pt-bulletin-rule {
+  flex: 1; height: 1px; background: rgba(0,83,155,.2);
+}
+.pt-bulletin-label {
+  font-size: .46rem; font-weight: 800; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--pln-blue);
+  white-space: nowrap; flex-shrink: 0;
+}
+.pt-bulletin-body {
+  padding: 12px 16px 14px;
+}
+.pt-bulletin-lead {
+  font-size: .72rem; font-weight: 400; line-height: 1.75;
+  color: #1a2a3a;
+  border-left: 3px solid var(--pln-blue);
+  padding-left: 12px;
+  margin-bottom: 12px;
+}
+.pt-bulletin-lead strong {
+  color: var(--pln-blue); font-weight: 800;
+}
+.pt-bulletin-divider {
+  height: 1px; background: rgba(0,83,155,.12);
+  margin: 12px 0;
+}
+.pt-bulletin-insights {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.pt-insight {
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.pt-insight-icon {
+  width: 26px; height: 26px; flex-shrink: 0;
+  background: rgba(0,83,155,.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .78rem; margin-top: 1px;
+  border: 1px solid rgba(0,83,155,.15);
+}
+.pt-insight-content {}
+.pt-insight-title {
+  font-size: .6rem; font-weight: 800;
+  color: #0a1a2a; letter-spacing: .01em;
+  text-transform: uppercase; margin-bottom: 3px;
+}
+.pt-insight-text {
+  font-size: .63rem; font-weight: 300; line-height: 1.7;
+  color: #3a4a5a;
+}
+.pt-bulletin-footer {
+  display: flex; align-items: center; gap: 0;
+  background: rgba(0,83,155,.06);
+  border: 1px solid rgba(0,83,155,.12);
+  padding: 8px 0;
+}
+.pt-footer-stat {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2px; padding: 2px 8px;
+}
+.pt-footer-n {
+  font-size: 1.1rem; font-weight: 900; color: var(--pln-blue);
+  font-variant-numeric: tabular-nums; line-height: 1;
+  letter-spacing: -.02em;
+}
+.pt-footer-desc {
+  font-size: .44rem; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: rgba(0,83,155,.6);
+  text-align: center; line-height: 1.3;
+}
+.pt-footer-sep {
+  width: 1px; height: 36px;
+  background: rgba(0,83,155,.15); flex-shrink: 0;
+}
+
+</style>
+</head>
+<body>
+<!-- ═══════════════════════════════════════
+     LANDING — SWISS DESIGN
+═══════════════════════════════════════ -->
+<div id="landing">
+
+  <!-- TOP RULE BAR -->
+  <div id="lp-topbar">
+    <div class="lp-topbar-brand">
+      <!-- PLN Logo SVG -->
+      <div class="lp-pln-logo">
+        <svg width="44" height="44" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <rect width="80" height="80" rx="4" fill="#FFD700"/>
+          <path d="M40 10 L27 40 H37 L29 70 L56 33 H44 L54 10 Z" fill="#E63B2E"/>
+          <path d="M14 52 Q22 47 30 52 Q38 57 46 52" stroke="#00AEEF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <path d="M14 60 Q22 55 30 60 Q38 65 46 60" stroke="#00AEEF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <path d="M14 68 Q22 63 30 68 Q38 73 46 68" stroke="#00AEEF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="lp-brand-text">
+        <div class="lp-brand-primary">PT PLN (Persero)</div>
+        <div class="lp-brand-secondary">Perusahaan Listrik Negara</div>
+      </div>
+    </div>
+    <nav class="lp-topbar-nav">
+      <div class="lp-nav-item">Atlas</div>
+      <div class="lp-nav-item">Metodologi</div>
+      <div class="lp-nav-item">Data</div>
+      <div class="lp-nav-item">Tentang</div>
+    </nav>
+    <div class="lp-topbar-right">
+      <div class="lp-cesgs-logo">
+        <svg width="32" height="32" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="30,3 57,18 57,43 30,57 3,43 3,18" fill="none" stroke="#2A7FC1" stroke-width="3.5"/>
+          <polygon points="30,13 47,23 47,38 30,47 13,38 13,23" fill="none" stroke="#2A7FC1" stroke-width="2"/>
+          <circle cx="30" cy="30" r="5.5" fill="#2A7FC1"/>
+        </svg>
+        <div>
+          <div class="lp-cesgs-text">CESGS</div>
+          <div class="lp-cesgs-sub">UNIVERSITAS AIRLANGGA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEFT COLUMN — Hero text on PLN blue -->
+  <div id="lp-left">
+    <div class="lp-left-inner">
+      <div class="lp-issue">Indonesia · 2025</div>
+      <h1 class="lp-main-title">
+        PLTS<br>Terapung<br><em>Indonesia</em>
+      </h1>
+      <p class="lp-subtitle-left">Platform analitik geospasial untuk pemetaan potensi Pembangkit Listrik Tenaga Surya Terapung di 108 lokasi waduk strategis seluruh Indonesia.</p>
+
+      <div class="lp-stats-block">
+        <div class="lp-stat-row">
+          <div class="lp-stat-n">108</div>
+          <div class="lp-stat-desc">Lokasi Waduk Potensial</div>
+        </div>
+        <div class="lp-stat-row">
+          <div class="lp-stat-n">~13</div>
+          <div class="lp-stat-desc">GWp Kapasitas Total</div>
+        </div>
+        <div class="lp-stat-row">
+          <div class="lp-stat-n">4</div>
+          <div class="lp-stat-desc">Kawasan Regional</div>
+        </div>
+        <div class="lp-stat-row">
+          <div class="lp-stat-n">ESG</div>
+          <div class="lp-stat-desc">Kerangka Penilaian CESGS</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lp-left-foot">
+      <div class="lp-foot-label">Sumber: RUPTL 2025 · ERA 5 · BNPB · BIG</div>
+      <div class="lp-foot-year">2026</div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN — Map selection cards -->
+  <div id="lp-right">
+    <div class="lp-right-header">
+      <div>
+        <div class="lp-right-kicker">Pilih Mode Analisis</div>
+        <div class="lp-right-heading">Tiga<br>Perspektif</div>
+      </div>
+      <div class="lp-right-note">Setiap peta menyajikan dimensi analisis yang berbeda. Pilih sesuai kebutuhan.</div>
+    </div>
+
+    <div class="lp-cards">
+
+      <!-- Card 1 -->
+      <div class="lp-card theoretical" onclick="enterMap('theoretical')">
+        <div class="lp-card-num-col">
+          <div class="lp-card-num">01</div>
+          <div class="lp-card-num-rule"></div>
+        </div>
+        <div class="lp-card-body">
+          <div class="lp-card-kicker">Theoretical Potential</div>
+          <div class="lp-card-title">Potensi Teoretis</div>
+          <div class="lp-card-desc">Analisis potensi energi surya berdasarkan data radiasi GHI, kapasitas instalasi, dan skor prioritas serta resiko intermitensi dari data teknis.</div>
+          <div class="lp-card-tags">
+            <span class="lp-tag">Radiasi GHI</span>
+            <span class="lp-tag">PVOUT</span>
+            <span class="lp-tag">Skor Potensi</span>
+            <span class="lp-tag">Resiko Intermitensi</span>
+          </div>
+
+          <!-- ── BULETIN POTENSI TEORETIS ── -->
+          <div class="pt-bulletin" onclick="event.stopPropagation()">
+            <div class="pt-bulletin-header">
+              <div class="pt-bulletin-rule"></div>
+              <span class="pt-bulletin-label">Sorotan Analisis</span>
+              <div class="pt-bulletin-rule"></div>
+            </div>
+            <div class="pt-bulletin-body">
+              <div class="pt-bulletin-lead">
+                Indonesia menyimpan cadangan matahari yang belum sepenuhnya dimanfaatkan. Dengan 108 waduk strategis yang tersebar dari Sumatera hingga Sulawesi, potensi energi surya terapung nasional mencapai <strong>~13 GWp</strong> — setara dengan kapasitas puluhan pembangkit skala besar.
+              </div>
+              <div class="pt-bulletin-divider"></div>
+              <div class="pt-bulletin-insights">
+                <div class="pt-insight">
+                  <div class="pt-insight-icon">☀</div>
+                  <div class="pt-insight-content">
+                    <div class="pt-insight-title">Radiasi Optimal di Khatulistiwa</div>
+                    <div class="pt-insight-text">Intensitas cahaya matahari (GHI) di Indonesia rata-rata 150–230 W/m² sepanjang tahun — salah satu tertinggi di kawasan Asia Tenggara. Waduk-waduk di Jawa dan Kalimantan mencatat nilai PVOUT di atas 1.400 kWh/kWp per tahun, menjadikannya kandidat prioritas investasi.</div>
+                  </div>
+                </div>
+                <div class="pt-insight">
+                  <div class="pt-insight-icon">⚡</div>
+                  <div class="pt-insight-content">
+                    <div class="pt-insight-title">Kapasitas yang Terukur, Risiko yang Terkelola</div>
+                    <div class="pt-insight-text">Setiap lokasi dinilai berdasarkan skor prioritas multivariabel yang mempertimbangkan kapasitas instalasi, fluktuasi cuaca musiman, dan indeks intermitensi. Pendekatan ini membantu perusahaan mengalokasikan anggaran secara presisi dan meminimalkan risiko operasional jangka panjang.</div>
+                  </div>
+                </div>
+                <div class="pt-insight">
+                  <div class="pt-insight-icon">📊</div>
+                  <div class="pt-insight-content">
+                    <div class="pt-insight-title">Basis Data Ilmiah untuk Keputusan Strategis</div>
+                    <div class="pt-insight-text">Analisis ini mengintegrasikan data ERA5 (ECMWF), RUPTL 2025, serta citra spasial BIG sebagai fondasi pengambilan keputusan. Hasilnya bukan sekadar peta — melainkan instrumen perencanaan yang dapat langsung digunakan dalam proses studi kelayakan dan penyusunan proposal investasi.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="pt-bulletin-divider"></div>
+              <div class="pt-bulletin-footer">
+                <div class="pt-footer-stat">
+                  <span class="pt-footer-n">4</span>
+                  <span class="pt-footer-desc">Kawasan Analisis Regional</span>
+                </div>
+                <div class="pt-footer-sep"></div>
+                <div class="pt-footer-stat">
+                  <span class="pt-footer-n">13+</span>
+                  <span class="pt-footer-desc">GWp Potensi Teridentifikasi</span>
+                </div>
+                <div class="pt-footer-sep"></div>
+                <div class="pt-footer-stat">
+                  <span class="pt-footer-n">ERA5</span>
+                  <span class="pt-footer-desc">Sumber Data Iklim Global</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- ── END BULETIN ── -->
+
+        </div>
+        <div class="lp-card-cta">
+          <div class="lp-card-status">Tersedia</div>
+          <button class="lp-card-btn">Buka <span class="lp-arrow">→</span></button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="lp-card practical" onclick="enterMap('practical')">
+        <div class="lp-card-num-col">
+          <div class="lp-card-num">02</div>
+          <div class="lp-card-num-rule"></div>
+        </div>
+        <div class="lp-card-body">
+          <div class="lp-card-kicker">Practical ESG Assessment</div>
+          <div class="lp-card-title">Potensi Praktis</div>
+          <div class="lp-card-desc">Penilaian kelayakan dari sisi Environment, Social, dan Governance mengikuti kerangka World Class ESG CESGS-UNAIR untuk pengembangan berkelanjutan.</div>
+          <div class="lp-card-tags">
+            <span class="lp-tag">Environment</span>
+            <span class="lp-tag">Social</span>
+            <span class="lp-tag">Governance</span>
+            <span class="lp-tag">ESG Score</span>
+          </div>
+        </div>
+        <div class="lp-card-cta">
+          <div class="lp-card-status">Segera</div>
+          <button class="lp-card-btn">Buka <span class="lp-arrow">→</span></button>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="lp-card integrated" onclick="enterMap('integrated')">
+        <div class="lp-card-num-col">
+          <div class="lp-card-num">03</div>
+          <div class="lp-card-num-rule"></div>
+        </div>
+        <div class="lp-card-body">
+          <div class="lp-card-kicker">Integrated Priority Map</div>
+          <div class="lp-card-title">Prioritas PLTST</div>
+          <div class="lp-card-desc">Integrasi skor Teoretis dan Praktis menjadi peringkat prioritas tunggal — panduan strategis untuk pengembangan PLTS Terapung skala nasional.</div>
+          <div class="lp-card-tags">
+            <span class="lp-tag">Skor Gabungan</span>
+            <span class="lp-tag">Prioritas Nasional</span>
+            <span class="lp-tag">Ranking Final</span>
+          </div>
+        </div>
+        <div class="lp-card-cta">
+          <div class="lp-card-status">Segera</div>
+          <button class="lp-card-btn">Buka <span class="lp-arrow">→</span></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER RULE -->
+  <div id="lp-footer">
+    <div class="lp-footer-item">© 2025 CESGS UNAIR × PT PLN (Persero)</div>
+    <div class="lp-footer-item">Data: NASA POWER · BMKG · BIG</div>
+    <div class="lp-footer-item">Foto Referensi: PLTS Terapung Cirata, Jawa Barat</div>
+    <div class="lp-footer-item">v9.0 — Indonesia Floating Solar Atlas</div>
+  </div>
+
+</div>
+
+<div id="app">
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="brand-wrap">
+    <div class="brand-icon">☀</div>
+    <div>
+      <div class="brand-text">PLTS Terapung Indonesia</div>
+      <div class="brand-sub">108 Lokasi · 4 Kawasan</div>
+    </div>
+  </div>
+  <div class="tb-div"></div>
+  <div id="navBtnGroup">
+    <button class="nav-btn" id="btnBack" onclick="navBack()" title="Kembali ke Halaman Utama" disabled>&#8592;</button>
+    <button class="nav-btn" id="btnFwd"  onclick="navFwd()"  title="Maju" disabled>&#8594;</button>
+  </div>
+  <div id="mapTypeBadge" class="theoretical">⚡ Potensi Teoretis</div>
+  <div class="tb-div"></div>
+
+  <span class="tb-lbl">Warna:</span>
+  <div class="pill-group">
+    <button class="pill active" data-color="potensi">Potensi</button>
+    <button class="pill" data-color="pvout">PVOUT</button>
+    <button class="pill" data-color="resiko">Resiko</button>
+    <button class="pill" data-color="pulau">Pulau</button>
+    <button class="pill" data-color="ranking">Ranking</button>
+  </div>
+  <div class="tb-div"></div>
+
+  <span class="tb-lbl">Mode:</span>
+  <div class="pill-group">
+    <button class="pill active" data-mode="markers">● Markers</button>
+    <button class="pill" data-mode="heat">▣ Heatmap</button>
+  </div>
+  <div class="tb-div"></div>
+
+  <button class="icon-btn" id="radBtn" onclick="toggleRadiation()" title="Overlay Radiasi GHI">☀ Radiasi</button>
+  <div class="tb-div"></div>
+
+  <button class="export-btn" onclick="openExportModal()">⬇ Export PNG</button>
+</div>
+
+<!-- EXPORT MODAL -->
+<div id="exportModal">
+  <div class="em-box">
+    <div class="em-title">📥 Export ke PNG</div>
+    <div class="em-sub">Pilih konten yang ingin diekspor (semua nilai MWh)</div>
+    <div class="em-options">
+      <div class="em-opt selected" data-export="map" onclick="selExp(this)"><div class="em-opt-icon">🗺</div><div><div class="eo-title">Peta + Legenda + Statistik</div><div class="eo-desc">Tampilan peta saat ini</div></div></div>
+      <div class="em-opt" data-export="table" onclick="selExp(this)"><div class="em-opt-icon">📊</div><div><div class="eo-title">Tabel Data Lengkap (MWh)</div><div class="eo-desc">Semua 108 lokasi, semua kolom</div></div></div>
+      <div class="em-opt" data-export="summary" onclick="selExp(this)"><div class="em-opt-icon">📈</div><div><div class="eo-title">Ringkasan per Kawasan</div><div class="eo-desc">Statistik agregat 4 kawasan</div></div></div>
+    </div>
+    <div class="em-progress" id="emProgress"><div class="ep-label" id="epLabel">Memproses...</div><div class="ep-track"><div class="ep-fill" id="epFill"></div></div></div>
+    <div class="em-actions">
+      <button class="em-cancel" onclick="closeExpModal()">Batal</button>
+      <button class="em-confirm" id="emConfirm" onclick="doExport()">⬇ Download PNG</button>
+    </div>
+  </div>
+</div>
+
+<div id="csvNotice"></div>
+
+<div id="main">
+  <!-- SIDEBAR TOGGLE TAB -->
+  <div id="sidebarToggle" onclick="toggleSidebar()" title="Sembunyikan sidebar">▲ SIDEBAR</div>
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <!-- Map type note -->
+    <div id="esgModeNote" style="display:none;padding:6px 11px;background:linear-gradient(135deg,rgba(5,150,105,.08),rgba(5,150,105,.04));border-bottom:1px solid rgba(5,150,105,.2);font-size:.58rem;color:#059669;font-weight:600;line-height:1.5"></div>
+    <!-- Island summary (overview only, no tabs) -->
+    <div id="islandSummaryWrap"></div>
+
+    <div class="s-section">
+      <div class="s-label">Filter Wilayah</div>
+      <div class="filter-chips" id="islandFilter">
+        <button class="chip active" data-island="all"><span class="if-dot" style="background:#6b7280"></span>Semua</button>
+        <button class="chip" data-island="Sumatera"><span class="if-dot" style="background:var(--c-sum)"></span>Sumatera</button>
+        <button class="chip" data-island="Jawa & Kep. Sunda Kecil"><span class="if-dot" style="background:var(--c-jaw)"></span>Jawa+SK</button>
+        <button class="chip" data-island="Kalimantan"><span class="if-dot" style="background:var(--c-kal)"></span>Kalimantan</button>
+        <button class="chip" data-island="Sulawesi & Maluku"><span class="if-dot" style="background:var(--c-sul)"></span>Sul+Mal</button>
+      </div>
+    </div>
+
+    <div class="s-section">
+      <div class="s-label">Filter Potensi</div>
+      <div class="filter-chips" id="potFilter">
+        <button class="chip active" data-pot="all">Semua</button>
+        <button class="chip" data-pot="Sangat Potensial">Sangat</button>
+        <button class="chip" data-pot="Potensial">Potensial</button>
+        <button class="chip" data-pot="Cukup Potensial">Cukup</button>
+        <button class="chip" data-pot="Kurang Potensial">Kurang</button>
+      </div>
+    </div>
+    <div class="s-section">
+      <div class="s-label">Filter Resiko</div>
+      <div class="filter-chips" id="riskFilter">
+        <button class="chip active" data-risk="all">Semua</button>
+        <button class="chip" data-risk="Rendah">Rendah</button>
+        <button class="chip" data-risk="Sedang">Sedang</button>
+        <button class="chip" data-risk="Tinggi">Tinggi</button>
+        <button class="chip" data-risk="Sangat Tinggi">Sgt Tinggi</button>
+      </div>
+    </div>
+
+    <div id="detailPanel">
+      <div class="dp-head">
+        <div class="dp-name" id="dp-name">—</div>
+        <div class="dp-meta" id="dp-meta">—</div>
+        <div class="dp-badges" id="dp-badges"></div>
+      </div>
+      <div class="dp-metrics" id="dp-metrics"></div>
+      <div class="dp-scores" id="dp-scores"></div>
+    </div>
+
+    <div class="s-section" style="padding-bottom:3px">
+      <div class="s-label">Ranking Skor Potensial (<span id="rankCount">108</span> lokasi)</div>
+    </div>
+    <div id="rankList"></div>
+  </div>
+
+  <!-- MAP -->
+  <div id="mapWrap">
+    <div id="map"></div>
+
+    <!-- Floating search box -->
+    <div id="mapSearch">
+      <div class="ms-inner">
+        <div class="ms-icon">⌕</div>
+        <input type="text" id="sideSearch" placeholder="Cari lokasi..." autocomplete="off">
+        <button class="ms-clear" id="msClear" onclick="clearSearch()" title="Hapus pencarian">✕</button>
+      </div>
+      <div id="searchSuggest"></div>
+    </div>
+
+    <div class="map-card" id="statsCard">
+      <div class="sc-header">Statistik Tampil</div>
+      <div class="sc-row"><span class="sc-key">Tampil</span><span class="sc-val" id="sc-n" style="color:var(--accent)">—</span></div>
+      <div class="sc-row"><span class="sc-key">Kapasitas</span><span class="sc-val" id="sc-kap">—</span></div>
+      <div class="sc-row"><span class="sc-key">Prod./thn (MWh)</span><span class="sc-val" id="sc-prod">—</span></div>
+      <div class="sc-row"><span class="sc-key">Avg PVOUT (kWh/kWp)</span><span class="sc-val" id="sc-pvout">—</span></div>
+      <div class="sc-row"><span class="sc-key">Avg Skor</span><span class="sc-val" id="sc-skor">—</span></div>
+    </div>
+
+    <div class="map-card" id="legendCard">
+      <div class="lc-header"><span class="lc-title" id="lc-title">Kategori Potensi</span></div>
+      <div class="lc-body" id="lc-items"></div>
+    </div>
+
+    <!-- Radiation legend -->
+    <div class="map-card" id="radLegend">
+      <div class="rad-header">
+        <span class="rad-title-text">☀ Radiasi GHI (W/m²)</span>
+      </div>
+      <div class="rad-body">
+        <div class="rad-contour-swatch">
+          <div class="rad-swatch-block" style="background:#1a237e"></div>
+          <div class="rad-swatch-block" style="background:#1565c0"></div>
+          <div class="rad-swatch-block" style="background:#29b6f6"></div>
+          <div class="rad-swatch-block" style="background:#80cbc4"></div>
+          <div class="rad-swatch-block" style="background:#a5d6a7"></div>
+          <div class="rad-swatch-block" style="background:#fff176"></div>
+          <div class="rad-swatch-block" style="background:#f9a825"></div>
+          <div class="rad-swatch-block" style="background:#e65100"></div>
+          <div class="rad-swatch-block" style="background:#b71c1c"></div>
+        </div>
+        <div class="rad-swatch-row"><span>110</span><span>140</span><span>170</span><span>200</span><span>230+</span></div>
+        <!-- Month slider -->
+        <div class="rad-timeline">
+          <div class="rad-tl-label">Periode: <strong id="radMonthLabel">Tahunan</strong></div>
+          <input type="range" id="radSlider" min="0" max="12" value="0" step="1"
+                 oninput="onRadSlider(this.value)"
+                 style="width:100%;margin:5px 0 2px;accent-color:var(--accent);">
+          <div class="rad-tl-months">
+            <span>T</span><span>J</span><span>F</span><span>M</span><span>A</span><span>M</span><span>J</span>
+            <span>J</span><span>A</span><span>S</span><span>O</span><span>N</span><span>D</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div id="mapTooltip">
+      <div class="mt-name" id="mt-name">—</div>
+      <div class="mt-sub" id="mt-sub">—</div>
+      <div class="mt-grid">
+        <div class="mt-cell"><span class="mt-val" id="mt-kap">—</span><span class="mt-lbl">Kapasitas (MWp)</span></div>
+        <div class="mt-cell"><span class="mt-val" id="mt-pvout">—</span><span class="mt-lbl">PVOUT (kWh/kWp)</span></div>
+        <div class="mt-div"></div>
+        <div class="mt-cell"><span class="mt-val" id="mt-skor">—</span><span class="mt-lbl">Skor Potensi</span></div>
+        <div class="mt-cell"><span class="mt-val" id="mt-resiko">—</span><span class="mt-lbl">Resiko</span></div>
+        <div class="mt-div"></div>
+        <div class="mt-cell" style="grid-column:1/-1"><span class="mt-val" id="mt-tahunan">—</span><span class="mt-lbl">Produksi Tahunan (MWh)</span></div>
+      </div>
+    </div>
+
+    <button id="toggleBtn" onclick="toggleBottom()">▲ Analitik Charts</button>
+    <div id="bottomBar">
+      <div class="bc-panel"><div class="bc-title">Distribusi Kategori Potensi</div><div class="bc-chart-wrap"><canvas id="bc1"></canvas></div></div>
+      <div class="bc-panel"><div class="bc-title">Produksi Tahunan per Pulau (MWh)</div><div class="bc-chart-wrap"><canvas id="bc2"></canvas></div></div>
+      <div class="bc-panel"><div class="bc-title">Top 8 Skor Potensial</div><div class="bc-chart-wrap"><canvas id="bc3"></canvas></div></div>
+      <div class="bc-panel"><div class="bc-title">Skor Potensi vs Skor Resiko</div><div class="bc-chart-wrap"><canvas id="bc4"></canvas></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+/* ═══ DATA ═══ */
+let DATA = [{"kode": "PLTST-1", "nama": "Jatiluhur/Djuanda", "provinsi": "Jawa Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.526886, "lon": 107.310748, "harian": 6628.560666, "bulanan": 201784.4343, "tahunan": 2421413.211, "kapasitas": 1626.0, "luas": 8130.0, "pvout": 1489.184017, "skorPotensial": 0.45, "kategoriPotensi": "Cukup Potensial", "ranking": 46, "skorResiko": 0.43, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-2", "nama": "Karangkates/Sutami", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.159799, "lon": 112.446994, "harian": 1204.459309, "bulanan": 36665.7488, "tahunan": 439988.9856, "kapasitas": 300.0, "luas": 1500.0, "pvout": 1466.629952, "skorPotensial": 0.36, "kategoriPotensi": "Cukup Potensial", "ranking": 66, "skorResiko": 0.54, "kategoriResiko": "Sedang"}, {"kode": "PLTST-3", "nama": "Kedung Ombo", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.253714, "lon": 110.836375, "harian": 3776.516407, "bulanan": 114963.4536, "tahunan": 1379561.443, "kapasitas": 920.0, "luas": 4600.0, "pvout": 1499.523308, "skorPotensial": 0.5, "kategoriPotensi": "Potensial", "ranking": 38, "skorResiko": 0.49, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-4", "nama": "Tlogo Ngebel", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.796114, "lon": 111.63179, "harian": 112.777683, "bulanan": 3433.140633, "tahunan": 41197.6876, "kapasitas": 28.6, "luas": 143.0, "pvout": 1440.478587, "skorPotensial": 0.35, "kategoriPotensi": "Cukup Potensial", "ranking": 71, "skorResiko": 0.5, "kategoriResiko": "Sedang"}, {"kode": "PLTST-5", "nama": "Selorejo", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.865278, "lon": 112.361111, "harian": 315.8833701, "bulanan": 9616.016258, "tahunan": 115392.1951, "kapasitas": 80.0, "luas": 400.0, "pvout": 1442.402439, "skorPotensial": 0.34, "kategoriPotensi": "Cukup Potensial", "ranking": 73, "skorResiko": 0.47, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-6", "nama": "Sempor", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.566503, "lon": 109.485728, "harian": 183.4446645, "bulanan": 5584.361328, "tahunan": 67012.33593, "kapasitas": 49.4, "luas": 247.0, "pvout": 1356.525019, "skorPotensial": 0.22, "kategoriPotensi": "Kurang Potensial", "ranking": 98, "skorResiko": 0.47, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-7", "nama": "Bening/Widas", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.54537, "lon": 111.79971, "harian": 469.7451816, "bulanan": 14299.82624, "tahunan": 171597.9148, "kapasitas": 114.0, "luas": 570.0, "pvout": 1505.244867, "skorPotensial": 0.48, "kategoriPotensi": "Cukup Potensial", "ranking": 41, "skorResiko": 0.52, "kategoriResiko": "Sedang"}, {"kode": "PLTST-8", "nama": "Wadas Lintang", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.607597, "lon": 109.781083, "harian": 950.2949901, "bulanan": 28928.56332, "tahunan": 347142.7599, "kapasitas": 256.0, "luas": 1280.0, "pvout": 1356.026406, "skorPotensial": 0.21, "kategoriPotensi": "Kurang Potensial", "ranking": 100, "skorResiko": 0.42, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-9", "nama": "Sengguruh", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.183226, "lon": 112.552216, "harian": 190.3045708, "bulanan": 5793.188311, "tahunan": 69518.25973, "kapasitas": 47.4, "luas": 237.0, "pvout": 1466.629952, "skorPotensial": 0.36, "kategoriPotensi": "Cukup Potensial", "ranking": 68, "skorResiko": 0.54, "kategoriResiko": "Sedang"}, {"kode": "PLTST-10", "nama": "MamaK", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.697699, "lon": 117.578792, "harian": 227.9711761, "bulanan": 6939.822554, "tahunan": 83277.87065, "kapasitas": 54.0, "luas": 270.0, "pvout": 1542.18279, "skorPotensial": 0.48, "kategoriPotensi": "Cukup Potensial", "ranking": 42, "skorResiko": 0.6, "kategoriResiko": "Sedang"}, {"kode": "PLTST-11", "nama": "Merancang", "provinsi": "Kalimantan Barat", "pulau": "Kalimantan", "lat": -2.169331, "lon": 102.018944, "harian": 434.5114662, "bulanan": 13227.25322, "tahunan": 158727.0386, "kapasitas": 117.4, "luas": 587.0, "pvout": 1352.019068, "skorPotensial": 0.26, "kategoriPotensi": "Kurang Potensial", "ranking": 94, "skorResiko": 0.43, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-12", "nama": "Wonorejo", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.015859, "lon": 111.800219, "harian": 296.9391552, "bulanan": 9039.322784, "tahunan": 108471.8734, "kapasitas": 77.0, "luas": 385.0, "pvout": 1408.725629, "skorPotensial": 0.27, "kategoriPotensi": "Kurang Potensial", "ranking": 85, "skorResiko": 0.48, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-13", "nama": "Batu Bulan", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.614484, "lon": 117.47067, "harian": 552.6623471, "bulanan": 16823.96295, "tahunan": 201887.5554, "kapasitas": 126.6, "luas": 633.0, "pvout": 1594.688431, "skorPotensial": 0.56, "kategoriPotensi": "Potensial", "ranking": 31, "skorResiko": 0.71, "kategoriResiko": "Sedang"}, {"kode": "PLTST-14", "nama": "Batu Tegi", "provinsi": "Lampung", "pulau": "Sumatera", "lat": -5.254539, "lon": 104.780956, "harian": 1591.553118, "bulanan": 48449.5295, "tahunan": 581394.354, "kapasitas": 420.0, "luas": 2100.0, "pvout": 1384.272271, "skorPotensial": 0.26, "kategoriPotensi": "Kurang Potensial", "ranking": 92, "skorResiko": 0.48, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-15", "nama": "Pandanduri", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.684755, "lon": 116.434357, "harian": 306.5479541, "bulanan": 9331.830636, "tahunan": 111981.9676, "kapasitas": 65.6, "luas": 328.0, "pvout": 1707.04219, "skorPotensial": 0.76, "kategoriPotensi": "Sangat Potensial", "ranking": 7, "skorResiko": 0.8, "kategoriResiko": "Rendah"}, {"kode": "PLTST-16", "nama": "Jatigede", "provinsi": "Jawa Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.856113, "lon": 108.09492, "harian": 3280.258761, "bulanan": 99856.54379, "tahunan": 1198278.525, "kapasitas": 824.4, "luas": 4122.0, "pvout": 1453.515921, "skorPotensial": 0.39, "kategoriPotensi": "Cukup Potensial", "ranking": 59, "skorResiko": 0.42, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-17", "nama": "Raknamo", "provinsi": "Nusa Tenggara Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -10.118817, "lon": 123.935902, "harian": 133.7958318, "bulanan": 4072.968113, "tahunan": 48875.61736, "kapasitas": 29.4, "luas": 147.0, "pvout": 1662.435964, "skorPotensial": 0.66, "kategoriPotensi": "Potensial", "ranking": 16, "skorResiko": 0.75, "kategoriResiko": "Rendah"}, {"kode": "PLTST-18", "nama": "Leuwikeris", "provinsi": "Jawa Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.360974, "lon": 108.396146, "harian": 177.2616445, "bulanan": 5396.139896, "tahunan": 64753.67875, "kapasitas": 48.6, "luas": 243.0, "pvout": 1332.380221, "skorPotensial": 0.17, "kategoriPotensi": "Kurang Potensial", "ranking": 105, "skorResiko": 0.46, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-19", "nama": "Tigadihaji", "provinsi": "Sumatera Selatan", "pulau": "Sumatera", "lat": -4.629415, "lon": 103.876438, "harian": 363.3729322, "bulanan": 11061.67768, "tahunan": 132740.1321, "kapasitas": 93.6, "luas": 468.0, "pvout": 1418.163805, "skorPotensial": 0.31, "kategoriPotensi": "Kurang Potensial", "ranking": 77, "skorResiko": 0.43, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-20", "nama": "Prijetan", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.223056, "lon": 112.213056, "harian": 145.9418901, "bulanan": 4442.71437, "tahunan": 53312.57245, "kapasitas": 34.0, "luas": 170.0, "pvout": 1568.016837, "skorPotensial": 0.64, "kategoriPotensi": "Potensial", "ranking": 18, "skorResiko": 0.56, "kategoriResiko": "Sedang"}, {"kode": "PLTST-21", "nama": "Situ Kamojing", "provinsi": "Jawa Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.43379, "lon": 107.45, "harian": 516.3728712, "bulanan": 15719.25082, "tahunan": 188631.0098, "kapasitas": 125.6, "luas": 628.0, "pvout": 1501.83925, "skorPotensial": 0.48, "kategoriPotensi": "Cukup Potensial", "ranking": 39, "skorResiko": 0.43, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-22", "nama": "Cipancuh", "provinsi": "Jawa Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.494036, "lon": 107.955196, "harian": 297.1324683, "bulanan": 9045.207555, "tahunan": 108542.4907, "kapasitas": 70.8, "luas": 354.0, "pvout": 1533.086026, "skorPotensial": 0.55, "kategoriPotensi": "Potensial", "ranking": 32, "skorResiko": 0.45, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-23", "nama": "Pacal", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.36642, "lon": 111.870273, "harian": 445.5970125, "bulanan": 13564.71572, "tahunan": 162776.5887, "kapasitas": 104.0, "luas": 520.0, "pvout": 1565.159506, "skorPotensial": 0.6, "kategoriPotensi": "Potensial", "ranking": 28, "skorResiko": 0.53, "kategoriResiko": "Sedang"}, {"kode": "PLTST-24", "nama": "Penjalin", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.328333, "lon": 109.049444, "harian": 90.93597768, "bulanan": 2768.242721, "tahunan": 33218.91265, "kapasitas": 24.0, "luas": 120.0, "pvout": 1384.12136, "skorPotensial": 0.26, "kategoriPotensi": "Kurang Potensial", "ranking": 88, "skorResiko": 0.47, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-25", "nama": "Jombor", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.754192, "lon": 110.63338, "harian": 133.0214815, "bulanan": 4049.395598, "tahunan": 48592.74717, "kapasitas": 33.4, "luas": 167.0, "pvout": 1454.87267, "skorPotensial": 0.35, "kategoriPotensi": "Cukup Potensial", "ranking": 72, "skorResiko": 0.54, "kategoriResiko": "Sedang"}, {"kode": "PLTST-26", "nama": "Kedung Bendo", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.934071, "lon": 111.58867, "harian": 270.4567316, "bulanan": 8233.15367, "tahunan": 98797.84404, "kapasitas": 70.6, "luas": 353.0, "pvout": 1399.40289, "skorPotensial": 0.26, "kategoriPotensi": "Kurang Potensial", "ranking": 90, "skorResiko": 0.48, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-27", "nama": "Gembong", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.695881, "lon": 110.957569, "harian": 97.99921191, "bulanan": 2983.259343, "tahunan": 35799.11211, "kapasitas": 22.0, "luas": 110.0, "pvout": 1627.232369, "skorPotensial": 0.67, "kategoriPotensi": "Sangat Potensial", "ranking": 15, "skorResiko": 0.54, "kategoriResiko": "Sedang"}, {"kode": "PLTST-28", "nama": "Cacaban", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.00649, "lon": 109.18624, "harian": 615.2292793, "bulanan": 18728.60464, "tahunan": 224743.2557, "kapasitas": 152.6, "luas": 763.0, "pvout": 1472.760522, "skorPotensial": 0.44, "kategoriPotensi": "Cukup Potensial", "ranking": 50, "skorResiko": 0.51, "kategoriResiko": "Sedang"}, {"kode": "PLTST-29", "nama": "Darma", "provinsi": "Jawa Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.003451, "lon": 108.409835, "harian": 301.5157887, "bulanan": 9178.643134, "tahunan": 110143.7176, "kapasitas": 78.4, "luas": 392.0, "pvout": 1404.894357, "skorPotensial": 0.3, "kategoriPotensi": "Kurang Potensial", "ranking": 79, "skorResiko": 0.48, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-30", "nama": "Lahor", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.14695, "lon": 112.455145, "harian": 208.7729469, "bulanan": 6355.396459, "tahunan": 76264.75751, "kapasitas": 52.0, "luas": 260.0, "pvout": 1466.629952, "skorPotensial": 0.36, "kategoriPotensi": "Cukup Potensial", "ranking": 67, "skorResiko": 0.54, "kategoriResiko": "Sedang"}, {"kode": "PLTST-31", "nama": "Klampis", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.099722, "lon": 113.220833, "harian": 224.7303308, "bulanan": 6841.165819, "tahunan": 82093.98983, "kapasitas": 48.8, "luas": 244.0, "pvout": 1682.25389, "skorPotensial": 0.81, "kategoriPotensi": "Sangat Potensial", "ranking": 2, "skorResiko": 0.67, "kategoriResiko": "Sedang"}, {"kode": "PLTST-32", "nama": "Way Jepara", "provinsi": "Lampung", "pulau": "Sumatera", "lat": -5.211921, "lon": 105.672665, "harian": 252.1109292, "bulanan": 7674.676869, "tahunan": 92096.12243, "kapasitas": 62.0, "luas": 310.0, "pvout": 1485.42133, "skorPotensial": 0.46, "kategoriPotensi": "Cukup Potensial", "ranking": 44, "skorResiko": 0.49, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-33", "nama": "Samboja", "provinsi": "Kalimantan Timur", "pulau": "Kalimantan", "lat": -1.046559, "lon": 117.048542, "harian": 158.3909901, "bulanan": 4821.685724, "tahunan": 57860.22869, "kapasitas": 40.4, "luas": 202.0, "pvout": 1432.183878, "skorPotensial": 0.31, "kategoriPotensi": "Kurang Potensial", "ranking": 76, "skorResiko": 0.45, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-34", "nama": "Lempake", "provinsi": "Kalimantan Timur", "pulau": "Kalimantan", "lat": -0.407968, "lon": 117.192996, "harian": 106.4885515, "bulanan": 3241.688987, "tahunan": 38900.26785, "kapasitas": 27.0, "luas": 135.0, "pvout": 1440.750661, "skorPotensial": 0.37, "kategoriPotensi": "Cukup Potensial", "ranking": 64, "skorResiko": 0.45, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-35", "nama": "Parangjoho", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.951226, "lon": 110.817267, "harian": 160.7287773, "bulanan": 4892.851863, "tahunan": 58714.22236, "kapasitas": 40.0, "luas": 200.0, "pvout": 1467.855559, "skorPotensial": 0.37, "kategoriPotensi": "Cukup Potensial", "ranking": 63, "skorResiko": 0.58, "kategoriResiko": "Sedang"}, {"kode": "PLTST-36", "nama": "Batujai", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.729722, "lon": 116.270556, "harian": 93.13640538, "bulanan": 2835.227407, "tahunan": 34022.72889, "kapasitas": 20.2, "luas": 101.0, "pvout": 1684.293509, "skorPotensial": 0.72, "kategoriPotensi": "Sangat Potensial", "ranking": 12, "skorResiko": 0.78, "kategoriResiko": "Rendah"}, {"kode": "PLTST-37", "nama": "Bringe", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.723195, "lon": 116.422755, "harian": 158.8815616, "bulanan": 4836.619537, "tahunan": 58039.43445, "kapasitas": 34.0, "luas": 170.0, "pvout": 1707.04219, "skorPotensial": 0.76, "kategoriPotensi": "Sangat Potensial", "ranking": 9, "skorResiko": 0.8, "kategoriResiko": "Rendah"}, {"kode": "PLTST-38", "nama": "Wonogiri/Gadjah Mungkur", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.897552, "lon": 110.897016, "harian": 4948.243628, "bulanan": 150632.7831, "tahunan": 1807593.397, "kapasitas": 1277.2, "luas": 6386.0, "pvout": 1415.278263, "skorPotensial": 0.28, "kategoriPotensi": "Kurang Potensial", "ranking": 83, "skorResiko": 0.5, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-39", "nama": "Way Rarem", "provinsi": "Lampung", "pulau": "Sumatera", "lat": -4.925719, "lon": 104.785113, "harian": 320.6143281, "bulanan": 9760.034504, "tahunan": 117120.414, "kapasitas": 83.8, "luas": 419.0, "pvout": 1397.618306, "skorPotensial": 0.3, "kategoriPotensi": "Kurang Potensial", "ranking": 78, "skorResiko": 0.49, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-40", "nama": "Gondang", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.209167, "lon": 112.268333, "harian": 331.3739386, "bulanan": 10087.57498, "tahunan": 121050.8998, "kapasitas": 77.2, "luas": 386.0, "pvout": 1568.016837, "skorPotensial": 0.64, "kategoriPotensi": "Potensial", "ranking": 18, "skorResiko": 0.56, "kategoriResiko": "Sedang"}, {"kode": "PLTST-41", "nama": "Klego", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.360576, "lon": 110.705127, "harian": 563.1935337, "bulanan": 17144.54982, "tahunan": 205734.5978, "kapasitas": 137.2, "luas": 686.0, "pvout": 1499.523308, "skorPotensial": 0.5, "kategoriPotensi": "Potensial", "ranking": 37, "skorResiko": 0.49, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-42", "nama": "Tiu Kulit", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.690928, "lon": 117.679188, "harian": 96.52886451, "bulanan": 2938.499517, "tahunan": 35261.99421, "kapasitas": 22.0, "luas": 110.0, "pvout": 1602.817918, "skorPotensial": 0.57, "kategoriPotensi": "Potensial", "ranking": 30, "skorResiko": 0.67, "kategoriResiko": "Sedang"}, {"kode": "PLTST-43", "nama": "Kali Ujung", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.7246, "lon": 116.4585, "harian": 149.5355874, "bulanan": 4552.112506, "tahunan": 54625.35007, "kapasitas": 32.0, "luas": 160.0, "pvout": 1707.04219, "skorPotensial": 0.76, "kategoriPotensi": "Sangat Potensial", "ranking": 8, "skorResiko": 0.8, "kategoriResiko": "Rendah"}, {"kode": "PLTST-44", "nama": "Pondok", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.407306, "lon": 111.564771, "harian": 312.8338605, "bulanan": 9523.184104, "tahunan": 114278.2092, "kapasitas": 76.0, "luas": 380.0, "pvout": 1503.660648, "skorPotensial": 0.51, "kategoriPotensi": "Potensial", "ranking": 36, "skorResiko": 0.53, "kategoriResiko": "Sedang"}, {"kode": "PLTST-45", "nama": "Kalola", "provinsi": "Sulawesi Tengah", "pulau": "Sulawesi & Maluku", "lat": 0.802586, "lon": 124.072003, "harian": 1061.962722, "bulanan": 32327.9152, "tahunan": 387934.9824, "kapasitas": 260.0, "luas": 1300.0, "pvout": 1492.057625, "skorPotensial": 0.4, "kategoriPotensi": "Cukup Potensial", "ranking": 56, "skorResiko": 0.49, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-46", "nama": "Sermo", "provinsi": "DI Yogyakarta", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.566503, "lon": 109.485728, "harian": 116.602479, "bulanan": 3549.573799, "tahunan": 42594.88559, "kapasitas": 31.4, "luas": 157.0, "pvout": 1356.525019, "skorPotensial": 0.22, "kategoriPotensi": "Kurang Potensial", "ranking": 97, "skorResiko": 0.47, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-47", "nama": "Manggar", "provinsi": "Kalimantan Timur", "pulau": "Kalimantan", "lat": -1.16772, "lon": 116.918109, "harian": 321.0969044, "bulanan": 9774.724933, "tahunan": 117296.6992, "kapasitas": 80.6, "luas": 403.0, "pvout": 1455.294035, "skorPotensial": 0.34, "kategoriPotensi": "Cukup Potensial", "ranking": 74, "skorResiko": 0.46, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-48", "nama": "Gapit", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.793409, "lon": 117.930489, "harian": 209.8682889, "bulanan": 6388.740493, "tahunan": 76664.88592, "kapasitas": 45.0, "luas": 225.0, "pvout": 1703.664132, "skorPotensial": 0.74, "kategoriPotensi": "Sangat Potensial", "ranking": 11, "skorResiko": 0.78, "kategoriResiko": "Rendah"}, {"kode": "PLTST-49", "nama": "Simo", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.201565, "lon": 111.098079, "harian": 113.6816574, "bulanan": 3460.659122, "tahunan": 41527.90947, "kapasitas": 27.0, "luas": 135.0, "pvout": 1538.070721, "skorPotensial": 0.58, "kategoriPotensi": "Potensial", "ranking": 29, "skorResiko": 0.52, "kategoriResiko": "Sedang"}, {"kode": "PLTST-50", "nama": "Salomekko", "provinsi": "Sulawesi Selatan", "pulau": "Sulawesi & Maluku", "lat": -4.963054, "lon": 120.231106, "harian": 86.24305873, "bulanan": 2625.382446, "tahunan": 31504.58936, "kapasitas": 20.8, "luas": 104.0, "pvout": 1514.643719, "skorPotensial": 0.48, "kategoriPotensi": "Cukup Potensial", "ranking": 40, "skorResiko": 0.37, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-51", "nama": "Bili Bili", "provinsi": "Sulawesi Selatan", "pulau": "Sulawesi & Maluku", "lat": -5.258501, "lon": 119.580491, "harian": 1222.130834, "bulanan": 37203.69947, "tahunan": 446444.3936, "kapasitas": 318.0, "luas": 1590.0, "pvout": 1403.913187, "skorPotensial": 0.29, "kategoriPotensi": "Kurang Potensial", "ranking": 81, "skorResiko": 0.37, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-52", "nama": "Sumi", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.641902, "lon": 118.953886, "harian": 153.507952, "bulanan": 4673.037904, "tahunan": 56076.45485, "kapasitas": 32.6, "luas": 163.0, "pvout": 1720.136652, "skorPotensial": 0.76, "kategoriPotensi": "Sangat Potensial", "ranking": 6, "skorResiko": 0.78, "kategoriResiko": "Rendah"}, {"kode": "PLTST-53", "nama": "Sangiran", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.410903, "lon": 111.615126, "harian": 119.3708152, "bulanan": 3633.846566, "tahunan": 43606.15879, "kapasitas": 29.0, "luas": 145.0, "pvout": 1503.660648, "skorPotensial": 0.51, "kategoriPotensi": "Potensial", "ranking": 35, "skorResiko": 0.53, "kategoriResiko": "Sedang"}, {"kode": "PLTST-54", "nama": "Grokgak", "provinsi": "Bali", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.214445, "lon": 114.781427, "harian": 279.3487317, "bulanan": 8503.840974, "tahunan": 102046.0917, "kapasitas": 59.0, "luas": 295.0, "pvout": 1729.594774, "skorPotensial": 0.79, "kategoriPotensi": "Sangat Potensial", "ranking": 5, "skorResiko": 0.74, "kategoriResiko": "Sedang"}, {"kode": "PLTST-55", "nama": "Tilong", "provinsi": "Nusa Tenggara Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -10.175975, "lon": 123.744691, "harian": 145.8921463, "bulanan": 4441.200087, "tahunan": 53294.40105, "kapasitas": 32.4, "luas": 162.0, "pvout": 1644.888921, "skorPotensial": 0.63, "kategoriPotensi": "Potensial", "ranking": 20, "skorResiko": 0.74, "kategoriResiko": "Sedang"}, {"kode": "PLTST-56", "nama": "PelAparado", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.720699, "lon": 118.606953, "harian": 98.96877452, "bulanan": 3012.774444, "tahunan": 36153.29333, "kapasitas": 20.8, "luas": 104.0, "pvout": 1738.139103, "skorPotensial": 0.79, "kategoriPotensi": "Sangat Potensial", "ranking": 4, "skorResiko": 0.78, "kategoriResiko": "Rendah"}, {"kode": "PLTST-57", "nama": "Keuliling", "provinsi": "Aceh", "pulau": "Sumatera", "lat": 5.365509, "lon": 95.480199, "harian": 194.5060308, "bulanan": 5921.087754, "tahunan": 71053.05305, "kapasitas": 52.0, "luas": 260.0, "pvout": 1366.404866, "skorPotensial": 0.16, "kategoriPotensi": "Kurang Potensial", "ranking": 106, "skorResiko": 0.13, "kategoriResiko": "Sangat Tinggi"}, {"kode": "PLTST-58", "nama": "Beriwit", "provinsi": "Kalimantan Tengah", "pulau": "Kalimantan", "lat": 2.142123, "lon": 117.667853, "harian": 259.4226498, "bulanan": 7897.25783, "tahunan": 94767.09396, "kapasitas": 66.0, "luas": 330.0, "pvout": 1435.86506, "skorPotensial": 0.37, "kategoriPotensi": "Cukup Potensial", "ranking": 65, "skorResiko": 0.47, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-59", "nama": "Gegurik", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.257877, "lon": 116.34627, "harian": 127.8002862, "bulanan": 3890.453714, "tahunan": 46685.44457, "kapasitas": 26.6, "luas": 133.0, "pvout": 1755.091901, "skorPotensial": 0.83, "kategoriPotensi": "Sangat Potensial", "ranking": 1, "skorResiko": 0.81, "kategoriResiko": "Rendah"}, {"kode": "PLTST-60", "nama": "Jati Barang", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.036667, "lon": 110.350278, "harian": 89.91504423, "bulanan": 2737.163805, "tahunan": 32845.96566, "kapasitas": 22.0, "luas": 110.0, "pvout": 1492.998439, "skorPotensial": 0.44, "kategoriPotensi": "Cukup Potensial", "ranking": 47, "skorResiko": 0.48, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-61", "nama": "Tanju", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.472337, "lon": 118.349215, "harian": 274.9605181, "bulanan": 8370.25644, "tahunan": 100443.0773, "kapasitas": 57.6, "luas": 288.0, "pvout": 1743.803425, "skorPotensial": 0.8, "kategoriPotensi": "Sangat Potensial", "ranking": 3, "skorResiko": 0.75, "kategoriResiko": "Rendah"}, {"kode": "PLTST-62", "nama": "Sei Gong", "provinsi": "Kepulauan Riau", "pulau": "Sumatera", "lat": 0.725904, "lon": 104.217839, "harian": 288.4156531, "bulanan": 8779.853174, "tahunan": 105358.2381, "kapasitas": 71.2, "luas": 356.0, "pvout": 1479.750535, "skorPotensial": 0.44, "kategoriPotensi": "Cukup Potensial", "ranking": 49, "skorResiko": 0.43, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-63", "nama": "Tapin", "provinsi": "Kalimantan Selatan", "pulau": "Kalimantan", "lat": -2.944034, "lon": 115.340632, "harian": 319.0899718, "bulanan": 9713.630558, "tahunan": 116563.5667, "kapasitas": 85.0, "luas": 425.0, "pvout": 1371.336079, "skorPotensial": 0.26, "kategoriPotensi": "Kurang Potensial", "ranking": 91, "skorResiko": 0.41, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-64", "nama": "Sindang Heula", "provinsi": "Banten", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.181459, "lon": 106.112845, "harian": 104.2886784, "bulanan": 3174.721185, "tahunan": 38096.65422, "kapasitas": 26.0, "luas": 130.0, "pvout": 1465.255931, "skorPotensial": 0.42, "kategoriPotensi": "Cukup Potensial", "ranking": 54, "skorResiko": 0.53, "kategoriResiko": "Sedang"}, {"kode": "PLTST-65", "nama": "Kuningan", "provinsi": "Jawa Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.067854, "lon": 108.703193, "harian": 175.5825106, "bulanan": 5345.024262, "tahunan": 64140.29114, "kapasitas": 44.4, "luas": 222.0, "pvout": 1444.601152, "skorPotensial": 0.39, "kategoriPotensi": "Cukup Potensial", "ranking": 61, "skorResiko": 0.51, "kategoriResiko": "Sedang"}, {"kode": "PLTST-66", "nama": "Way Sekampung", "provinsi": "Lampung", "pulau": "Sumatera", "lat": -5.333469, "lon": 104.918286, "harian": 626.0145417, "bulanan": 19056.92601, "tahunan": 228683.1121, "kapasitas": 165.0, "luas": 825.0, "pvout": 1385.958255, "skorPotensial": 0.27, "kategoriPotensi": "Kurang Potensial", "ranking": 86, "skorResiko": 0.5, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-67", "nama": "Paselloreng", "provinsi": "Sulawesi Selatan", "pulau": "Sulawesi & Maluku", "lat": -3.883281, "lon": 120.180929, "harian": 1035.406357, "bulanan": 31519.49519, "tahunan": 378233.9422, "kapasitas": 256.6, "luas": 1283.0, "pvout": 1474.021599, "skorPotensial": 0.42, "kategoriPotensi": "Cukup Potensial", "ranking": 52, "skorResiko": 0.31, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-68", "nama": "Bendo", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.934071, "lon": 111.58867, "harian": 130.2482843, "bulanan": 3964.974855, "tahunan": 47579.69826, "kapasitas": 34.0, "luas": 170.0, "pvout": 1399.40289, "skorPotensial": 0.26, "kategoriPotensi": "Kurang Potensial", "ranking": 89, "skorResiko": 0.48, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-69", "nama": "Ladongi", "provinsi": "Sulawesi Tenggara", "pulau": "Sulawesi & Maluku", "lat": -4.149433, "lon": 121.889292, "harian": 172.1443094, "bulanan": 5240.359684, "tahunan": 62884.31621, "kapasitas": 42.6, "luas": 213.0, "pvout": 1476.157658, "skorPotensial": 0.36, "kategoriPotensi": "Cukup Potensial", "ranking": 69, "skorResiko": 0.32, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-70", "nama": "Pidelkso", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.037029, "lon": 110.998779, "harian": 179.767072, "bulanan": 5472.409283, "tahunan": 65668.9114, "kapasitas": 46.4, "luas": 232.0, "pvout": 1415.278263, "skorPotensial": 0.28, "kategoriPotensi": "Kurang Potensial", "ranking": 83, "skorResiko": 0.5, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-71", "nama": "Gongseng", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.36447, "lon": 111.899676, "harian": 246.6801505, "bulanan": 7509.354916, "tahunan": 90112.25899, "kapasitas": 57.6, "luas": 288.0, "pvout": 1564.448941, "skorPotensial": 0.61, "kategoriPotensi": "Potensial", "ranking": 27, "skorResiko": 0.54, "kategoriResiko": "Sedang"}, {"kode": "PLTST-72", "nama": "Karalloe", "provinsi": "Sulawesi Selatan", "pulau": "Sulawesi & Maluku", "lat": -5.51464, "lon": 119.803, "harian": 203.0839378, "bulanan": 6182.213541, "tahunan": 74186.5625, "kapasitas": 49.8, "luas": 249.0, "pvout": 1489.69001, "skorPotensial": 0.43, "kategoriPotensi": "Cukup Potensial", "ranking": 51, "skorResiko": 0.46, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-73", "nama": "Bintang Bano", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.714842, "lon": 116.987142, "harian": 228.192871, "bulanan": 6946.571315, "tahunan": 83358.85578, "kapasitas": 51.2, "luas": 256.0, "pvout": 1628.102652, "skorPotensial": 0.63, "kategoriPotensi": "Potensial", "ranking": 22, "skorResiko": 0.69, "kategoriResiko": "Sedang"}, {"kode": "PLTST-74", "nama": "Randugunting", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.874747, "lon": 111.257247, "harian": 137.550855, "bulanan": 4187.277277, "tahunan": 50247.32733, "kapasitas": 31.0, "luas": 155.0, "pvout": 1620.881527, "skorPotensial": 0.68, "kategoriPotensi": "Sangat Potensial", "ranking": 14, "skorResiko": 0.56, "kategoriResiko": "Sedang"}, {"kode": "PLTST-75", "nama": "Semantok", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.494603, "lon": 111.890537, "harian": 241.173621, "bulanan": 7341.726978, "tahunan": 88100.72374, "kapasitas": 58.6, "luas": 293.0, "pvout": 1503.42532, "skorPotensial": 0.46, "kategoriPotensi": "Cukup Potensial", "ranking": 43, "skorResiko": 0.53, "kategoriResiko": "Sedang"}, {"kode": "PLTST-76", "nama": "Sadawarna", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.588152, "lon": 107.848187, "harian": 567.3387719, "bulanan": 17270.73778, "tahunan": 207248.8534, "kapasitas": 136.2, "luas": 681.0, "pvout": 1521.650906, "skorPotensial": 0.52, "kategoriPotensi": "Potensial", "ranking": 34, "skorResiko": 0.44, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-77", "nama": "Beringin Sila", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.455236, "lon": 117.127044, "harian": 110.6686509, "bulanan": 3368.938181, "tahunan": 40427.25817, "kapasitas": 25.2, "luas": 126.0, "pvout": 1604.256277, "skorPotensial": 0.64, "kategoriPotensi": "Potensial", "ranking": 17, "skorResiko": 0.7, "kategoriResiko": "Sedang"}, {"kode": "PLTST-78", "nama": "Kuwil Kawangkoan", "provinsi": "Sulawesi Utara", "pulau": "Sulawesi & Maluku", "lat": 1.442479, "lon": 124.931313, "harian": 121.8963698, "bulanan": 3710.728658, "tahunan": 44528.74389, "kapasitas": 27.8, "luas": 139.0, "pvout": 1601.753377, "skorPotensial": 0.62, "kategoriPotensi": "Potensial", "ranking": 24, "skorResiko": 0.58, "kategoriResiko": "Sedang"}, {"kode": "PLTST-79", "nama": "Margatiga", "provinsi": "Lampung", "pulau": "Sumatera", "lat": -5.207586, "lon": 105.485403, "harian": 1781.90468, "bulanan": 54244.1483, "tahunan": 650929.7796, "kapasitas": 462.8, "luas": 2314.0, "pvout": 1406.503413, "skorPotensial": 0.33, "kategoriPotensi": "Kurang Potensial", "ranking": 75, "skorResiko": 0.47, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-80", "nama": "Lolak", "provinsi": "Sulawesi Utara", "pulau": "Sulawesi & Maluku", "lat": 0.802586, "lon": 124.072003, "harian": 83.32322898, "bulanan": 2536.497962, "tahunan": 30437.97554, "kapasitas": 20.4, "luas": 102.0, "pvout": 1492.057625, "skorPotensial": 0.4, "kategoriPotensi": "Cukup Potensial", "ranking": 57, "skorResiko": 0.49, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-81", "nama": "Cipanas", "provinsi": "Jawa Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.677649, "lon": 108.02356, "harian": 1047.263593, "bulanan": 31880.44921, "tahunan": 382565.3905, "kapasitas": 263.2, "luas": 1316.0, "pvout": 1453.515921, "skorPotensial": 0.39, "kategoriPotensi": "Cukup Potensial", "ranking": 60, "skorResiko": 0.42, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-82", "nama": "Sepaku Semoi", "provinsi": "Kalimantan Timur", "pulau": "Kalimantan", "lat": -0.910116, "lon": 116.842938, "harian": 246.62905, "bulanan": 7507.79933, "tahunan": 90093.59196, "kapasitas": 67.0, "luas": 335.0, "pvout": 1344.680477, "skorPotensial": 0.19, "kategoriPotensi": "Kurang Potensial", "ranking": 101, "skorResiko": 0.41, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-83", "nama": "Karian", "provinsi": "Banten", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.413397, "lon": 106.283675, "harian": 1310.765608, "bulanan": 39901.88971, "tahunan": 478822.6765, "kapasitas": 348.0, "luas": 1740.0, "pvout": 1375.927231, "skorPotensial": 0.25, "kategoriPotensi": "Kurang Potensial", "ranking": 95, "skorResiko": 0.45, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-84", "nama": "Keureuto", "provinsi": "Aceh", "pulau": "Sumatera", "lat": 4.938447, "lon": 97.157456, "harian": 716.9676425, "bulanan": 21825.68998, "tahunan": 261908.2798, "kapasitas": 179.2, "luas": 896.0, "pvout": 1461.54174, "skorPotensial": 0.35, "kategoriPotensi": "Cukup Potensial", "ranking": 70, "skorResiko": 0.23, "kategoriResiko": "Sangat Tinggi"}, {"kode": "PLTST-85", "nama": "Rukoh", "provinsi": "Aceh", "pulau": "Sumatera", "lat": 5.20275, "lon": 95.894389, "harian": 525.3278899, "bulanan": 15991.85651, "tahunan": 191902.2782, "kapasitas": 143.2, "luas": 716.0, "pvout": 1340.099708, "skorPotensial": 0.14, "kategoriPotensi": "Kurang Potensial", "ranking": 107, "skorResiko": 0.16, "kategoriResiko": "Sangat Tinggi"}, {"kode": "PLTST-86", "nama": "Tiu Suntuk", "provinsi": "Nusa Tenggara Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.7938, "lon": 116.9268, "harian": 278.1100615, "bulanan": 8466.13379, "tahunan": 101593.6055, "kapasitas": 62.4, "luas": 312.0, "pvout": 1628.102652, "skorPotensial": 0.63, "kategoriPotensi": "Potensial", "ranking": 22, "skorResiko": 0.69, "kategoriResiko": "Sedang"}, {"kode": "PLTST-87", "nama": "Lau Simeme", "provinsi": "Sumatera Utara", "pulau": "Sumatera", "lat": 3.371278, "lon": 98.648528, "harian": 183.8329065, "bulanan": 5596.180063, "tahunan": 67154.16076, "kapasitas": 49.4, "luas": 247.0, "pvout": 1359.395967, "skorPotensial": 0.18, "kategoriPotensi": "Kurang Potensial", "ranking": 104, "skorResiko": 0.23, "kategoriResiko": "Sangat Tinggi"}, {"kode": "PLTST-88", "nama": "Temef", "provinsi": "Nusa Tenggara Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -9.718621, "lon": 124.447253, "harian": 273.1959895, "bulanan": 8316.541248, "tahunan": 99798.49498, "kapasitas": 59.6, "luas": 298.0, "pvout": 1674.471392, "skorPotensial": 0.74, "kategoriPotensi": "Sangat Potensial", "ranking": 10, "skorResiko": 0.6, "kategoriResiko": "Sedang"}, {"kode": "PLTST-89", "nama": "Pamukkulu", "provinsi": "Sulawesi Selatan", "pulau": "Sulawesi & Maluku", "lat": -5.3996, "lon": 119.594029, "harian": 369.8028714, "bulanan": 11257.41574, "tahunan": 135088.9889, "kapasitas": 92.0, "luas": 460.0, "pvout": 1468.358575, "skorPotensial": 0.42, "kategoriPotensi": "Cukup Potensial", "ranking": 53, "skorResiko": 0.44, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-90", "nama": "Ameroro", "provinsi": "Sulawesi Tenggara", "pulau": "Sulawesi & Maluku", "lat": -3.910486, "lon": 122.0089, "harian": 189.3240642, "bulanan": 5763.340054, "tahunan": 69160.08065, "kapasitas": 48.8, "luas": 244.0, "pvout": 1417.214767, "skorPotensial": 0.24, "kategoriPotensi": "Kurang Potensial", "ranking": 96, "skorResiko": 0.22, "kategoriResiko": "Sangat Tinggi"}, {"kode": "PLTST-91", "nama": "Way Apu", "provinsi": "Lampung", "pulau": "Sumatera", "lat": -5.333469, "lon": 104.918286, "harian": 207.9127084, "bulanan": 6329.209365, "tahunan": 75950.51238, "kapasitas": 54.8, "luas": 274.0, "pvout": 1385.958255, "skorPotensial": 0.27, "kategoriPotensi": "Kurang Potensial", "ranking": 87, "skorResiko": 0.5, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-92", "nama": "Bulango Ulu", "provinsi": "Gorontalo", "pulau": "Sulawesi & Maluku", "lat": 0.659928, "lon": 123.096164, "harian": 546.3666702, "bulanan": 16632.31205, "tahunan": 199587.7446, "kapasitas": 123.0, "luas": 615.0, "pvout": 1622.66459, "skorPotensial": 0.62, "kategoriPotensi": "Potensial", "ranking": 25, "skorResiko": 0.56, "kategoriResiko": "Sedang"}, {"kode": "PLTST-93", "nama": "Manikin", "provinsi": "Nusa Tenggara Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -10.222501, "lon": 123.720577, "harian": 148.5938527, "bulanan": 4523.444533, "tahunan": 54281.3344, "kapasitas": 33.0, "luas": 165.0, "pvout": 1644.888921, "skorPotensial": 0.63, "kategoriPotensi": "Potensial", "ranking": 20, "skorResiko": 0.74, "kategoriResiko": "Sedang"}, {"kode": "PLTST-94", "nama": "Bener", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.599535, "lon": 110.01984, "harian": 235.0488632, "bulanan": 7155.279145, "tahunan": 85863.34974, "kapasitas": 62.6, "luas": 313.0, "pvout": 1371.619005, "skorPotensial": 0.21, "kategoriPotensi": "Kurang Potensial", "ranking": 99, "skorResiko": 0.4, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-95", "nama": "Jragung", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.138277, "lon": 110.549261, "harian": 360.2345066, "bulanan": 10966.13877, "tahunan": 131593.6653, "kapasitas": 90.2, "luas": 451.0, "pvout": 1458.909814, "skorPotensial": 0.4, "kategoriPotensi": "Cukup Potensial", "ranking": 58, "skorResiko": 0.44, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-96", "nama": "Budong-Budong", "provinsi": "Sulawesi Barat", "pulau": "Sulawesi & Maluku", "lat": -2.016833, "lon": 119.454444, "harian": 262.6806144, "bulanan": 7996.435703, "tahunan": 95957.22843, "kapasitas": 73.8, "luas": 369.0, "pvout": 1300.233448, "skorPotensial": 0.07, "kategoriPotensi": "Kurang Potensial", "ranking": 108, "skorResiko": 0.27, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-97", "nama": "Marangkayu", "provinsi": "Kalimantan Timur", "pulau": "Kalimantan", "lat": -0.109359, "lon": 117.397854, "harian": 199.6125813, "bulanan": 6076.539663, "tahunan": 72918.47596, "kapasitas": 51.6, "luas": 258.0, "pvout": 1413.148759, "skorPotensial": 0.28, "kategoriPotensi": "Kurang Potensial", "ranking": 82, "skorResiko": 0.49, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-98", "nama": "Mbay", "provinsi": "Nusa Tenggara Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -8.697125, "lon": 121.283566, "harian": 422.2436115, "bulanan": 12853.79927, "tahunan": 154245.5913, "kapasitas": 99.8, "luas": 499.0, "pvout": 1545.547007, "skorPotensial": 0.55, "kategoriPotensi": "Potensial", "ranking": 33, "skorResiko": 0.65, "kategoriResiko": "Sedang"}, {"kode": "PLTST-99", "nama": "Merangin", "provinsi": "Jambi", "pulau": "Sumatera", "lat": -2.169331, "lon": 102.018944, "harian": 508.5338625, "bulanan": 15480.61833, "tahunan": 185767.42, "kapasitas": 137.4, "luas": 687.0, "pvout": 1352.019068, "skorPotensial": 0.26, "kategoriPotensi": "Kurang Potensial", "ranking": 93, "skorResiko": 0.43, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-100", "nama": "Cibeet", "provinsi": "Jawa Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.511869, "lon": 107.138428, "harian": 750.0954259, "bulanan": 22834.15492, "tahunan": 274009.8591, "kapasitas": 184.0, "luas": 920.0, "pvout": 1489.184017, "skorPotensial": 0.45, "kategoriPotensi": "Cukup Potensial", "ranking": 45, "skorResiko": 0.43, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-101", "nama": "Kedung Langgar", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.977309, "lon": 109.803431, "harian": 113.0525499, "bulanan": 3441.50804, "tahunan": 41298.09648, "kapasitas": 28.4, "luas": 142.0, "pvout": 1454.158327, "skorPotensial": 0.38, "kategoriPotensi": "Cukup Potensial", "ranking": 62, "skorResiko": 0.46, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-102", "nama": "Cijurey", "provinsi": "Jawa Barat", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -6.549922, "lon": 107.083897, "harian": 111.533176, "bulanan": 3395.255767, "tahunan": 40743.0692, "kapasitas": 27.8, "luas": 139.0, "pvout": 1465.578029, "skorPotensial": 0.41, "kategoriPotensi": "Cukup Potensial", "ranking": 55, "skorResiko": 0.41, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-103", "nama": "Bodri", "provinsi": "Jawa Tengah", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.093698, "lon": 110.188963, "harian": 137.3247948, "bulanan": 4180.395629, "tahunan": 50164.74755, "kapasitas": 33.6, "luas": 168.0, "pvout": 1492.998439, "skorPotensial": 0.44, "kategoriPotensi": "Cukup Potensial", "ranking": 48, "skorResiko": 0.48, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-104", "nama": "Riam Kiwa", "provinsi": "Kalimantan Selatan", "pulau": "Kalimantan", "lat": -3.090441, "lon": 115.393884, "harian": 484.6337762, "bulanan": 14753.05987, "tahunan": 177036.7184, "kapasitas": 130.8, "luas": 654.0, "pvout": 1353.491731, "skorPotensial": 0.18, "kategoriPotensi": "Kurang Potensial", "ranking": 103, "skorResiko": 0.39, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-105", "nama": "Pelosika", "provinsi": "Sulawesi Tenggara", "pulau": "Sulawesi & Maluku", "lat": -3.766125, "lon": 121.745836, "harian": 207.0852898, "bulanan": 6304.021363, "tahunan": 75648.25636, "kapasitas": 54.2, "luas": 271.0, "pvout": 1395.724287, "skorPotensial": 0.18, "kategoriPotensi": "Kurang Potensial", "ranking": 102, "skorResiko": 0.17, "kategoriResiko": "Sangat Tinggi"}, {"kode": "PLTST-106", "nama": "Jenelata", "provinsi": "Sulawesi Selatan", "pulau": "Sulawesi & Maluku", "lat": -5.290821, "lon": 119.598947, "harian": 937.7356083, "bulanan": 28546.23481, "tahunan": 342554.8177, "kapasitas": 244.0, "luas": 1220.0, "pvout": 1403.913187, "skorPotensial": 0.29, "kategoriPotensi": "Kurang Potensial", "ranking": 80, "skorResiko": 0.37, "kategoriResiko": "Tinggi"}, {"kode": "PLTST-107", "nama": "Karangnongko", "provinsi": "Jawa Timur", "pulau": "Jawa & Kep. Sunda Kecil", "lat": -7.264694, "lon": 111.448472, "harian": 879.5485884, "bulanan": 26774.92494, "tahunan": 321299.0993, "kapasitas": 205.4, "luas": 1027.0, "pvout": 1564.260464, "skorPotensial": 0.62, "kategoriPotensi": "Potensial", "ranking": 26, "skorResiko": 0.53, "kategoriResiko": "Sedang"}, {"kode": "PLTST-108", "nama": "Abusur", "provinsi": "Maluku", "pulau": "Sulawesi & Maluku", "lat": -8.076364, "lon": 127.183282, "harian": 159.626157, "bulanan": 4859.286263, "tahunan": 58311.43516, "kapasitas": 34.0, "luas": 170.0, "pvout": 1715.04221, "skorPotensial": 0.7, "kategoriPotensi": "Sangat Potensial", "ranking": 13, "skorResiko": 0.6, "kategoriResiko": "Sedang"}];
+
+/* ═══ CONFIGS ═══ */
+const POT_CONFIG = {
+  'Sangat Potensial':{bg:'#dcfce7',fg:'#166534',dot:'#16a34a'},
+  'Potensial':       {bg:'#dbeafe',fg:'#1e40af',dot:'#2563eb'},
+  'Cukup Potensial': {bg:'#fef3c7',fg:'#854d0e',dot:'#d97706'},
+  'Kurang Potensial':{bg:'#fee2e2',fg:'#991b1b',dot:'#dc2626'},
+};
+const RISK_CONFIG = {
+  'Rendah':       {bg:'#dcfce7',fg:'#166534',dot:'#16a34a'},
+  'Sedang':       {bg:'#fef3c7',fg:'#854d0e',dot:'#d97706'},
+  'Tinggi':       {bg:'#fee2e2',fg:'#991b1b',dot:'#ef4444'},
+  'Sangat Tinggi':{bg:'#f3e8ff',fg:'#6b21a8',dot:'#9333ea'},
+};
+const ISLAND_COLOR = {
+  'Sumatera':               '#0ea5e9',
+  'Jawa & Kep. Sunda Kecil':'#10b981',
+  'Kalimantan':             '#f59e0b',
+  'Sulawesi & Maluku':      '#8b5cf6',
+};
+const ISLAND_MAP = {
+  'Aceh':'Sumatera','Sumatera Utara':'Sumatera','Sumatera Barat':'Sumatera',
+  'Riau':'Sumatera','Kepulauan Riau':'Sumatera','Jambi':'Sumatera',
+  'Sumatera Selatan':'Sumatera','Bengkulu':'Sumatera','Lampung':'Sumatera','Bangka Belitung':'Sumatera',
+  'DKI Jakarta':'Jawa & Kep. Sunda Kecil','Jawa Barat':'Jawa & Kep. Sunda Kecil',
+  'Banten':'Jawa & Kep. Sunda Kecil','Jawa Tengah':'Jawa & Kep. Sunda Kecil',
+  'DI Yogyakarta':'Jawa & Kep. Sunda Kecil','Jawa Timur':'Jawa & Kep. Sunda Kecil',
+  'Bali':'Jawa & Kep. Sunda Kecil','Nusa Tenggara Barat':'Jawa & Kep. Sunda Kecil',
+  'Nusa Tenggara Timur':'Jawa & Kep. Sunda Kecil',
+  'Kalimantan Barat':'Kalimantan','Kalimantan Tengah':'Kalimantan',
+  'Kalimantan Selatan':'Kalimantan','Kalimantan Timur':'Kalimantan','Kalimantan Utara':'Kalimantan',
+  'Sulawesi Utara':'Sulawesi & Maluku','Gorontalo':'Sulawesi & Maluku',
+  'Sulawesi Tengah':'Sulawesi & Maluku','Sulawesi Barat':'Sulawesi & Maluku',
+  'Sulawesi Selatan':'Sulawesi & Maluku','Sulawesi Tenggara':'Sulawesi & Maluku',
+  'Maluku':'Sulawesi & Maluku','Maluku Utara':'Sulawesi & Maluku',
+  'Papua':'Sulawesi & Maluku','Papua Barat':'Sulawesi & Maluku',
+};
+
+/* Island zoom bounds */
+const ISLAND_BOUNDS = {
+  all: [[-11, 94], [6, 142]],
+  'Sumatera': [[-6, 94], [6, 109]],
+  'Jawa & Kep. Sunda Kecil': [[-11, 104], [1, 131]],
+  'Kalimantan': [[-5, 108], [5, 119]],
+  'Sulawesi & Maluku': [[-11, 119], [4, 135]],
+};
+
+let ST = {
+  mode:'markers', colorBy:'potensi',
+  islandFilter:'all', potFilter:'all', riskFilter:'all',
+  kapMin:0, kapMax:1626, search:'',
+  selected:null, bottomOpen:false, radOn:false, sidebarVisible:true,
+};
+
+/* ═══ MAP ═══ */
+const RAD_BOUNDS = L.latLngBounds(
+  L.latLng(-12, 94),
+  L.latLng(8,  142)
+);
+// Center of RAD_BOUNDS: lat=(-12+8)/2=-2, lon=(94+142)/2=118
+const map = L.map('map', {
+  zoomControl: false,
+  minZoom: 5,
+  maxZoom: 19,
+  maxBounds: RAD_BOUNDS,
+  maxBoundsViscosity: 1.0,
+}).setView([-2, 118], 5);
+// Custom zoom control — positioned below search box via CSS class
+L.control.zoom({ position: 'topleft' }).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19}).addTo(map);
+// Pre-warm annual GHI grid so first radiation render is instant
+setTimeout(() => getGhiGrid('annual'), 100);
+const mLayer = L.layerGroup().addTo(map);
+let clusterLayer=null, heatLayer=null, radLayer=null;
+
+/* ═══ SIDEBAR TOGGLE ═══ */
+const SIDEBAR_W = 290; // matches --sidebar-w
+
+function toggleSidebar(){
+  ST.sidebarVisible = !ST.sidebarVisible;
+  const sb  = document.getElementById('sidebar');
+  const tog = document.getElementById('sidebarToggle');
+
+  sb.classList.toggle('hidden', !ST.sidebarVisible);
+
+  const newLeft = ST.sidebarVisible ? SIDEBAR_W : 0;
+  tog.style.left = newLeft + 'px';
+  // writing-mode:vertical-rl → ▲ points left visually, ▼ points right
+  tog.innerHTML = ST.sidebarVisible ? '▲ SIDEBAR' : '▼ SIDEBAR';
+  tog.title = ST.sidebarVisible ? 'Sembunyikan sidebar' : 'Tampilkan sidebar';
+
+  setTimeout(()=>map.invalidateSize(), 300);
+}
+
+/* ═══ ISLAND ZOOM ═══ */
+function zoomToIsland(island){
+  const bounds = ISLAND_BOUNDS[island] || ISLAND_BOUNDS.all;
+  map.fitBounds(bounds, {padding:[30,30], animate:true, duration:0.8});
+}
+
+/* ═══ RADIATION OVERLAY — Canvas Filled Contour ═══ */
+const GHI_COLORS = [
+  {v:110, c:[26,35,126]},
+  {v:130, c:[21,101,192]},
+  {v:148, c:[41,182,246]},
+  {v:163, c:[128,203,196]},
+  {v:176, c:[165,214,167]},
+  {v:189, c:[255,241,118]},
+  {v:204, c:[249,168,37]},
+  {v:220, c:[230,81,0]},
+  {v:250, c:[183,28,28]},
+];
+
+// Monthly GHI multipliers for Indonesia (climatology-based)
+// Indonesia has two seasons: wet (Nov-Mar, lower GHI) & dry (Apr-Oct, higher GHI)
+// Values represent avg monthly deviation from annual mean per region
+const MONTH_FACTORS = {
+  // [Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec]
+  // Base national factor
+  national: [0.88, 0.90, 0.95, 1.03, 1.05, 1.06, 1.10, 1.12, 1.08, 1.03, 0.92, 0.85],
+  // Sumatera (more pronounced wet season)
+  sumatra:  [0.82, 0.85, 0.92, 1.02, 1.05, 1.07, 1.10, 1.11, 1.07, 1.02, 0.90, 0.82],
+  // Java & Bali (sharpest contrast)
+  java:     [0.78, 0.80, 0.88, 1.05, 1.10, 1.15, 1.20, 1.22, 1.15, 1.05, 0.88, 0.78],
+  // Kalimantan (equatorial, less seasonal)
+  kalimantan:[0.90, 0.91, 0.94, 1.00, 1.03, 1.05, 1.07, 1.09, 1.06, 1.02, 0.94, 0.88],
+  // Sulawesi, Maluku, Papua (eastern)
+  eastern:  [0.85, 0.87, 0.92, 1.02, 1.06, 1.08, 1.12, 1.14, 1.10, 1.04, 0.91, 0.84],
+};
+const MONTH_NAMES = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+let ST_RAD_MONTH = 'annual'; // 'annual' or 0–11
+
+function getMonthFactor(lat, lon, month){
+  if(month === 'annual') return 1.0;
+  // Assign regional factor based on location
+  if(lon < 108 && lat > -6) return MONTH_FACTORS.sumatra[month];
+  if(lon >= 108 && lon < 117 && lat > -5) return MONTH_FACTORS.kalimantan[month];
+  if((lon >= 105 && lon < 116) && lat < -5) return MONTH_FACTORS.java[month];
+  if(lon >= 115 && lon < 122 && lat < -4) return MONTH_FACTORS.java[month]; // Bali/NTB/NTT
+  if(lon >= 117) return MONTH_FACTORS.eastern[month];
+  return MONTH_FACTORS.national[month];
+}
+
+function lerpColor(c1, c2, t){
+  return [
+    Math.round(c1[0]+(c2[0]-c1[0])*t),
+    Math.round(c1[1]+(c2[1]-c1[1])*t),
+    Math.round(c1[2]+(c2[2]-c1[2])*t),
+  ];
+}
+function ghiToColor(ghi){
+  const v = Math.max(GHI_COLORS[0].v, Math.min(GHI_COLORS[GHI_COLORS.length-1].v, ghi));
+  for(let i=1;i<GHI_COLORS.length;i++){
+    if(v<=GHI_COLORS[i].v){
+      const t=(v-GHI_COLORS[i-1].v)/(GHI_COLORS[i].v-GHI_COLORS[i-1].v);
+      return lerpColor(GHI_COLORS[i-1].c, GHI_COLORS[i].c, t);
+    }
+  }
+  return GHI_COLORS[GHI_COLORS.length-1].c;
+}
+
+function ghiModel(lat, lon, month){
+  const base=185.0;
+  let latF;
+  if(lat<-5) latF=1.08+(Math.abs(lat)-5)*0.018;
+  else if(lat<0) latF=1.0+Math.abs(lat)*0.016;
+  else if(lat<3) latF=1.0-lat*0.02;
+  else latF=0.94-(lat-3)*0.025;
+  let lonF;
+  if(lon<102) lonF=0.72+(lon-95)*0.018;
+  else if(lon<108) lonF=0.845+(lon-102)*0.012;
+  else if(lon<116) lonF=0.917+(lon-108)*0.006;
+  else if(lon<122) lonF=0.965+(lon-116)*0.008;
+  else if(lon<132) lonF=1.013+(lon-122)*0.003;
+  else lonF=1.043-(lon-132)*0.004;
+  const noise = Math.sin(lat*7.3+lon*3.1)*3 + Math.cos(lat*4.1-lon*5.7)*2;
+  const mf = getMonthFactor(lat, lon, month);
+  return Math.max(90, Math.min(265, base*latF*lonF*mf + noise));
+}
+
+// ── Radiation Canvas Layer ── CORRECT FINAL IMPLEMENTATION ──
+// 
+// Key insight: Leaflet's overlayPane is moved via CSS transform during pan.
+// We place canvas in overlayPane and set position using latLngToLayerPoint.
+// During pan: Leaflet moves the pane, canvas follows automatically → NO move listener needed.
+// During zoom: layerPoints change → we must reproject and repaint → listen to zoomend only.
+//
+// Performance fix: Pre-compute GHI on a fixed geographic grid (lat/lon steps).
+// Then for each canvas pixel, do direct linear interpolation in geo-space —
+// NO map.layerPointToLatLng() calls in the pixel loop (that was the page-hang culprit).
+
+const RAD_NW = L.latLng(8, 94);
+const RAD_SE = L.latLng(-12, 142);
+
+// Geographic grid resolution — 0.5° = ~55km cells, fast to render
+const GEO_STEP = 0.5;
+const GEO_COLS = Math.round((142 - 94)  / GEO_STEP) + 1;  // 97
+const GEO_ROWS = Math.round((8  - (-12))/ GEO_STEP) + 1;  // 41
+
+// Pre-compute GHI grid for each month (cached)
+const GHI_GRID_CACHE = {};
+function getGhiGrid(month) {
+  if (GHI_GRID_CACHE[month]) return GHI_GRID_CACHE[month];
+  const grid = new Float32Array(GEO_ROWS * GEO_COLS);
+  for (let r = 0; r < GEO_ROWS; r++) {
+    const lat = 8 - r * GEO_STEP;
+    for (let c = 0; c < GEO_COLS; c++) {
+      const lon = 94 + c * GEO_STEP;
+      grid[r * GEO_COLS + c] = ghiModel(lat, lon, month);
+    }
+  }
+  GHI_GRID_CACHE[month] = grid;
+  return grid;
+}
+
+// Bilinear sample from geo grid at arbitrary lat/lon
+function sampleGhiGrid(grid, lat, lon) {
+  const fc = (lon - 94)  / GEO_STEP;
+  const fr = (8   - lat) / GEO_STEP;
+  const c0 = Math.max(0, Math.min(GEO_COLS - 2, Math.floor(fc)));
+  const r0 = Math.max(0, Math.min(GEO_ROWS - 2, Math.floor(fr)));
+  const tc = fc - c0, tr = fr - r0;
+  const v00 = grid[ r0      * GEO_COLS + c0];
+  const v10 = grid[ r0      * GEO_COLS + c0 + 1];
+  const v01 = grid[(r0 + 1) * GEO_COLS + c0];
+  const v11 = grid[(r0 + 1) * GEO_COLS + c0 + 1];
+  return v00*(1-tc)*(1-tr) + v10*tc*(1-tr) + v01*(1-tc)*tr + v11*tc*tr;
+}
+
+// ── Radiation Overlay ────────────────────────────────────────────────────────
+// Use L.ImageOverlay — Leaflet handles ALL positioning, zoom, pan, projection.
+
+function buildGhiDataUrl(month) {
+  const grid    = getGhiGrid(month);
+  const COLS    = GEO_COLS;
+  const ROWS    = GEO_ROWS;
+  // Render at full geo-grid resolution (97×41), smooth enough
+  const c   = document.createElement('canvas');
+  c.width   = COLS;
+  c.height  = ROWS;
+  const ctx = c.getContext('2d');
+  const img = ctx.createImageData(COLS, ROWS);
+  const d   = img.data;
+  for (let r = 0; r < ROWS; r++) {
+    for (let col = 0; col < COLS; col++) {
+      const ghi = grid[r * COLS + col];
+      const [rv, gv, bv] = ghiToColor(ghi);
+      const i = (r * COLS + col) * 4;
+      d[i] = rv; d[i+1] = gv; d[i+2] = bv; d[i+3] = 185;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  return c.toDataURL('image/png');
+}
+
+function buildRadLayer(month) {
+  const url = buildGhiDataUrl(month);
+  // L.imageOverlay(url, bounds, options) — Leaflet stretches the image to fit bounds exactly
+  return L.imageOverlay(url, RAD_BOUNDS, {
+    opacity: 0.72,
+    interactive: false,
+    zIndex: 250,
+    className: 'rad-overlay',
+  });
+}
+
+function toggleRadiation(){
+  ST.radOn = !ST.radOn;
+  document.getElementById('radBtn').classList.toggle('active', ST.radOn);
+  document.getElementById('radLegend').style.display = ST.radOn ? 'block' : 'none';
+  if (ST.radOn) {
+    if (radLayer) map.removeLayer(radLayer);
+    radLayer = buildRadLayer(ST_RAD_MONTH);
+    radLayer.addTo(map);
+    updateRadTimeline();
+  } else {
+    if (radLayer) { map.removeLayer(radLayer); radLayer = null; }
+  }
+}
+
+// Slider: 0=Tahunan, 1=Jan .. 12=Des
+const SLIDER_MONTHS = ['annual',0,1,2,3,4,5,6,7,8,9,10,11];
+const SLIDER_LABELS = ['Tahunan','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+function onRadSlider(val){
+  const idx = parseInt(val);
+  const month = SLIDER_MONTHS[idx];
+  ST_RAD_MONTH = month;
+  const lbl = document.getElementById('radMonthLabel');
+  if (lbl) lbl.textContent = SLIDER_LABELS[idx];
+  if (ST.radOn) {
+    if (radLayer) map.removeLayer(radLayer);
+    radLayer = buildRadLayer(month);
+    radLayer.addTo(map);
+  }
+}
+
+function updateRadTimeline(){
+  const slider = document.getElementById('radSlider');
+  if (!slider) return;
+  const idx = ST_RAD_MONTH === 'annual' ? 0 : ST_RAD_MONTH + 1;
+  slider.value = idx;
+  const lbl = document.getElementById('radMonthLabel');
+  if (lbl) lbl.textContent = SLIDER_LABELS[idx];
+}
+
+
+/* ═══ FILTER ═══ */
+function getFiltered(){
+  return DATA.filter(d=>{
+    if(ST.islandFilter!=='all' && d.pulau!==ST.islandFilter) return false;
+    if(ST.potFilter!=='all' && d.kategoriPotensi!==ST.potFilter) return false;
+    if(ST.riskFilter!=='all' && d.kategoriResiko!==ST.riskFilter) return false;
+    if(ST.search && !d.nama.toLowerCase().includes(ST.search.toLowerCase())) return false;
+    return true;
+  });
+}
+
+/* ═══ MARKER COLOR ═══ */
+function getColor(d){
+  switch(ST.colorBy){
+    case 'potensi': return POT_CONFIG[d.kategoriPotensi]?.dot||'#6b7280';
+    case 'resiko':  return RISK_CONFIG[d.kategoriResiko]?.dot||'#6b7280';
+    case 'pulau':   return ISLAND_COLOR[d.pulau]||'#6b7280';
+    case 'pvout':{
+      const t=(d.pvout-1280)/(1780-1280);
+      return lerpC('#4fc3f7','#ef4444',t);
+    }
+    case 'ranking':{
+      const t=(d.ranking-1)/(DATA.length-1);
+      return lerpC('#22c55e','#dc2626',t);
+    }
+    default: return '#6b7280';
+  }
+}
+function lerpC(a,b,t){
+  const ah=[a.slice(1,3),a.slice(3,5),a.slice(5,7)].map(h=>parseInt(h,16));
+  const bh=[b.slice(1,3),b.slice(3,5),b.slice(5,7)].map(h=>parseInt(h,16));
+  return '#'+ah.map((v,i)=>Math.round(v+(bh[i]-v)*Math.min(1,Math.max(0,t))).toString(16).padStart(2,'0')).join('');
+}
+function getR(d){
+  const mn=Math.min(...DATA.map(x=>x.kapasitas)), mx=Math.max(...DATA.map(x=>x.kapasitas));
+  return 5+((d.kapasitas-mn)/(mx-mn))*17;
+}
+
+/* ═══ RENDER MAP ═══ */
+function renderMap(){
+  const filtered = getFiltered();
+  mLayer.clearLayers();
+  if(clusterLayer){map.removeLayer(clusterLayer);clusterLayer=null;}
+  if(heatLayer){map.removeLayer(heatLayer);heatLayer=null;}
+
+  if(ST.mode==='heat'){
+    const pts=filtered.map(d=>[d.lat,d.lon,(d.skorPotensial-0.07)/0.76]);
+    heatLayer=L.heatLayer(pts,{radius:30,blur:20,maxZoom:9,gradient:{'0':'#3b82f6','0.5':'#f59e0b','1':'#16a34a'}});
+    heatLayer.addTo(map);
+  } else if(ST.mode==='cluster'){
+    clusterLayer=L.markerClusterGroup({maxClusterRadius:40});
+    filtered.forEach(d=>{
+      const col=getColor(d),r=getR(d);
+      const icon=L.divIcon({html:`<div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:${col};border:2px solid rgba(255,255,255,.85);box-shadow:0 1px 4px rgba(0,0,0,.25)"></div>`,className:'',iconSize:[r*2,r*2],iconAnchor:[r,r]});
+      const mk=L.marker([d.lat,d.lon],{icon});
+      mk.on('click',()=>selectLocation(d));
+      clusterLayer.addLayer(mk);
+    });
+    clusterLayer.addTo(map);
+  } else {
+    filtered.forEach(d=>{
+      const col=getColor(d),r=getR(d);
+      const showRank = ST.colorBy==='ranking';
+      const rl = showRank?`<span style="font-size:${Math.max(7,r*.75)}px;font-weight:700;color:#fff;line-height:1">${d.ranking}</span>`:'';
+      const icon=L.divIcon({
+        html:`<div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:${col};border:2px solid rgba(255,255,255,.85);box-shadow:0 1px 4px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;cursor:pointer">${rl}</div>`,
+        className:'',iconSize:[r*2,r*2],iconAnchor:[r,r]
+      });
+      const mk=L.marker([d.lat,d.lon],{icon});
+      mk.on('click',()=>selectLocation(d));
+      mk.on('mouseover',e=>showTT(d,e.originalEvent));
+      mk.on('mousemove',e=>moveTT(e.originalEvent));
+      mk.on('mouseout',()=>hideTT());
+      mLayer.addLayer(mk);
+    });
+  }
+  updateStats(filtered);
+  updateLegend();
+  updateRankList(filtered);
+  updateIslandSummary(ST.islandFilter);
+  if(ST.bottomOpen) setTimeout(()=>buildCharts(filtered),60);
+}
+
+/* ═══ TOOLTIP ═══ */
+function showTT(d,e){
+  const t=document.getElementById('mapTooltip');
+  document.getElementById('mt-name').textContent=d.nama;
+  document.getElementById('mt-sub').textContent=`${d.kode} · ${d.provinsi}`;
+  document.getElementById('mt-kap').textContent=d.kapasitas+' MWp';
+  document.getElementById('mt-pvout').textContent=d.pvout.toFixed(0);
+  const pc=POT_CONFIG[d.kategoriPotensi];
+  document.getElementById('mt-skor').textContent=d.skorPotensial.toFixed(2)+' — '+d.kategoriPotensi;
+  document.getElementById('mt-skor').style.color=pc?.dot||'#6b7280';
+  document.getElementById('mt-resiko').textContent=d.kategoriResiko;
+  document.getElementById('mt-resiko').style.color=RISK_CONFIG[d.kategoriResiko]?.dot||'#6b7280';
+  document.getElementById('mt-tahunan').textContent=d.tahunan.toFixed(0)+' MWh';
+  moveTT(e);t.style.display='block';
+}
+function moveTT(e){
+  const t=document.getElementById('mapTooltip'),r=document.getElementById('mapWrap').getBoundingClientRect();
+  let x=e.clientX-r.left+14,y=e.clientY-r.top+14;
+  if(x+210>r.width) x=e.clientX-r.left-215;
+  if(y+150>r.height) y=e.clientY-r.top-155;
+  t.style.left=x+'px';t.style.top=y+'px';
+}
+function hideTT(){document.getElementById('mapTooltip').style.display='none';}
+
+/* ═══ STATS ═══ */
+function updateStats(filtered){
+  const n=filtered.length;
+  const kap=filtered.reduce((s,d)=>s+d.kapasitas,0);
+  const prod=filtered.reduce((s,d)=>s+d.tahunan,0);
+  const pvout=n?filtered.reduce((s,d)=>s+d.pvout,0)/n:0;
+  const skor=n?filtered.reduce((s,d)=>s+d.skorPotensial,0)/n:0;
+  document.getElementById('sc-n').textContent=n;
+  document.getElementById('sc-kap').textContent=(kap/1000).toFixed(2)+' GWp';
+  document.getElementById('sc-prod').textContent=prod.toFixed(0);
+  document.getElementById('sc-pvout').textContent=pvout.toFixed(1);
+  document.getElementById('sc-skor').textContent=skor.toFixed(2);
+}
+
+/* ═══ LEGEND ═══ */
+function updateLegend(){
+  const title=document.getElementById('lc-title'),items=document.getElementById('lc-items');
+  items.innerHTML='';
+  if(ST.colorBy==='potensi'){
+    title.textContent='Kategori Potensi';
+    Object.entries(POT_CONFIG).forEach(([k,v])=>{items.innerHTML+=`<div class="lc-item"><div class="lc-dot" style="background:${v.dot}"></div><span class="lc-label">${k}</span></div>`;});
+  } else if(ST.colorBy==='resiko'){
+    title.textContent='Resiko Intermitensi';
+    Object.entries(RISK_CONFIG).forEach(([k,v])=>{items.innerHTML+=`<div class="lc-item"><div class="lc-dot" style="background:${v.dot}"></div><span class="lc-label">${k}</span></div>`;});
+  } else if(ST.colorBy==='pulau'){
+    title.textContent='Kawasan Pulau';
+    Object.entries(ISLAND_COLOR).forEach(([k,v])=>{items.innerHTML+=`<div class="lc-item"><div class="lc-dot" style="background:${v}"></div><span class="lc-label">${k}</span></div>`;});
+  } else if(ST.colorBy==='ranking'){
+    title.textContent='Ranking Potensi';
+    [['#1–27','#22c55e'],['#28–54','#84cc16'],['#55–81','#f59e0b'],['#82–108','#dc2626']].forEach(([l,c])=>{
+      items.innerHTML+=`<div class="lc-item"><div class="lc-dot" style="background:${c}"></div><span class="lc-label">${l}</span></div>`;
+    });
+  } else {
+    title.textContent='PVOUT (kWh/kWp/thn)';
+    [['≥1700','#ef4444'],['1600–1700','#f59e0b'],['1500–1600','#34d399'],['<1400','#4fc3f7']].forEach(([l,c])=>{
+      items.innerHTML+=`<div class="lc-item"><div class="lc-dot" style="background:${c}"></div><span class="lc-label">${l}</span></div>`;
+    });
+  }
+}
+
+/* ═══ ISLAND SUMMARY ═══ */
+function updateIslandSummary(filter){
+  const wrap = document.getElementById('islandSummaryWrap');
+  if(filter !== 'all'){
+    // Show detail for selected island
+    const sub = DATA.filter(d=>d.pulau===filter);
+    const c = ISLAND_COLOR[filter];
+    const kap = sub.reduce((s,d)=>s+d.kapasitas,0);
+    const prod = sub.reduce((s,d)=>s+d.tahunan,0);
+    const avgPvout = sub.reduce((s,d)=>s+d.pvout,0)/sub.length;
+    const avgSkor = sub.reduce((s,d)=>s+d.skorPotensial,0)/sub.length;
+    const potCounts = {}; sub.forEach(d=>potCounts[d.kategoriPotensi]=(potCounts[d.kategoriPotensi]||0)+1);
+    wrap.innerHTML=`<div style="padding:9px 11px;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px">
+        <div style="width:8px;height:8px;border-radius:50%;background:${c}"></div>
+        <div style="font-weight:700;font-size:.75rem;flex:1">${filter}</div>
+        <div style="font-size:.58rem;color:var(--text3);font-family:'JetBrains Mono',monospace">${sub.length} lokasi</div>
+      </div>
+      <div class="is-grid">
+        <div class="is-card"><div class="ic-val" style="color:${c}">${(kap/1000).toFixed(2)}</div><div class="ic-lbl">GWp</div></div>
+        <div class="is-card"><div class="ic-val" style="color:#059669">${prod.toFixed(0)}</div><div class="ic-lbl">MWh/tahun</div></div>
+        <div class="is-card"><div class="ic-val">${avgPvout.toFixed(0)}</div><div class="ic-lbl">Avg PVOUT</div></div>
+        <div class="is-card"><div class="ic-val" style="color:#2563eb">${avgSkor.toFixed(2)}</div><div class="ic-lbl">Avg Skor Pot.</div></div>
+      </div>
+      <div>${Object.entries(POT_CONFIG).map(([k,v])=>{
+        const n=potCounts[k]||0;
+        return `<div class="pot-row"><div class="pot-label" style="color:${v.fg}">${k.replace(' Potensial','')}</div>
+          <div class="pot-track"><div class="pot-fill" style="width:${(n/sub.length*100).toFixed(0)}%;background:${v.dot}"></div></div>
+          <div class="pot-num">${n}</div></div>`;
+      }).join('')}</div>
+    </div>`;
+  } else {
+    // Show 4-island overview cards
+    const islands=['Sumatera','Jawa & Kep. Sunda Kecil','Kalimantan','Sulawesi & Maluku'];
+    wrap.innerHTML=islands.map(p=>{
+      const sub=DATA.filter(d=>d.pulau===p);
+      const c=ISLAND_COLOR[p];
+      const kap=sub.reduce((s,d)=>s+d.kapasitas,0);
+      const sp=sub.filter(d=>d.kategoriPotensi==='Sangat Potensial').length;
+      const avgPvout=sub.reduce((s,d)=>s+d.pvout,0)/sub.length;
+      const shortN=p==='Jawa & Kep. Sunda Kecil'?'Jawa & SK':p;
+      return `<div class="iov-card" onclick="setIslandFilter('${p.replace(/'/g,"\\'")}')">
+        <div class="iov-row"><div class="iov-dot" style="background:${c}"></div><div class="iov-name">${shortN}</div><div class="iov-cnt">${sub.length} lok</div></div>
+        <div class="iov-grid">
+          <div class="iov-cell"><div class="iov-cv" style="color:${c}">${(kap/1000).toFixed(1)}</div><div class="iov-cl">GWp</div></div>
+          <div class="iov-cell"><div class="iov-cv" style="color:#16a34a">${sp}</div><div class="iov-cl">Sgt Pot.</div></div>
+          <div class="iov-cell"><div class="iov-cv">${avgPvout.toFixed(0)}</div><div class="iov-cl">PVOUT</div></div>
+        </div>
+        <div class="iov-bar"><div class="iov-track"><div class="iov-fill" style="width:${(sp/sub.length*100).toFixed(0)}%;background:${c}"></div></div>
+        <div class="iov-barlbl">${(sp/sub.length*100).toFixed(0)}% Sangat Potensial</div></div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function setIslandFilter(island){
+  ST.islandFilter = island;
+  document.querySelectorAll('#islandFilter .chip').forEach(b=>b.classList.toggle('active',b.dataset.island===island));
+  zoomToIsland(island);
+  updateIslandSummary(island);
+  renderMap();
+}
+
+/* ═══ SELECT LOCATION ═══ */
+function selectLocation(d){
+  ST.selected=d;
+  map.flyTo([d.lat,d.lon],11,{duration:0.9});
+  const dp=document.getElementById('detailPanel');
+  dp.classList.add('show');
+  const pc=POT_CONFIG[d.kategoriPotensi],rc=RISK_CONFIG[d.kategoriResiko];
+  document.getElementById('dp-name').textContent=d.nama;
+  document.getElementById('dp-meta').textContent=`${d.kode} · ${d.provinsi} · ${d.pulau}`;
+  document.getElementById('dp-badges').innerHTML=`
+    <span class="badge" style="background:${pc.bg};color:${pc.fg}">${d.kategoriPotensi}</span>
+    <span class="badge" style="background:${rc.bg};color:${rc.fg}">Resiko: ${d.kategoriResiko}</span>
+    <span class="badge" style="background:#f1f5f9;color:#475569">Rank #${d.ranking}</span>
+  `;
+  document.getElementById('dp-metrics').innerHTML=`
+    <div class="dm"><div class="dv" style="color:#2563eb">${d.harian.toFixed(1)}</div><div class="dl">Harian (MWh)</div></div>
+    <div class="dm"><div class="dv" style="color:#7c3aed">${d.bulanan.toFixed(0)}</div><div class="dl">Bulanan (MWh)</div></div>
+    <div class="dm"><div class="dv" style="color:#059669">${d.tahunan.toFixed(0)}</div><div class="dl">Tahunan (MWh)</div></div>
+    <div class="dm"><div class="dv" style="color:#d97706">${d.kapasitas}</div><div class="dl">Kapasitas (MWp)</div></div>
+    <div class="dm"><div class="dv">${d.luas.toLocaleString()}</div><div class="dl">Luas (Ha)</div></div>
+    <div class="dm"><div class="dv" style="color:#dc2626">${d.pvout.toFixed(1)}</div><div class="dl">PVOUT (kWh/kWp)</div></div>
+  `;
+  document.getElementById('dp-scores').innerHTML=`
+    <div class="ds-item">
+      <div class="ds-label">Skor Potensi Theoretical</div>
+      <div class="ds-bar-track"><div class="ds-bar-fill" style="width:${d.skorPotensial*100}%;background:${pc.dot}"></div></div>
+      <div class="ds-val" style="color:${pc.dot}">${d.skorPotensial.toFixed(2)}</div>
+    </div>
+    <div class="ds-item">
+      <div class="ds-label">Skor Resiko Intermitensi</div>
+      <div class="ds-bar-track"><div class="ds-bar-fill" style="width:${d.skorResiko*100}%;background:${rc.dot}"></div></div>
+      <div class="ds-val" style="color:${rc.dot}">${d.skorResiko.toFixed(2)}</div>
+    </div>
+  `;
+  document.querySelectorAll('.rank-item').forEach(el=>el.classList.toggle('selected',el.dataset.kode===d.kode));
+  document.querySelector('.rank-item.selected')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* ═══ RANK LIST ═══ */
+function updateRankList(filtered){
+  const sorted=[...filtered].sort((a,b)=>a.ranking-b.ranking);
+  document.getElementById('rankCount').textContent=sorted.length;
+  document.getElementById('rankList').innerHTML=sorted.map(d=>{
+    const pc=POT_CONFIG[d.kategoriPotensi];
+    const ic=ISLAND_COLOR[d.pulau]||'#6b7280';
+    return `<div class="rank-item${ST.selected?.kode===d.kode?' selected':''}" data-kode="${d.kode}" onclick="selectLocation(DATA.find(x=>x.kode==='${d.kode}'))">
+      <div class="ri-rank${d.ranking<=3?' top3':''}">#${d.ranking}</div>
+      <div class="ri-island-dot" style="background:${ic}"></div>
+      <div class="ri-info"><div class="ri-name">${d.nama}</div><div class="ri-prov">${d.provinsi}</div></div>
+      <div class="ri-skor" style="background:${pc.bg};color:${pc.fg}">${d.skorPotensial.toFixed(2)}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══ AUTOCOMPLETE SEARCH ═══ */
+let suggestIdx = -1;
+
+function updateClearBtn(val){
+  const btn = document.getElementById('msClear');
+  if(btn) btn.classList.toggle('show', val.length > 0);
+}
+
+function clearSearch(){
+  const inp = document.getElementById('sideSearch');
+  inp.value = '';
+  ST.search = '';
+  ST.selected = null;
+  hideSuggestions();
+  updateClearBtn('');
+  // Hide detail panel
+  document.getElementById('detailPanel').classList.remove('show');
+  renderMap();
+}
+
+document.getElementById('sideSearch').addEventListener('input', e => {
+  const q = e.target.value.trim();
+  ST.search = q;
+  updateClearBtn(e.target.value);
+  if(!q){
+    // Reset: clear selection, hide detail panel
+    ST.selected = null;
+    document.getElementById('detailPanel').classList.remove('show');
+    hideSuggestions();
+    renderMap();
+    return;
+  }
+  renderMap();
+  showSuggestions(q);
+});
+document.getElementById('sideSearch').addEventListener('keydown', e => {
+  const items = document.querySelectorAll('.suggest-item');
+  if(e.key==='ArrowDown'){e.preventDefault();suggestIdx=Math.min(suggestIdx+1,items.length-1);items.forEach((el,i)=>el.classList.toggle('active',i===suggestIdx));}
+  else if(e.key==='ArrowUp'){e.preventDefault();suggestIdx=Math.max(suggestIdx-1,-1);items.forEach((el,i)=>el.classList.toggle('active',i===suggestIdx));}
+  else if(e.key==='Enter'){
+    const active=document.querySelector('.suggest-item.active');
+    if(active) active.click();
+    else hideSuggestions();
+  }
+  else if(e.key==='Escape') hideSuggestions();
+});
+document.addEventListener('click', e => {
+  if(!e.target.closest('#mapSearch')) hideSuggestions();
+});
+
+function showSuggestions(q){
+  const box = document.getElementById('searchSuggest');
+  if(!q){hideSuggestions();return;}
+  const matches = DATA.filter(d=>d.nama.toLowerCase().includes(q.toLowerCase())).slice(0,10);
+  if(!matches.length){hideSuggestions();return;}
+  suggestIdx = -1;
+  box.innerHTML = matches.map(d=>{
+    const hi = d.nama.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')', 'gi'), '<span class="suggest-hl">$1</span>');
+    return `<div class="suggest-item" onclick="pickSuggest('${d.kode}')">
+      ${hi}<div class="suggest-kode">${d.kode} · ${d.provinsi}</div>
+    </div>`;
+  }).join('');
+  box.classList.add('show');
+}
+function hideSuggestions(){
+  document.getElementById('searchSuggest').classList.remove('show');
+  suggestIdx=-1;
+}
+function pickSuggest(kode){
+  const d=DATA.find(x=>x.kode===kode);
+  if(!d) return;
+  document.getElementById('sideSearch').value=d.nama;
+  ST.search=d.nama;
+  hideSuggestions();
+  renderMap();
+  selectLocation(d);
+}
+
+/* ═══ BOTTOM CHARTS ═══ */
+let bCharts=[];
+function toggleBottom(){
+  ST.bottomOpen=!ST.bottomOpen;
+  const bar=document.getElementById('bottomBar'),btn=document.getElementById('toggleBtn');
+  bar.classList.toggle('open',ST.bottomOpen);
+  btn.classList.toggle('open',ST.bottomOpen);
+  btn.innerHTML=ST.bottomOpen?'▼ Tutup Analitik':'▲ Analitik Charts';
+  // Shift legend cards above bottom bar
+  const offset = ST.bottomOpen ? 208 : 8;
+  document.getElementById('legendCard').style.bottom = offset+'px';
+  document.getElementById('radLegend').style.bottom = offset+'px';
+  if(ST.bottomOpen) setTimeout(()=>buildCharts(getFiltered()),60);
+}
+function buildCharts(f){
+  bCharts.forEach(c=>c.destroy());bCharts=[];
+  const FONT={family:"'Inter',sans-serif",size:9};
+  const TC='#94a3b8';
+  const GR='rgba(148,163,184,0.12)';
+
+  // Professional clean color palette
+  const POT_COLORS = {
+    'Sangat Potensial': '#0ea5e9',
+    'Potensial':        '#6366f1',
+    'Cukup Potensial':  '#f59e0b',
+    'Kurang Potensial': '#f87171',
+  };
+  const ISLAND_COLORS_CLEAN = {
+    'Sumatera':               '#0ea5e9',
+    'Jawa & Kep. Sunda Kecil':'#6366f1',
+    'Kalimantan':             '#f59e0b',
+    'Sulawesi & Maluku':      '#34d399',
+  };
+
+  const baseScaleOpts = {
+    x:{ticks:{color:TC,font:FONT,maxRotation:0},grid:{color:GR,lineWidth:1},border:{dash:[3,3],color:GR}},
+    y:{ticks:{color:TC,font:FONT},grid:{color:GR,lineWidth:1},border:{dash:[3,3],color:GR}}
+  };
+
+  const potOrder=['Sangat Potensial','Potensial','Cukup Potensial','Kurang Potensial'];
+  const potC={};
+  f.forEach(d=>potC[d.kategoriPotensi]=(potC[d.kategoriPotensi]||0)+1);
+
+  // Chart 1: Doughnut — clean professional look
+  bCharts.push(new Chart(document.getElementById('bc1'),{
+    type:'doughnut',
+    data:{
+      labels:potOrder,
+      datasets:[{
+        data:potOrder.map(k=>potC[k]||0),
+        backgroundColor:potOrder.map(k=>POT_COLORS[k]),
+        borderWidth:3,
+        borderColor:'#ffffff',
+        hoverBorderColor:'#ffffff',
+        hoverBorderWidth:4,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:true,position:'right',labels:{font:FONT,color:TC,padding:6,boxWidth:8,usePointStyle:true,pointStyleWidth:8}},
+        tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw} (${(c.raw/f.length*100).toFixed(0)}%)`},bodyFont:FONT}
+      },
+      cutout:'65%'
+    }
+  }));
+
+  // Chart 2: Bar per pulau — clean with soft fill
+  const PULAUS=['Sumatera','Jawa & Kep. Sunda Kecil','Kalimantan','Sulawesi & Maluku'];
+  bCharts.push(new Chart(document.getElementById('bc2'),{
+    type:'bar',
+    data:{
+      labels:['Sumatera','Jawa+SK','Kalimantan','Sul+Mal'],
+      datasets:[{
+        data:PULAUS.map(p=>+(f.filter(d=>d.pulau===p).reduce((s,d)=>s+d.tahunan,0)/1e6).toFixed(2)),
+        backgroundColor:PULAUS.map(p=>ISLAND_COLORS_CLEAN[p]+'d0'),
+        borderColor:PULAUS.map(p=>ISLAND_COLORS_CLEAN[p]),
+        borderWidth:0,
+        borderRadius:5,
+        borderSkipped:false,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>`${c.formattedValue} TWh/thn`},bodyFont:FONT}
+      },
+      scales:{
+        x:{...baseScaleOpts.x},
+        y:{...baseScaleOpts.y,ticks:{...baseScaleOpts.y.ticks,callback:v=>v+' TWh'}}
+      }
+    }
+  }));
+
+  // Chart 3: Top 8 horizontal bar — clean gradient-ish
+  const top8=[...f].sort((a,b)=>b.skorPotensial-a.skorPotensial).slice(0,8);
+  bCharts.push(new Chart(document.getElementById('bc3'),{
+    type:'bar',
+    data:{
+      labels:top8.map(d=>d.nama.length>14?d.nama.slice(0,14)+'…':d.nama),
+      datasets:[{
+        data:top8.map(d=>d.skorPotensial),
+        backgroundColor:top8.map((_,i)=>{
+          const alpha=Math.round(255*(0.95-i*0.07)).toString(16).padStart(2,'0');
+          return '#6366f1'+alpha;
+        }),
+        borderColor:top8.map(()=>'#6366f1'),
+        borderWidth:0,
+        borderRadius:4,
+        borderSkipped:false,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      indexAxis:'y',
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>`Skor: ${c.raw.toFixed(3)}`},bodyFont:FONT}
+      },
+      scales:{
+        x:{...baseScaleOpts.x,max:1,ticks:{...baseScaleOpts.x.ticks,callback:v=>v.toFixed(1)}},
+        y:{...baseScaleOpts.y,grid:{display:false},ticks:{color:TC,font:{...FONT,size:8}}}
+      }
+    }
+  }));
+
+  // Chart 4: Scatter — clean with island color coding
+  const islandKeys=Object.keys(ISLAND_COLORS_CLEAN);
+  const datasets=islandKeys.map(island=>({
+    label:island==='Jawa & Kep. Sunda Kecil'?'Jawa+SK':island,
+    data:f.filter(d=>d.pulau===island).map(d=>({x:d.skorPotensial,y:d.skorResiko,label:d.nama})),
+    backgroundColor:ISLAND_COLORS_CLEAN[island]+'99',
+    borderColor:ISLAND_COLORS_CLEAN[island],
+    borderWidth:1,
+    pointRadius:4,
+    pointHoverRadius:6,
+  }));
+  bCharts.push(new Chart(document.getElementById('bc4'),{
+    type:'scatter',
+    data:{datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:true,position:'top',align:'end',labels:{font:{...FONT,size:8},color:TC,padding:6,boxWidth:8,usePointStyle:true,pointStyleWidth:8}},
+        tooltip:{callbacks:{label:c=>`${c.raw.label}: pot=${c.raw.x.toFixed(2)}, rsk=${c.raw.y.toFixed(2)}`},bodyFont:FONT}
+      },
+      scales:{
+        x:{...baseScaleOpts.x,title:{display:true,text:'Skor Potensi',color:TC,font:FONT}},
+        y:{...baseScaleOpts.y,title:{display:true,text:'Skor Resiko',color:TC,font:FONT}}
+      }
+    }
+  }));
+}
+
+/* ═══ EXPORT ═══ */
+let selExport='map';
+function openExportModal(){document.getElementById('exportModal').classList.add('show');document.getElementById('emProgress').classList.remove('show');const b=document.getElementById('emConfirm');b.disabled=false;b.textContent='⬇ Download PNG';}
+function closeExpModal(){document.getElementById('exportModal').classList.remove('show');}
+function selExp(el){document.querySelectorAll('.em-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');selExport=el.dataset.export;}
+function setP(pct,lbl){document.getElementById('emProgress').classList.add('show');document.getElementById('epFill').style.width=pct+'%';document.getElementById('epLabel').textContent=lbl;}
+async function doExport(){
+  const btn=document.getElementById('emConfirm');btn.disabled=true;btn.textContent='⏳ Memproses...';
+  try{
+    if(selExport==='map') await exportMap();
+    else if(selExport==='table') await exportTable();
+    else await exportSummary();
+    btn.textContent='✓ Selesai!';
+    setTimeout(()=>closeExpModal(),1100);
+  }catch(e){console.error(e);btn.disabled=false;btn.textContent='⬇ Download PNG';alert('Gagal: '+e.message);}
+}
+function dlCanvas(c,fn){const a=document.createElement('a');a.download=fn;a.href=c.toDataURL('image/png');a.click();}
+function setupC(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d');ctx.fillStyle='#f8f9fc';ctx.fillRect(0,0,w,h);return{c,ctx};}
+function drawHdr(ctx,w,title,sub,y=0){
+  const g=ctx.createLinearGradient(0,y,w,y+50);g.addColorStop(0,'#1e40af');g.addColorStop(1,'#7c3aed');
+  ctx.fillStyle=g;ctx.fillRect(0,y,w,50);
+  ctx.fillStyle='#fff';ctx.font='bold 15px Inter,sans-serif';ctx.fillText(title,18,y+18);
+  ctx.font='10px Inter,sans-serif';ctx.fillStyle='rgba(255,255,255,.75)';ctx.fillText(sub,18,y+36);
+  ctx.font='9px JetBrains Mono,monospace';ctx.fillStyle='rgba(255,255,255,.6)';
+  const ts=new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'});
+  ctx.textAlign='right';ctx.fillText(ts,w-14,y+36);ctx.textAlign='left';
+  return y+50;
+}
+function rRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+function drawMapC(ctx,ox,oy,W,H){
+  ctx.fillStyle='#d0e8f5';ctx.fillRect(ox,oy,W,H);
+  ctx.strokeStyle='#c8d6e5';ctx.lineWidth=1;ctx.strokeRect(ox,oy,W,H);
+  const filtered=getFiltered();
+  filtered.forEach(d=>{
+    const pt=map.latLngToContainerPoint([d.lat,d.lon]);
+    if(pt.x<0||pt.x>W||pt.y<0||pt.y>H) return;
+    const col=getColor(d),r=getR(d);
+    ctx.beginPath();ctx.arc(ox+pt.x,oy+pt.y,r,0,Math.PI*2);
+    ctx.fillStyle=col;ctx.fill();ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=1.5;ctx.stroke();
+    if(d.ranking<=10){ctx.font=`bold ${Math.max(7,r*.75)}px Inter,sans-serif`;ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(d.ranking,ox+pt.x,oy+pt.y+r*.35);ctx.textAlign='left';}
+  });
+}
+function drawStats(ctx,x,y,w,filtered){
+  ctx.fillStyle='#fff';ctx.fillRect(x,y,w,36);ctx.fillStyle='#e4e7ef';ctx.fillRect(x,y,w,1);
+  const n=filtered.length,kap=(filtered.reduce((s,d)=>s+d.kapasitas,0)/1000).toFixed(2);
+  const prod=filtered.reduce((s,d)=>s+d.tahunan,0).toFixed(0);
+  const pv=(filtered.reduce((s,d)=>s+d.pvout,0)/n).toFixed(0);
+  const sk=(filtered.reduce((s,d)=>s+d.skorPotensial,0)/n).toFixed(2);
+  [['Lokasi',n],['Kap.',kap+' GWp'],['Prod.(MWh)',prod],['PVOUT',pv],['Avg Skor',sk]].forEach(([k,v],i)=>{
+    const cx=x+i*(w/5)+w/10;
+    ctx.font='bold 10px JetBrains Mono,monospace';ctx.fillStyle='#2563eb';ctx.textAlign='center';ctx.fillText(String(v),cx,y+15);
+    ctx.font='8px Inter,sans-serif';ctx.fillStyle='#8b96b0';ctx.fillText(k,cx,y+28);
+  });ctx.textAlign='left';
+}
+async function exportMap(){
+  setP(10,'Merender...');
+  const filtered=getFiltered(),mapEl=document.getElementById('map');
+  const W=mapEl.offsetWidth,H=mapEl.offsetHeight;
+  const {c,ctx}=setupC(W+40,H+90);
+  let y=drawHdr(ctx,W+40,'PLTS Terapung Indonesia — Peta Spasial',`Filter: ${ST.islandFilter==='all'?'Semua':ST.islandFilter} · ${filtered.length} Lokasi · ${ST.colorBy}`);
+  setP(40,'Menggambar...');drawMapC(ctx,20,y+6,W,H-6);
+  ctx.fillStyle='rgba(255,255,255,.94)';rRect(ctx,W+40-162,y+10,152,90,7);ctx.fill();ctx.strokeStyle='#e4e7ef';ctx.lineWidth=1;ctx.stroke();
+  ctx.font='bold 8px Inter,sans-serif';ctx.fillStyle='#8b96b0';ctx.fillText('KATEGORI POTENSI',W+40-155,y+22);
+  Object.entries(POT_CONFIG).forEach(([k,v],i)=>{
+    const ly=y+30+i*17;ctx.beginPath();ctx.arc(W+40-148,ly+4,4.5,0,Math.PI*2);ctx.fillStyle=v.dot;ctx.fill();
+    ctx.font='8.5px Inter,sans-serif';ctx.fillStyle='#1e293b';ctx.fillText(k.replace(' Potensial',''),W+40-138,ly+8);
+  });
+  setP(85,'Statistik...');drawStats(ctx,0,y+H+4,W+40,filtered);setP(100,'Selesai!');
+  dlCanvas(c,`PLTS_Peta_${new Date().toISOString().slice(0,10)}.png`);
+}
+async function exportTable(){
+  setP(10,'Menyiapkan...');
+  const filtered=[...getFiltered()].sort((a,b)=>a.ranking-b.ranking);
+  const COLS=[
+    {k:'ranking',label:'#',w:32},{k:'kode',label:'Kode',w:62},{k:'nama',label:'Nama',w:148},
+    {k:'provinsi',label:'Provinsi',w:105},{k:'pulau',label:'Kawasan',w:112},
+    {k:'kapasitas',label:'Kap(MWp)',w:64},{k:'luas',label:'Ha',w:56},
+    {k:'pvout',label:'PVOUT',w:52},{k:'harian',label:'Harian',w:66},
+    {k:'bulanan',label:'Bulanan',w:74},{k:'tahunan',label:'Tahunan(MWh)',w:90},
+    {k:'skorPotensial',label:'SkorPot',w:56},{k:'kategoriPotensi',label:'Kat.Pot',w:100},
+    {k:'skorResiko',label:'SkorRsk',w:56},{k:'kategoriResiko',label:'Kat.Rsk',w:88},
+  ];
+  const ROW=19,HEAD=26,PAD=12;
+  const TW=COLS.reduce((s,c)=>s+c.w,0)+PAD*2;
+  const {c,ctx}=setupC(TW,54+14+HEAD+filtered.length*ROW+44);
+  let y=drawHdr(ctx,TW,'PLTS Terapung Indonesia — Tabel Data (MWh)',`${filtered.length} lokasi · sorted by ranking`);
+  y+=12;
+  ctx.fillStyle='#1e293b';ctx.fillRect(PAD,y,TW-PAD*2,HEAD);
+  ctx.font='bold 8px Inter,sans-serif';ctx.fillStyle='#e2e8f0';
+  let rx=PAD;COLS.forEach(col=>{ctx.fillText(col.label,rx+3,y+17);rx+=col.w;});y+=HEAD;
+  filtered.forEach((d,i)=>{
+    const ry=y+i*ROW;
+    ctx.fillStyle=i%2?'#f8fafc':'#fff';ctx.fillRect(PAD,ry,TW-PAD*2,ROW);
+    ctx.fillStyle=POT_CONFIG[d.kategoriPotensi]?.dot||'#94a3b8';ctx.fillRect(PAD,ry,2,ROW);
+    let rx=PAD;
+    COLS.forEach(col=>{
+      let val=d[col.k],color='#1e293b';ctx.font='8px Inter,sans-serif';
+      if(col.k==='ranking'){val='#'+val;color=d.ranking<=3?'#854d0e':d.ranking<=10?'#1d4ed8':'#4b5675';ctx.font='bold 8px JetBrains Mono,monospace';}
+      else if(col.k==='kode'){color='#6366f1';ctx.font='7.5px JetBrains Mono,monospace';}
+      else if(col.k==='kategoriPotensi'){color=POT_CONFIG[val]?.fg||'#1e293b';ctx.font='bold 7.5px Inter,sans-serif';}
+      else if(col.k==='kategoriResiko'){color=RISK_CONFIG[val]?.fg||'#1e293b';ctx.font='bold 7.5px Inter,sans-serif';}
+      else if(col.k==='pulau'){color=ISLAND_COLOR[val]||'#64748b';ctx.font='7.5px Inter,sans-serif';}
+      else if(['kapasitas','luas','pvout','harian','bulanan','tahunan','skorPotensial','skorResiko'].includes(col.k)){
+        val=['skorPotensial','skorResiko'].includes(col.k)?parseFloat(val).toFixed(2):parseFloat(val).toFixed(0);
+        ctx.font='8px JetBrains Mono,monospace';color='#374151';
+      }
+      ctx.fillStyle=color;
+      const txt=String(val),mw=col.w-7;let dt=txt;
+      while(ctx.measureText(dt).width>mw&&dt.length>3) dt=dt.slice(0,-1);
+      if(dt!==txt) dt=dt.slice(0,-1)+'…';
+      ctx.fillText(dt,rx+3,ry+ROW/2+3.5);rx+=col.w;
+    });
+  });
+  const fy=y+filtered.length*ROW+6;
+  ctx.fillStyle='#eff4ff';ctx.fillRect(PAD,fy,TW-PAD*2,28);
+  ctx.font='bold 9px JetBrains Mono,monospace';ctx.fillStyle='#2563eb';ctx.textAlign='center';
+  ctx.fillText(`${filtered.length} Lokasi · ${(filtered.reduce((s,d)=>s+d.kapasitas,0)/1000).toFixed(2)} GWp · ${filtered.reduce((s,d)=>s+d.tahunan,0).toFixed(0)} MWh/thn`,TW/2,fy+18);
+  ctx.textAlign='left';setP(100,'Selesai!');
+  dlCanvas(c,`PLTS_Tabel_MWh_${new Date().toISOString().slice(0,10)}.png`);
+}
+async function exportSummary(){
+  setP(10,'Menyiapkan...');
+  const PULAUS=['Sumatera','Jawa & Kep. Sunda Kecil','Kalimantan','Sulawesi & Maluku'];
+  const W=840,H=660;
+  const {c,ctx}=setupC(W,H);
+  let y=drawHdr(ctx,W,'PLTS Terapung Indonesia — Ringkasan per Kawasan',`4 Kawasan · ${DATA.length} Lokasi · Satuan: MWh`);
+  y+=16;
+  const cW=390,cH=224,gap=16,sx=(W-cW*2-gap)/2;
+  PULAUS.forEach((p,i)=>{
+    const sub=DATA.filter(d=>d.pulau===p),col=ISLAND_COLOR[p];
+    const kap=(sub.reduce((s,d)=>s+d.kapasitas,0)/1000).toFixed(2);
+    const prod=sub.reduce((s,d)=>s+d.tahunan,0).toFixed(0);
+    const pv=(sub.reduce((s,d)=>s+d.pvout,0)/sub.length).toFixed(0);
+    const sk=(sub.reduce((s,d)=>s+d.skorPotensial,0)/sub.length).toFixed(2);
+    const cx=sx+(i%2)*(cW+gap),cy=y+Math.floor(i/2)*(cH+gap);
+    ctx.fillStyle='#fff';rRect(ctx,cx,cy,cW,cH,8);ctx.fill();ctx.strokeStyle='#e4e7ef';ctx.lineWidth=1.5;ctx.stroke();
+    const g=ctx.createLinearGradient(cx,cy,cx+cW,cy);g.addColorStop(0,col+'28');g.addColorStop(1,col+'05');
+    ctx.fillStyle=g;rRect(ctx,cx,cy,cW,42,8);ctx.fill();
+    ctx.fillStyle=col;ctx.fillRect(cx,cy+34,cW,3);
+    ctx.font='bold 12px Inter,sans-serif';ctx.fillStyle='#0f1523';ctx.fillText(p.replace('Jawa & Kep. Sunda Kecil','Jawa & Kep. Sunda Kecil').slice(0,35),cx+11,cy+22);
+    ctx.textAlign='right';ctx.font='9px JetBrains Mono,monospace';ctx.fillStyle=col;ctx.fillText(sub.length+' lok',cx+cW-11,cy+22);ctx.textAlign='left';
+    [[kap+' GWp','Kapasitas'],[prod,'MWh/tahun'],[pv,'Avg PVOUT'],[sk,'Avg Skor']].forEach(([v,l],mi)=>{
+      const mx=cx+11+(mi%2)*((cW-22)/2),my=cy+50+Math.floor(mi/2)*34;
+      ctx.fillStyle='#f8fafc';rRect(ctx,mx,my,(cW-26)/2,26,4);ctx.fill();ctx.strokeStyle='#e4e7ef';ctx.lineWidth=1;ctx.stroke();
+      ctx.font='bold 9px JetBrains Mono,monospace';ctx.fillStyle=col;ctx.fillText(v,mx+6,my+12);
+      ctx.font='7.5px Inter,sans-serif';ctx.fillStyle='#8b96b0';ctx.fillText(l,mx+6,my+22);
+    });
+    const potC={};sub.forEach(d=>potC[d.kategoriPotensi]=(potC[d.kategoriPotensi]||0)+1);
+    ctx.font='bold 7px Inter,sans-serif';ctx.fillStyle='#8b96b0';ctx.fillText('DISTRIBUSI POTENSI',cx+11,cy+127);
+    Object.entries(POT_CONFIG).forEach(([k,v],pi)=>{
+      const n=potC[k]||0,bx=cx+11,by=cy+133+pi*17;
+      ctx.font='7.5px Inter,sans-serif';ctx.fillStyle='#374151';ctx.fillText(k.replace(' Potensial',''),bx,by+9);
+      ctx.fillStyle='#f1f5f9';ctx.fillRect(bx+62,by+1,cW-84,9);
+      ctx.fillStyle=v.dot+'cc';ctx.fillRect(bx+62,by+1,Math.max(2,(cW-84)*n/sub.length),9);
+      ctx.font='7px JetBrains Mono,monospace';ctx.fillStyle=v.fg;
+      ctx.textAlign='right';ctx.fillText(n,cx+cW-11,by+9);ctx.textAlign='left';
+    });
+  });
+  setP(100,'Selesai!');dlCanvas(c,`PLTS_Ringkasan_${new Date().toISOString().slice(0,10)}.png`);
+}
+
+/* ═══ EVENT LISTENERS ═══ */
+document.querySelectorAll('#islandFilter .chip').forEach(btn=>btn.addEventListener('click',()=>{
+  setIslandFilter(btn.dataset.island);
+}));
+document.querySelectorAll('[data-mode]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('[data-mode]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');ST.mode=btn.dataset.mode;renderMap();
+}));
+document.querySelectorAll('[data-color]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('[data-color]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');ST.colorBy=btn.dataset.color;renderMap();
+}));
+document.querySelectorAll('[data-pot]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('[data-pot]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');ST.potFilter=btn.dataset.pot;renderMap();
+}));
+document.querySelectorAll('[data-risk]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('[data-risk]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');ST.riskFilter=btn.dataset.risk;renderMap();
+}));
+
+map.on('click',()=>{if(ST.selected){ST.selected=null;document.getElementById('detailPanel').classList.remove('show');}});
+
+/* ═══ INIT ═══ */
+updateIslandSummary('all');
+renderMap();
+zoomToIsland('all');
+
+/* ═══ LANDING PAGE LOGIC ═══ */
+let CURRENT_MAP_TYPE = 'theoretical';
+
+const MAP_CONFIG = {
+  theoretical: {
+    badge: '⚡ Potensi Teoretis',
+    badgeClass: 'theoretical',
+    topbarTitle: 'PLTS Terapung — Potensi Teoretis',
+    sidebarNote: 'Mode: Skor Radiasi & Intermitensi',
+    colorBy: 'potensi',
+    description: 'Menampilkan skor potensi berdasarkan radiasi GHI, kapasitas, dan faktor teknis.',
+  },
+  practical: {
+    badge: '🌿 Potensi Praktis (ESG)',
+    badgeClass: 'practical',
+    topbarTitle: 'PLTS Terapung — Potensi Praktis ESG',
+    sidebarNote: 'Mode: Skor ESG (Environment · Social · Governance)',
+    colorBy: 'pulau',
+    description: 'Menampilkan penilaian dari sisi Environment, Social, dan Governance.',
+  },
+  integrated: {
+    badge: '🗺 Peta Gabungan',
+    badgeClass: 'integrated',
+    topbarTitle: 'PLTS Terapung — Peta Prioritas Gabungan',
+    sidebarNote: 'Mode: Skor Gabungan Teoritis + Praktis',
+    colorBy: 'ranking',
+    description: 'Peringkat prioritas terintegrasi dari seluruh dimensi penilaian.',
+  },
+};
+
+// ── Navigation History ──
+// Stack tracks: 'landing' | 'theoretical' | 'practical' | 'integrated'
+const NAV_HISTORY = ['landing'];
+let NAV_IDX = 0;
+
+function updateNavBtns(){
+  const back = document.getElementById('btnBack');
+  const fwd  = document.getElementById('btnFwd');
+  if(back) back.disabled = (NAV_IDX <= 0);
+  if(fwd)  fwd.disabled  = (NAV_IDX >= NAV_HISTORY.length - 1);
+}
+
+function navTo(page, pushHistory = true){
+  if(pushHistory){
+    // Truncate forward stack when navigating new direction
+    NAV_HISTORY.splice(NAV_IDX + 1);
+    NAV_HISTORY.push(page);
+    NAV_IDX = NAV_HISTORY.length - 1;
+  }
+  updateNavBtns();
+
+  if(page === 'landing'){
+    _showLandingUI();
+  } else {
+    _showMapUI(page);
+  }
+}
+
+function navBack(){
+  if(NAV_IDX <= 0) return;
+  NAV_IDX--;
+  updateNavBtns();
+  const page = NAV_HISTORY[NAV_IDX];
+  if(page === 'landing') _showLandingUI();
+  else _showMapUI(page);
+}
+
+function navFwd(){
+  if(NAV_IDX >= NAV_HISTORY.length - 1) return;
+  NAV_IDX++;
+  updateNavBtns();
+  const page = NAV_HISTORY[NAV_IDX];
+  if(page === 'landing') _showLandingUI();
+  else _showMapUI(page);
+}
+
+function _showLandingUI(){
+  const landing = document.getElementById('landing');
+  landing.style.display = 'grid';
+  landing.style.opacity = '1';
+  landing.classList.remove('fade-out');
+}
+
+function _showMapUI(type){
+  CURRENT_MAP_TYPE = type;
+  const cfg = MAP_CONFIG[type];
+
+  // Update topbar badge
+  const badge = document.getElementById('mapTypeBadge');
+  if(badge){ badge.textContent = cfg.badge; badge.className = cfg.badgeClass; }
+
+  // Switch default color mode
+  ST.colorBy = cfg.colorBy;
+  document.querySelectorAll('[data-color]').forEach(b => {
+    b.classList.toggle('active', b.dataset.color === cfg.colorBy);
+  });
+
+  // ESG note
+  const esgNote = document.getElementById('esgModeNote');
+  if(esgNote){
+    esgNote.textContent = cfg.sidebarNote;
+    esgNote.style.display = cfg.sidebarNote ? 'block' : 'none';
+  }
+
+  // Fade out landing then show map
+  const landing = document.getElementById('landing');
+
+  const _initMap = (firstTime) => {
+    map.invalidateSize({ animate: false });
+    if (firstTime) {
+      map.fitBounds(RAD_BOUNDS, { padding: [0, 0], animate: false });
+    }
+    renderMap();
+  };
+
+  if(landing.style.display !== 'none'){
+    landing.classList.add('fade-out');
+    setTimeout(() => {
+      landing.style.display = 'none';
+      landing.classList.remove('fade-out');
+      _initMap(true);
+    }, 480);
+  } else {
+    _initMap(false);
+  }
+}
+
+// Called from landing cards
+function enterMap(type){ navTo(type); }
+// Legacy alias (unused but safe)
+function showLanding(){ navTo('landing'); }
+
+</script>
+</body>
+</html>
