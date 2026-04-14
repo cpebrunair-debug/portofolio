@@ -527,9 +527,146 @@
     .port-item.applied-item:hover,
     .pub-item:hover{ border-color:rgba(31,95,191,.22); }
 
-  </style>
+  
+/* ===================== TYPOGRAPHY UNIFORM OVERRIDE ===================== */
+:root{
+  --font-title:Helvetica, "Helvetica Neue", Arial, sans-serif;
+  --font-body:"Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+}
+body, button, input, select, textarea {
+  font-family: var(--font-body) !important;
+}
+h1, h2, h3, h4, .hero-title, .page-title, .section-title, .section-title-wrap h2, .nav-card h3, .collab-card h4 {
+  font-family: var(--font-title) !important;
+}
+.hero-copy,
+.hero-copy * {
+  color:#ffffff;
+}
+.nav-card,
+.nav-card h3,
+.collab-card,
+.collab-card h4,
+.logo-item,
+.footer-note,
+.footer-note strong,
+.page,
+body {
+  color: var(--text);
+}
+.nav-card p,
+.footer-note,
+.hint {
+  color: var(--muted) !important;
+}
+
+</style>
+
+<style>
+/* ===================== PORTFOLIO PASSCODE ACCESS ===================== */
+:root{
+  --passcode-title:Helvetica, "Helvetica Neue", Arial, sans-serif;
+  --passcode-body:"Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+}
+body.portfolio-locked{overflow:hidden;}
+body.portfolio-locked .page{visibility:hidden;pointer-events:none;}
+#portfolio-lock{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:linear-gradient(135deg,#0c355d 0%, #124a7b 48%, #236ec7 100%);
+}
+body:not(.portfolio-locked) #portfolio-lock{display:none;}
+.lock-card{
+  width:min(460px,100%);
+  border-radius:28px;
+  padding:28px;
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(16,38,61,.10);
+  box-shadow:0 28px 60px rgba(12,53,93,.24);
+  color:#10263d;
+}
+.lock-eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:#edf4ff;
+  color:#1f5fbf;
+  font:800 11px "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.lock-title{
+  margin:0 0 10px;
+  font-family:Helvetica, "Helvetica Neue", Arial, sans-serif;
+  font-size:32px;
+  line-height:1.02;
+  letter-spacing:-.03em;
+  color:#10263d;
+}
+.lock-desc{
+  margin:0 0 18px;
+  font:400 14px/1.8 "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  color:#5c7189;
+}
+.lock-form{display:grid;gap:12px;}
+.lock-input{
+  width:100%;
+  height:50px;
+  border-radius:16px;
+  border:1px solid rgba(16,38,61,.12);
+  padding:0 16px;
+  font:600 15px "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  color:#10263d;
+  background:#ffffff;
+  outline:none;
+}
+.lock-input:focus{border-color:#1f5fbf;box-shadow:0 0 0 3px rgba(31,95,191,.12);}
+.lock-btn{
+  height:50px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(135deg,#103d67,#2d79d5);
+  color:#ffffff;
+  font:700 14px "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  cursor:pointer;
+}
+.lock-error{
+  min-height:20px;
+  font:600 12px "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  color:#c13b3b;
+}
+.lock-note{
+  margin-top:10px;
+  font:400 12px/1.7 "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  color:#6a7f96;
+}
+</style>
+
 </head>
-<body>
+<body class="portfolio-locked">
+  
+  <div id="portfolio-lock" aria-hidden="false">
+    <div class="lock-card" role="dialog" aria-modal="true" aria-labelledby="portfolio-lock-title">
+      <div class="lock-eyebrow">Akses Portofolio</div>
+      <h2 class="lock-title" id="portfolio-lock-title">Masukkan passcode</h2>
+      <p class="lock-desc">Halaman portofolio ini dilindungi passcode. Masukkan kode yang benar untuk membuka seluruh isi halaman tanpa mengubah link portofolio yang sudah ada.</p>
+      <form class="lock-form" id="portfolio-lock-form">
+        <input class="lock-input" id="portfolio-passcode-input" type="password" inputmode="text" autocomplete="off" placeholder="Masukkan passcode" aria-label="Passcode" />
+        <button class="lock-btn" type="submit">Buka halaman</button>
+        <div class="lock-error" id="portfolio-lock-error" aria-live="polite"></div>
+      </form>
+      <div class="lock-note">Passcode bersifat case-sensitive dan harus diisi persis sesuai kode yang ditentukan.</div>
+    </div>
+  </div>
+
   <main class="page">
 
 
@@ -569,6 +706,16 @@
               <h3>Dashboard Indosat</h3>
               <p>Hasil riset dan analisis consulting research bersama Indosat dalam kajian inovasi teknologi terapan.</p>
               <div class="port-item-cta">Buka Dashboard</div>
+            </div>
+          </a>
+
+          <a class="port-item applied-item" href="https://cpebrunair-debug.github.io/portofolio/bulletinindosat">
+            <div class="port-item-bar"></div>
+            <div class="port-item-body">
+              <div class="port-item-icon">BL</div>
+              <h3>Bulletin Indosat</h3>
+              <p>Ringkasan bulletin dan materi portofolio terkait kolaborasi riset bersama Indosat.</p>
+              <div class="port-item-cta">Buka Halaman</div>
             </div>
           </a>
 
@@ -677,6 +824,51 @@
 
     </div>
   </main>
+
+
+<script>
+(function(){
+  var PASSCODE = '*123#';
+  var STORAGE_KEY = 'rinov_portfolio_unlock';
+  var body = document.body;
+  var overlay = document.getElementById('portfolio-lock');
+  var form = document.getElementById('portfolio-lock-form');
+  var input = document.getElementById('portfolio-passcode-input');
+  var error = document.getElementById('portfolio-lock-error');
+
+  function unlockPage() {
+    sessionStorage.setItem(STORAGE_KEY, 'ok');
+    body.classList.remove('portfolio-locked');
+    overlay.setAttribute('aria-hidden', 'true');
+    error.textContent = '';
+    input.value = '';
+  }
+
+  function keepLocked() {
+    body.classList.add('portfolio-locked');
+    overlay.setAttribute('aria-hidden', 'false');
+  }
+
+  if (sessionStorage.getItem(STORAGE_KEY) === 'ok') {
+    unlockPage();
+  } else {
+    keepLocked();
+    window.setTimeout(function(){ input.focus(); }, 60);
+  }
+
+  form.addEventListener('submit', function(event){
+    event.preventDefault();
+    if (input.value === PASSCODE) {
+      unlockPage();
+      return;
+    }
+    keepLocked();
+    error.textContent = 'Passcode salah. Gunakan kode yang tepat untuk membuka halaman.';
+    input.focus();
+    input.select();
+  });
+})();
+</script>
 
 </body>
 </html>
