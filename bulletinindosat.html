@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SINYAL — Majalah Risiko Iklim BTS Indosat 2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════
+   ROOT
+═══════════════════════════════ */
+:root{
+  --r:#e8192c; --m:#d4006a; --y:#f5a623; --t:#00b8a9; --p:#8b1fae;
+  --b:#3b82f6; --g:#16a34a; --o:#ea580c;
+  --ink:#0d0d1a; --ink2:#2a2a3e; --ink3:#4a4a62;
+  --smoke:#f0f1f5; --paper:#fafaf8; --cream:#f7f4ee;
+  --fh:'Playfair Display',Georgia,serif;
+  --fb:'Plus Jakarta Sans',sans-serif;
+  --fm:'DM Mono',monospace;
+  --fd:'Bebas Neue',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:var(--fb);background:#1a1a2e;-webkit-font-smoothing:antialiased}
+
+/* ═══════════════════════════════
+   MAGAZINE WRAPPER
+═══════════════════════════════ */
+#magazine{
+  position:fixed;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  perspective:2400px;
+}
+
+/* ── Navigation Bar (top) ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;height:48px;z-index:1000;
+  background:rgba(10,10,20,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+}
+.tb-brand{display:flex;align-items:center;gap:8px}
+.tb-lc{position:relative;width:26px;height:20px}
+.tlc{position:absolute;border-radius:50%;width:13px;height:13px}
+.tlc1{background:#e8192c;top:0;left:0}
+.tlc2{background:#d4006a;top:0;left:7px;opacity:.85}
+.tlc3{background:#f5a623;top:6px;left:3px;opacity:.8}
+.tb-name{font-family:var(--fh);font-size:15px;font-weight:700;color:white;letter-spacing:-.01em}
+.tb-issue{font-family:var(--fm);font-size:9.5px;color:rgba(255,255,255,.35);letter-spacing:.1em}
+.tb-center{display:flex;align-items:center;gap:6px}
+.tb-page-info{font-family:var(--fm);font-size:10.5px;color:rgba(255,255,255,.45);letter-spacing:.05em}
+.tb-toc-btn{font-family:var(--fb);font-size:11.5px;font-weight:600;color:rgba(255,255,255,.6);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:5px 12px;cursor:pointer;transition:all .18s}
+.tb-toc-btn:hover{background:rgba(255,255,255,.12);color:white}
+
+/* ── Page Viewport ── */
+#page-viewport{
+  width:900px;max-width:96vw;
+  height:calc(100vh - 110px);
+  margin-top:48px;
+  position:relative;
+}
+
+/* ── Individual Page ── */
+.page{
+  position:absolute;inset:0;
+  background:var(--paper);
+  border-radius:4px 18px 18px 4px;
+  overflow:hidden;
+  transform-origin:left center;
+  transition:transform .7s cubic-bezier(.77,0,.175,1), opacity .4s ease;
+  box-shadow:4px 0 40px rgba(0,0,0,.5), 0 4px 32px rgba(0,0,0,.4);
+  display:none;
+  overflow-y:auto;
+}
+.page.active{display:block;transform:translateX(0);opacity:1;z-index:10}
+.page.prev-out{display:block;transform:translateX(-100%) rotateY(-15deg);opacity:0;z-index:5}
+.page.next-in{display:block;transform:translateX(100%);opacity:0;z-index:5}
+.page::-webkit-scrollbar{width:4px}
+.page::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:99px}
+
+/* ── Nav Arrows ── */
+.nav-arrow{
+  position:fixed;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);
+  color:white;font-size:18px;cursor:pointer;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;backdrop-filter:blur(8px);
+}
+.nav-arrow:hover{background:rgba(232,25,44,.7);border-color:transparent;transform:translateY(-50%) scale(1.08)}
+.nav-arrow:disabled{opacity:.2;cursor:not-allowed;transform:translateY(-50%)}
+#btn-prev{left:calc(50% - 480px);margin-left:-28px}
+#btn-next{right:calc(50% - 480px);margin-right:-28px}
+@media(max-width:960px){#btn-prev{left:4px}#btn-next{right:4px}}
+
+/* ── Bottom dot nav ── */
+#dot-nav{
+  position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
+  display:flex;gap:7px;z-index:100;align-items:center;
+}
+.dnav-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:all .2s}
+.dnav-dot.active{background:#e8192c;width:22px;border-radius:3px}
+
+/* ═══════════════════════════════
+   TABLE OF CONTENTS OVERLAY
+═══════════════════════════════ */
+#toc-overlay{
+  position:fixed;inset:0;z-index:900;
+  background:rgba(10,10,20,.96);backdrop-filter:blur(20px);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px 24px 24px;
+}
+#toc-overlay.open{display:flex}
+.toc-close{position:absolute;top:18px;right:24px;font-size:22px;color:rgba(255,255,255,.5);cursor:pointer;transition:color .15s}
+.toc-close:hover{color:white}
+.toc-title{font-family:var(--fh);font-size:28px;font-weight:700;color:white;margin-bottom:32px;text-align:center}
+.toc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:720px;width:100%}
+.toc-item{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 18px;cursor:pointer;transition:all .2s;display:flex;gap:12px;align-items:flex-start}
+.toc-item:hover{background:rgba(232,25,44,.12);border-color:rgba(232,25,44,.3);transform:translateY(-2px)}
+.toc-num{font-family:var(--fd);font-size:22px;color:rgba(255,255,255,.2);line-height:1;flex-shrink:0}
+.toc-info{}
+.toc-label{font-size:11px;color:rgba(255,255,255,.4);font-family:var(--fm);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.toc-page-title{font-size:13.5px;font-weight:600;color:white;line-height:1.3}
+
+/* ═══════════════════════════════
+   PAGE COMMON ELEMENTS
+═══════════════════════════════ */
+.page-header{
+  padding:28px 36px 20px;
+  border-bottom:1px solid rgba(0,0,0,.06);
+  display:flex;align-items:center;gap:10px;
+}
+.ph-section{font-family:var(--fm);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,0,0,.3)}
+.ph-sep{font-size:10px;color:rgba(0,0,0,.18)}
+.ph-page{font-family:var(--fm);font-size:9.5px;color:rgba(0,0,0,.25);margin-left:auto}
+.page-content{padding:28px 36px 36px}
+
+/* Typography helpers */
+.kicker{font-family:var(--fm);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--r);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.kicker::before{content:'';width:20px;height:2px;background:var(--r)}
+h1.pgtitle{font-family:var(--fh);font-size:clamp(28px,4vw,42px);font-weight:900;line-height:1;letter-spacing:-.02em;margin-bottom:14px}
+h2.sectitle{font-family:var(--fh);font-size:26px;font-weight:700;line-height:1.15;margin-bottom:12px}
+h3.subsec{font-family:var(--fh);font-size:18px;font-weight:700;margin-bottom:10px}
+.body-text{font-size:13.5px;line-height:1.75;color:rgba(0,0,0,.65)}
+.body-text p{margin-bottom:12px}
+.body-text p:first-child::first-letter{font-family:var(--fh);font-size:48px;font-weight:900;float:left;line-height:.82;margin:6px 6px 0 0;color:var(--r)}
+
+/* Insight boxes */
+.insight{display:flex;gap:12px;border-radius:12px;padding:15px 18px;margin:16px 0;border-left:4px solid}
+.ins-default{background:#fff9e6;border-color:var(--y)}
+.ins-red{background:#fff0f0;border-color:var(--r)}
+.ins-green{background:#f0fdf4;border-color:var(--g)}
+.ins-blue{background:#eff6ff;border-color:var(--b)}
+.ins-purple{background:#faf5ff;border-color:var(--p)}
+.ins-ico{font-size:20px;flex-shrink:0;margin-top:1px}
+.ins-body{}
+.ins-title{font-weight:700;font-size:13px;margin-bottom:3px;color:var(--ink)}
+.ins-text{font-size:12.5px;color:rgba(0,0,0,.6);line-height:1.58}
+.ins-text strong{color:var(--ink);font-weight:600}
+
+/* KPI strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--ink);border-radius:14px;overflow:hidden;margin:16px 0}
+.kpi-cell{background:var(--paper);padding:18px 16px;position:relative}
+.kpi-cell::before{content:'';position:absolute;top:0;left:16px;width:28px;height:3px;border-radius:0 0 3px 3px}
+.kc-r::before{background:var(--r)}.kc-m::before{background:var(--m)}.kc-y::before{background:var(--y)}.kc-t::before{background:var(--t)}.kc-p::before{background:var(--p)}.kc-b::before{background:var(--b)}
+.kc-lbl{font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,0,0,.35);margin-bottom:5px}
+.kc-val{font-family:var(--fd);font-size:28px;letter-spacing:.02em;line-height:1;margin-bottom:4px}
+.kc-r .kc-val{color:var(--r)}.kc-m .kc-val{color:var(--m)}.kc-y .kc-val{color:#a06000}.kc-t .kc-val{color:#007a74}.kc-p .kc-val{color:var(--p)}.kc-b .kc-val{color:#2563eb}
+.kc-note{font-size:11px;color:rgba(0,0,0,.4);line-height:1.4}
+
+/* Two column */
+.col2{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.col2-6040{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:start}
+.col2-4060{display:grid;grid-template-columns:1fr 1.4fr;gap:22px;align-items:start}
+
+/* Pull quote */
+.pullq{background:var(--ink);color:white;border-radius:14px;padding:22px 20px;margin:16px 0}
+.pq-text{font-family:var(--fh);font-size:16px;font-style:italic;line-height:1.45;margin-bottom:10px}
+.pq-bar{width:22px;height:2px;background:var(--r);margin:8px 0}
+.pq-attr{font-size:10px;color:rgba(255,255,255,.38);letter-spacing:.05em}
+
+/* Photo */
+.photo{border-radius:12px;overflow:hidden;position:relative}
+.photo img{width:100%;display:block;object-fit:cover}
+.photo-cap{font-size:10.5px;color:rgba(0,0,0,.38);font-style:italic;margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,0,0,.06);line-height:1.4}
+
+/* Info list */
+.infolist{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.infolist-item{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:rgba(0,0,0,.62);line-height:1.45}
+.il-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+
+/* Chart wrap */
+.cw{position:relative}
+.cw-sm{height:180px}
+.cw-md{height:220px}
+.cw-lg{height:260px}
+.chart-card{background:white;border:1.5px solid rgba(0,0,0,.07);border-radius:14px;padding:18px 16px 14px;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.cc-title{font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.2}
+.cc-badge{display:inline-block;font-family:var(--fm);font-size:8.5px;letter-spacing:.08em;background:var(--smoke);padding:2px 8px;border-radius:99px;color:rgba(0,0,0,.38);margin-bottom:10px}
+
+/* Hazard chips */
+.hazard-row{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.hchip{border-radius:8px;padding:10px 12px;text-align:center;flex:1;min-width:70px}
+.hc-vh{background:#fff0f0;border:1.5px solid #fca5a5}
+.hc-h{background:#fff6ef;border:1.5px solid #fdba74}
+.hc-m{background:#fffbeb;border:1.5px solid #fcd34d}
+.hc-l{background:#f0fdf4;border:1.5px solid #86efac}
+.hc-vl{background:#eff6ff;border:1.5px solid #93c5fd}
+.hc-nh{background:#f9fafb;border:1.5px solid #d1d5db}
+.hchip-dot{width:10px;height:10px;border-radius:50%;margin:0 auto 6px}
+.hc-vh .hchip-dot{background:#dc2626}.hc-h .hchip-dot{background:#ea580c}
+.hc-m .hchip-dot{background:#d97706}.hc-l .hchip-dot{background:#16a34a}
+.hc-vl .hchip-dot{background:#3b82f6}.hc-nh .hchip-dot{background:#9ca3af}
+.hchip-name{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ink);margin-bottom:4px}
+.hchip-val{font-family:var(--fd);font-size:22px;letter-spacing:.02em;color:var(--ink2)}
+.hchip-unit{font-size:9px;color:rgba(0,0,0,.35)}
+
+/* Disaster card */
+.dis-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.dc{border-radius:12px;padding:16px;border:1.5px solid}
+.dc-flood{background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:#bfdbfe}
+.dc-land{background:linear-gradient(135deg,#fefce8,#fef9c3);border-color:#fde68a}
+.dc-wx{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-color:#a7f3d0}
+.dc-fire{background:linear-gradient(135deg,#fff7ed,#ffedd5);border-color:#fed7aa}
+.dc-icon{font-size:24px;margin-bottom:7px;display:block}
+.dc-name{font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:4px}
+.dc-loss{font-family:var(--fd);font-size:22px;letter-spacing:.02em;color:var(--ink2);margin-bottom:6px}
+.dc-desc{font-size:11.5px;color:rgba(0,0,0,.55);line-height:1.5}
+.dc-tag{display:inline-block;font-family:var(--fm);font-size:8.5px;letter-spacing:.09em;padding:2px 8px;border-radius:99px;background:rgba(0,0,0,.06);color:rgba(0,0,0,.38);margin-bottom:8px}
+
+/* Group card */
+.grp-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.gc{border-radius:12px;padding:16px 14px;border:1.5px solid transparent}
+.gc-plat{background:linear-gradient(135deg,#1a1a2e,#2e2e50);color:white}
+.gc-gold{background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fde68a}
+.gc-silv{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-color:#cbd5e1}
+.gc-bron{background:linear-gradient(135deg,#fff7ed,#ffedd5);border-color:#fed7aa}
+.gc-badge{font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px;opacity:.5}
+.gc-plat .gc-badge{color:white}.gc-name{font-family:var(--fh);font-size:17px;font-weight:700;margin-bottom:10px}
+.gc-plat .gc-name{color:white}
+.gc-stat{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:11.5px}
+.gc-plat .gc-stat{border-color:rgba(255,255,255,.08)}
+.gc-stat:last-child{border-bottom:none}
+.gc-k{color:rgba(0,0,0,.4);font-size:10.5px}.gc-plat .gc-k{color:rgba(255,255,255,.38)}
+.gc-v{font-family:var(--fm);font-weight:500;font-size:11.5px}.gc-plat .gc-v{color:#ffd166}
+
+/* Formula box */
+.formula{background:var(--ink);color:white;border-radius:12px;padding:18px 20px;margin:14px 0;font-family:var(--fm)}
+.form-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px}
+.form-eq{font-size:13.5px;color:#7dd3fc;line-height:1.7}
+.form-eq .hl{color:#fde68a;font-weight:500}
+.form-eq .hl2{color:#86efac;font-weight:500}
+.form-eq .hl3{color:#f9a8d4;font-weight:500}
+.form-note{font-size:10.5px;color:rgba(255,255,255,.4);margin-top:10px;line-height:1.6}
+
+/* Scenario table */
+.sc-table{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0}
+.sc-table th{background:var(--ink);color:white;padding:8px 10px;text-align:left;font-size:10.5px;letter-spacing:.03em;font-weight:600}
+.sc-table th:first-child{border-radius:6px 0 0 0}.sc-table th:last-child{border-radius:0 6px 0 0}
+.sc-table td{padding:8px 10px;border-bottom:1px solid rgba(0,0,0,.06);color:rgba(0,0,0,.65)}
+.sc-table tr:last-child td{border-bottom:none}
+.sc-table tr:hover td{background:rgba(0,0,0,.02)}
+.sc-low{color:#16a34a;font-weight:600}.sc-mod{color:#d97706;font-weight:600}.sc-high{color:#dc2626;font-weight:600}
+.sc-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:700}
+.sc-badge.low{background:#dcfce7;color:#16a34a}.sc-badge.mod{background:#fef3c7;color:#d97706}.sc-badge.high{background:#fee2e2;color:#dc2626}
+
+/* Callout banner */
+.callout{border-radius:16px;padding:22px 24px;color:white;margin:16px 0;position:relative;overflow:hidden;background:linear-gradient(135deg,#e8192c,#d4006a 55%,#8b1fae)}
+.callout::after{content:'⚡';position:absolute;right:-8px;top:-8px;font-size:90px;opacity:.07;pointer-events:none}
+.co-eye{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:6px}
+.co-title{font-family:var(--fh);font-size:19px;font-weight:700;margin-bottom:7px}
+.co-body{font-size:12.5px;color:rgba(255,255,255,.72);line-height:1.6}
+
+/* Comparison bar */
+.comp-bar{margin:8px 0}
+.cb-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.cb-label{font-size:11px;font-weight:600;color:var(--ink2);width:90px;flex-shrink:0;line-height:1.3}
+.cb-track{flex:1;height:8px;background:var(--smoke);border-radius:99px;overflow:hidden}
+.cb-fill{height:100%;border-radius:99px;transition:width .8s ease}
+.cb-val{font-family:var(--fm);font-size:11px;color:var(--ink3);width:60px;text-align:right;flex-shrink:0}
+
+/* Province list */
+#prov-list-inner{max-height:200px;overflow-y:auto}
+#prov-list-inner::-webkit-scrollbar{width:3px}
+#prov-list-inner::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:99px}
+.pi{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-bottom:1px solid rgba(0,0,0,.04);cursor:pointer;border-radius:6px;transition:background .15s}
+.pi:hover{background:rgba(232,25,44,.05)}
+.pi.active{background:rgba(232,25,44,.07);border-left:3px solid var(--r)}
+.pi-name{font-size:12.5px;font-weight:600;color:var(--ink2)}
+.pi-cnt{font-family:var(--fm);font-size:10px;color:rgba(0,0,0,.3)}
+.phb{height:6px;background:var(--smoke);border-radius:99px;overflow:hidden;display:flex;gap:2px;margin:8px 0}
+.phbs{height:100%;border-radius:99px}
+
+/* Timeline / steps */
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:14px;padding-bottom:16px;position:relative}
+.step::before{content:'';position:absolute;left:16px;top:34px;bottom:0;width:2px;background:rgba(0,0,0,.08)}
+.step:last-child::before{display:none}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--ink);color:white;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:12px;flex-shrink:0;margin-top:2px;z-index:1}
+.step-body{padding-top:4px}
+.step-title{font-weight:700;font-size:13px;margin-bottom:4px;color:var(--ink)}
+.step-desc{font-size:12px;color:rgba(0,0,0,.55);line-height:1.55}
+
+/* Limitation chip */
+.limit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.limit-chip{background:white;border:1.5px solid rgba(0,0,0,.08);border-radius:10px;padding:12px 14px}
+.lc-icon{font-size:18px;margin-bottom:6px}
+.lc-title{font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:3px}
+.lc-text{font-size:11px;color:rgba(0,0,0,.5);line-height:1.5}
+
+/* Scenario toggle */
+.sc-tog{display:flex;gap:4px;background:var(--smoke);padding:3px;border-radius:8px;width:fit-content;margin-bottom:14px}
+.sct{padding:5px 12px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:transparent;color:rgba(0,0,0,.4);transition:all .18s;font-family:var(--fb);display:flex;align-items:center;gap:4px}
+.sct.active{background:white;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+
+/* ═══════════════════════════════
+   PAGE-SPECIFIC: COVER
+═══════════════════════════════ */
+.p-cover{
+  background:var(--ink);color:white;
+  display:flex!important;flex-direction:column;
+  border-radius:4px 18px 18px 4px;
+  overflow:hidden;
+}
+.cover-photo{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1558449028-b53a39d100fc?w=1200&q=80') center/cover no-repeat;opacity:.14;mix-blend-mode:luminosity}
+.cover-grad{position:absolute;inset:0;background:linear-gradient(160deg,rgba(13,13,26,.97) 0%,rgba(13,13,26,.75) 55%,rgba(232,25,44,.14) 100%)}
+.cover-noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");background-size:200px}
+.cover-accent{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#e8192c,#d4006a 25%,#8b1fae 50%,#f5a623 75%,#00b8a9);z-index:2}
+.cover-inner{position:relative;z-index:3;flex:1;display:flex;flex-direction:column;padding:36px 40px 28px}
+.cover-brand{display:flex;align-items:center;gap:10px;margin-bottom:auto}
+.cov-lcw{position:relative;width:28px;height:22px}
+.cov-lc{position:absolute;border-radius:50%;width:14px;height:14px}
+.cov-lc1{background:#e8192c;top:0;left:0}.cov-lc2{background:#d4006a;top:0;left:7px;opacity:.85}.cov-lc3{background:#f5a623;top:7px;left:3px;opacity:.8}
+.cov-bname{font-family:var(--fb);font-size:13px;font-weight:600;color:white}
+.cov-bsub{font-family:var(--fm);font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.1em}
+.cover-mid{margin:auto 0}
+.cov-kicker{font-family:var(--fm);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#ff4d5e;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cov-kicker::before{content:'';width:20px;height:2px;background:#ff4d5e}
+.cov-title{font-family:var(--fh);font-size:clamp(38px,5.5vw,64px);font-weight:900;line-height:.9;letter-spacing:-.022em;margin-bottom:20px}
+.cov-title em{font-style:italic;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.5)}
+.cov-sub{font-size:13.5px;line-height:1.68;color:rgba(255,255,255,.5);max-width:480px;margin-bottom:28px;font-weight:300}
+.cov-stats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:28px}
+.cov-stat{border-left:2px solid rgba(255,255,255,.12);padding-left:14px}
+.cov-sv{font-family:var(--fd);font-size:28px;letter-spacing:.03em;color:white;line-height:1}
+.cov-sl{font-size:10.5px;color:rgba(255,255,255,.4);margin-top:2px}
+.cov-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8192c,#d4006a);color:white;padding:10px 22px;border-radius:99px;font-size:13px;font-weight:700;font-family:var(--fb);cursor:pointer;border:none;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 22px rgba(212,0,106,.35)}
+.cov-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(212,0,106,.45)}
+.cover-foot{display:flex;gap:0;border-top:1px solid rgba(255,255,255,.07);padding-top:16px;margin-top:16px}
+.cov-ftag{padding:0 16px;border-right:1px solid rgba(255,255,255,.07);font-size:9.5px;color:rgba(255,255,255,.28);font-family:var(--fm);letter-spacing:.05em;display:flex;align-items:center;gap:5px}
+.cov-ftag:first-child{padding-left:0}.cov-ftag:last-child{border-right:none}
+.cfd{width:4px;height:4px;border-radius:50%;flex-shrink:0}
+
+/* ═══════════════════════════════
+   DARK PAGE (for special pages)
+═══════════════════════════════ */
+.p-dark{background:var(--ink)!important;color:white}
+.p-dark .page-header{border-color:rgba(255,255,255,.07)}
+.p-dark .ph-section,.p-dark .ph-sep,.p-dark .ph-page{color:rgba(255,255,255,.28)}
+.p-dark .body-text{color:rgba(255,255,255,.65)}
+.p-dark .kicker{color:#ff6b7a}
+.p-dark .kicker::before{background:#ff6b7a}
+.p-dark h2.sectitle,.p-dark h3.subsec{color:white}
+.p-dark .kc-cell{background:#1a1a2e}
+
+/* Section divider for page layouts */
+.sec-div{height:1px;background:rgba(0,0,0,.07);margin:20px 0}
+.sec-div-dark{height:1px;background:rgba(255,255,255,.07);margin:20px 0}
+
+/* Small badge */
+.badge{display:inline-block;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:99px}
+.badge-red{background:rgba(232,25,44,.1);color:var(--r)}
+.badge-yel{background:rgba(245,166,35,.15);color:#9a6800}
+.badge-grn{background:rgba(22,163,74,.1);color:var(--g)}
+
+/* Scrollbar for page content */
+.page::-webkit-scrollbar{width:5px}
+.page::-webkit-scrollbar-track{background:transparent}
+.page::-webkit-scrollbar-thumb{background:rgba(0,0,0,.12);border-radius:99px}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<div id="topbar">
+  <div class="tb-brand">
+    <div class="tb-lc"><div class="tlc tlc1"></div><div class="tlc tlc2"></div><div class="tlc tlc3"></div></div>
+    <div>
+      <div class="tb-name">SINYAL</div>
+      <div class="tb-issue">Majalah Risiko Iklim BTS · 2025</div>
+    </div>
+  </div>
+  <div class="tb-center">
+    <span class="tb-page-info" id="tb-pinfo">Halaman 1 dari 12</span>
+  </div>
+  <button class="tb-toc-btn" onclick="toggleToc()">☰ Daftar Isi</button>
+</div>
+
+<!-- ── MAGAZINE VIEWPORT ── -->
+<div id="magazine">
+  <div id="page-viewport">
+
+    <!-- ████████████████████████████
+         PAGE 1 — COVER
+    ████████████████████████████ -->
+    <div class="page p-cover active" id="pg-0">
+      <div class="cover-photo"></div>
+      <div class="cover-grad"></div>
+      <div class="cover-noise"></div>
+      <div class="cover-accent"></div>
+      <div class="cover-inner">
+        <div class="cover-brand">
+          <div class="cov-lcw"><div class="cov-lc cov-lc1"></div><div class="cov-lc cov-lc2"></div><div class="cov-lc cov-lc3"></div></div>
+          <div>
+            <div class="cov-bname">Indosat Ooredoo Hutchison</div>
+            <div class="cov-bsub">INTERNAL · TERBATAS · 2025</div>
+          </div>
+        </div>
+        <div class="cover-mid">
+          <div class="cov-kicker">Edisi Khusus · Iklim & Infrastruktur</div>
+          <h1 class="cov-title">Saat <em>Iklim</em><br>Ngancam<br>Sinyal Kita</h1>
+          <p class="cov-sub">Panduan santai — tapi serius — soal kenapa 10.006 menara BTS Indosat berisiko rugi lebih dari Rp 2 triliun gara-gara perubahan iklim. Dan apa yang bisa kita lakukan.</p>
+          <div class="cov-stats">
+            <div class="cov-stat"><div class="cov-sv" style="color:#ff4d5e">Rp 2,18T</div><div class="cov-sl">Estimasi total kerugian</div></div>
+            <div class="cov-stat"><div class="cov-sv" style="color:#ffc04d">10.006</div><div class="cov-sl">Titik BTS dipantau</div></div>
+            <div class="cov-stat"><div class="cov-sv" style="color:#33d4cb">34</div><div class="cov-sl">Provinsi terdampak</div></div>
+          </div>
+          <button class="cov-btn" onclick="goTo(1)">Buka Majalah →</button>
+        </div>
+        <div class="cover-foot">
+          <div class="cov-ftag"><div class="cfd" style="background:#dc2626"></div>4 JENIS BENCANA</div>
+          <div class="cov-ftag"><div class="cfd" style="background:#f5a623"></div>2 MODEL ANALISIS</div>
+          <div class="cov-ftag"><div class="cfd" style="background:#00b8a9"></div>3 SKENARIO RISIKO</div>
+          <div class="cov-ftag"><div class="cfd" style="background:#8b1fae"></div>4 GRUP BTS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████
+         PAGE 2 — DAFTAR ISI
+    ████████████████████████████ -->
+    <div class="page" id="pg-1">
+      <div class="page-header"><span class="ph-section">Daftar Isi</span><span class="ph-sep">·</span><span class="ph-section">Table of Contents</span><span class="ph-page">Hal. 2</span></div>
+      <div class="page-content">
+        <div class="kicker">Navigasi</div>
+        <h2 class="sectitle">Ada Apa di Dalam Majalah Ini?</h2>
+        <p class="body-text" style="margin-bottom:20px;font-size:13px">Klik bagian mana saja untuk langsung lompat ke sana. Atau bisa juga geser satu-satu — kayak baca majalah beneran! 📖</p>
+
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div onclick="goTo(2)" style="display:flex;gap:14px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--smoke);cursor:pointer;transition:background .15s;border-left:4px solid var(--r)" onmouseover="this.style.background='#ffe4e4'" onmouseout="this.style.background='var(--smoke)'">
+            <span style="font-family:var(--fd);font-size:28px;color:var(--r);opacity:.5;line-height:1">03</span>
+            <div><div style="font-size:10px;font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.35);margin-bottom:3px">RINGKASAN EKSEKUTIF</div><div style="font-weight:700;font-size:13.5px">Gambaran Besar: Apa, Kenapa, Seberapa Parah?</div></div>
+            <span style="margin-left:auto;color:rgba(0,0,0,.3);font-size:18px">›</span>
+          </div>
+          <div onclick="goTo(3)" style="display:flex;gap:14px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--smoke);cursor:pointer;transition:background .15s;border-left:4px solid var(--o)" onmouseover="this.style.background='#fff3e0'" onmouseout="this.style.background='var(--smoke)'">
+            <span style="font-family:var(--fd);font-size:28px;color:var(--o);opacity:.5;line-height:1">04</span>
+            <div><div style="font-size:10px;font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.35);margin-bottom:3px">PETA HAZARD</div><div style="font-weight:700;font-size:13.5px">Siapa Paling Kena? Peta Bahaya BTS Kita</div></div>
+            <span style="margin-left:auto;color:rgba(0,0,0,.3);font-size:18px">›</span>
+          </div>
+          <div onclick="goTo(4)" style="display:flex;gap:14px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--smoke);cursor:pointer;transition:background .15s;border-left:4px solid var(--b)" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='var(--smoke)'">
+            <span style="font-family:var(--fd);font-size:28px;color:var(--b);opacity:.5;line-height:1">05</span>
+            <div><div style="font-size:10px;font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.35);margin-bottom:3px">JENIS BENCANA</div><div style="font-weight:700;font-size:13.5px">4 Musuh Jaringan: Banjir, Longsor, Badai, Api</div></div>
+            <span style="margin-left:auto;color:rgba(0,0,0,.3);font-size:18px">›</span>
+          </div>
+          <div onclick="goTo(5)" style="display:flex;gap:14px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--smoke);cursor:pointer;transition:background .15s;border-left:4px solid var(--y)" onmouseover="this.style.background='#fffbeb'" onmouseout="this.style.background='var(--smoke)'">
+            <span style="font-family:var(--fd);font-size:28px;color:var(--y);opacity:.5;line-height:1">06</span>
+            <div><div style="font-size:10px;font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.35);margin-bottom:3px">ANALISIS GRUP BTS</div><div style="font-weight:700;font-size:13.5px">Platinum, Gold, Silver, Bronze — Siapa Paling Rentan?</div></div>
+            <span style="margin-left:auto;color:rgba(0,0,0,.3);font-size:18px">›</span>
+          </div>
+          <div onclick="goTo(6)" style="display:flex;gap:14px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--smoke);cursor:pointer;transition:background .15s;border-left:4px solid var(--g)" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='var(--smoke)'">
+            <span style="font-family:var(--fd);font-size:28px;color:var(--g);opacity:.5;line-height:1">07</span>
+            <div><div style="font-size:10px;font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.35);margin-bottom:3px">PROFIL PROVINSI</div><div style="font-weight:700;font-size:13.5px">Hotspot Provinsi: Mana yang Perlu Kita Khawatirkan?</div></div>
+            <span style="margin-left:auto;color:rgba(0,0,0,.3);font-size:18px">›</span>
+          </div>
+          <div onclick="goTo(7)" style="display:flex;gap:14px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--smoke);cursor:pointer;transition:background .15s;border-left:4px solid var(--p)" onmouseover="this.style.background='#faf5ff'" onmouseout="this.style.background='var(--smoke)'">
+            <span style="font-family:var(--fd);font-size:28px;color:var(--p);opacity:.5;line-height:1">08</span>
+            <div><div style="font-size:10px;font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.35);margin-bottom:3px">METODOLOGI</div><div style="font-weight:700;font-size:13.5px">Cara Kita Ngitung Angka-Angka Ini</div></div>
+            <span style="margin-left:auto;color:rgba(0,0,0,.3);font-size:18px">›</span>
+          </div>
+          <div onclick="goTo(9)" style="display:flex;gap:14px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--smoke);cursor:pointer;transition:background .15s;border-left:4px solid var(--t)" onmouseover="this.style.background='#f0fdfa'" onmouseout="this.style.background='var(--smoke)'">
+            <span style="font-family:var(--fd);font-size:28px;color:var(--t);opacity:.5;line-height:1">10</span>
+            <div><div style="font-size:10px;font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.35);margin-bottom:3px">REKOMENDASI</div><div style="font-weight:700;font-size:13.5px">Langkah Nyata: Kita Harus Ngapain Sekarang?</div></div>
+            <span style="margin-left:auto;color:rgba(0,0,0,.3);font-size:18px">›</span>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding:14px 16px;border-radius:10px;background:linear-gradient(135deg,rgba(232,25,44,.05),rgba(212,0,106,.05));border:1px solid rgba(232,25,44,.12)">
+          <div style="font-size:12px;color:rgba(0,0,0,.5);line-height:1.6">💡 <strong>Tips baca:</strong> Gunakan tombol <strong>‹ ›</strong> di kiri-kanan, atau klik "<strong>☰ Daftar Isi</strong>" di pojok kanan atas untuk lompat ke bagian manapun.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████
+         PAGE 3 — RINGKASAN EKSEKUTIF
+    ████████████████████████████ -->
+    <div class="page" id="pg-2">
+      <div class="page-header"><span class="ph-section">Ringkasan Eksekutif</span><span class="ph-sep">·</span><span class="ph-section">Executive Summary</span><span class="ph-page">Hal. 3</span></div>
+      <div class="page-content">
+        <div class="kicker">Gambaran Besar</div>
+        <h2 class="sectitle">Iklim Sedang Berubah — dan Sinyal Kita Ikut Kena</h2>
+
+        <div class="col2-4060" style="margin-bottom:16px">
+          <div>
+            <div class="photo" style="height:160px">
+              <img src="https://images.unsplash.com/photo-1547683905-f686c993aae5?w=600&q=80" style="height:160px" alt="banjir indonesia">
+              <div class="photo-cap">Banjir di permukiman — ancaman terbesar infrastruktur BTS Indonesia</div>
+            </div>
+          </div>
+          <div class="body-text">
+            <p>Kamu pernah nggak, lagi butuh banget sinyal terus tiba-tiba <em>no service</em> karena hujan deras atau banjir? Nah, itu bukan cuma gangguan kecil — di baliknya ada potensi kerugian <strong>miliaran rupiah</strong>.</p>
+            <p>Indosat Ooredoo Hutchison punya <strong>10.006 menara BTS</strong> yang tersebar di seluruh Indonesia. Masing-masing menara ini adalah "titik sinyal" yang nyambungin kamu ke internet dan telepon. Dan hampir semuanya — ternyata — ada dalam ancaman bencana iklim.</p>
+          </div>
+        </div>
+
+        <div class="kpi-strip">
+          <div class="kpi-cell kc-r"><div class="kc-lbl">Total Est. Kerugian</div><div class="kc-val">Rp 2,18T</div><div class="kc-note">Gabungan 4 bencana, semua BTS nasional</div></div>
+          <div class="kpi-cell kc-m"><div class="kc-lbl">BTS Dipantau</div><div class="kc-val">10.006</div><div class="kc-note">Tersebar di 37 provinsi Indonesia</div></div>
+          <div class="kpi-cell kc-y"><div class="kc-lbl">BTS Risiko Tinggi</div><div class="kc-val">1.543</div><div class="kc-note">Butuh tindakan dalam 12 bulan ke depan</div></div>
+        </div>
+
+        <div class="insight ins-red">
+          <div class="ins-ico">🔴</div>
+          <div class="ins-body">
+            <div class="ins-title">Fakta Mengejutkan: Cuma 15% BTS, tapi 60% Kerugiannya!</div>
+            <div class="ins-text">Dari 10.006 BTS, hanya <strong>1.543 titik (15,4%)</strong> yang masuk kategori berbahaya — tapi kelompok kecil ini pegang lebih dari <strong>60% potensi kerugian total</strong>. Artinya, kalau kita fokus mitigasi di titik-titik ini dulu, kita bisa selamatkan lebih dari Rp 1,3 triliun!</div>
+          </div>
+        </div>
+
+        <div class="insight ins-default">
+          <div class="ins-ico">💡</div>
+          <div class="ins-body">
+            <div class="ins-title">Kenapa Banjir Jadi Biang Kerok Terbesar?</div>
+            <div class="ins-text">Banjir nyumbang <strong>Rp 1,4 triliun (64%)</strong> dari total kerugian. Bukan cuma karena merusak fisik tower-nya — tapi juga karena jalan yang tergenang bikin teknisi susah masuk buat perbaikan. Makin lama nggak bisa diperbaiki, makin besar kerugian revenue-nya.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████
+         PAGE 4 — PETA HAZARD
+    ████████████████████████████ -->
+    <div class="page" id="pg-3">
+      <div class="page-header"><span class="ph-section">Peta Hazard</span><span class="ph-sep">·</span><span class="ph-section">Hazard Distribution</span><span class="ph-page">Hal. 4</span></div>
+      <div class="page-content">
+        <div class="kicker">Level Bahaya</div>
+        <h2 class="sectitle">BTS Kita Dibagi 6 Tingkat Bahaya — Dari "Aman" sampai "Alarm Merah"</h2>
+
+        <p class="body-text" style="margin-bottom:14px">Setiap BTS punya nilai <strong>Hazard Index (HI)</strong> — angka antara 0 sampai 1 yang ngukur seberapa "berbahaya" lokasi tower itu terhadap bencana. Makin tinggi nilainya, makin besar risikonya.</p>
+
+        <div class="hazard-row">
+          <div class="hchip hc-vh"><div class="hchip-dot"></div><div class="hchip-name">Very High</div><div class="hchip-val">312</div><div class="hchip-unit">BTS · 3,1%</div></div>
+          <div class="hchip hc-h"><div class="hchip-dot"></div><div class="hchip-name">High</div><div class="hchip-val">1.231</div><div class="hchip-unit">BTS · 12,3%</div></div>
+          <div class="hchip hc-m"><div class="hchip-dot"></div><div class="hchip-name">Moderate</div><div class="hchip-val">2.847</div><div class="hchip-unit">BTS · 28,5%</div></div>
+          <div class="hchip hc-l"><div class="hchip-dot"></div><div class="hchip-name">Low</div><div class="hchip-val">3.124</div><div class="hchip-unit">BTS · 31,2%</div></div>
+          <div class="hchip hc-vl"><div class="hchip-dot"></div><div class="hchip-name">Very Low</div><div class="hchip-val">1.956</div><div class="hchip-unit">BTS · 19,5%</div></div>
+          <div class="hchip hc-nh"><div class="hchip-dot"></div><div class="hchip-name">No Hazard</div><div class="hchip-val">536</div><div class="hchip-unit">BTS · 5,4%</div></div>
+        </div>
+
+        <div class="col2" style="margin-bottom:14px">
+          <div class="chart-card">
+            <div class="cc-badge">DONUT</div>
+            <div class="cc-title">Distribusi Level Hazard</div>
+            <div class="cw cw-sm"><canvas id="cHaz1"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="cc-badge">BAR — IDR</div>
+            <div class="cc-title">Kerugian per Level</div>
+            <div class="cw cw-sm"><canvas id="cHaz2"></canvas></div>
+          </div>
+        </div>
+
+        <div class="insight ins-green">
+          <div class="ins-ico">✅</div>
+          <div class="ins-body">
+            <div class="ins-title">Good News: Lebih dari Separuh BTS Kita Sebenarnya Cukup Aman</div>
+            <div class="ins-text">Sebanyak <strong>56,1% BTS (5.616 titik)</strong> ada di level Low dan Very Low — artinya risikonya masih terkendali. Tapi jangan lengah — <strong>28,5% lainnya ada di Moderate</strong>, dan meski bahayanya tidak sekeras Very High, bencana level Moderate justru lebih sering terjadi. Dalam 5 tahun, akumulasinya bisa melebihi kerugian dari level Very High.</div>
+          </div>
+        </div>
+
+        <div class="insight ins-default">
+          <div class="ins-ico">🧐</div>
+          <div class="ins-body">
+            <div class="ins-title">Paradoks Menarik: BTS Sedikit, Kerugian Besar</div>
+            <div class="ins-text">BTS Very High cuma <strong>312 titik (3,1%)</strong>, tapi menanggung ~28% total kerugian. Kenapa? Karena tower Very High umumnya ada di lokasi-lokasi strategis dengan revenue tinggi — kalau mati, dampaknya jauh lebih besar. Nilai kerugian per BTS-nya <strong>9× lipat rata-rata</strong> jaringan secara keseluruhan.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████
+         PAGE 5 — 4 JENIS BENCANA
+    ████████████████████████████ -->
+    <div class="page" id="pg-4">
+      <div class="page-header"><span class="ph-section">Jenis Bencana</span><span class="ph-sep">·</span><span class="ph-section">Disaster Profiles</span><span class="ph-page">Hal. 5</span></div>
+      <div class="page-content">
+        <div class="kicker">4 Musuh Utama</div>
+        <h2 class="sectitle">Ini Dia Bencana-Bencana yang Bikin Tim NOC Kita Pusing</h2>
+
+        <div class="dis-cards">
+          <div class="dc dc-flood">
+            <div class="dc-tag">PRIORITAS #1</div>
+            <span class="dc-icon">🌊</span>
+            <div class="dc-name">Banjir</div>
+            <div class="dc-loss">Rp 1,40T</div>
+            <div class="dc-desc">Si nomor satu paling merusak. Banjir nggak cuma nyerempet, tapi juga menghambat akses perbaikan. Jalan tergenang = teknisi nggak bisa masuk = downtime makin panjang = kerugian berlipat.</div>
+          </div>
+          <div class="dc dc-land">
+            <div class="dc-tag">PRIORITAS #2</div>
+            <span class="dc-icon">⛰️</span>
+            <div class="dc-name">Tanah Longsor</div>
+            <div class="dc-loss">Rp 380M</div>
+            <div class="dc-desc">Lebih jarang tapi lebih mahal perbaikannya. Longsor bisa merusak pondasi tower secara permanen — dan untuk rebuilding, bisa butuh waktu berminggu-minggu bahkan berbulan-bulan.</div>
+          </div>
+          <div class="dc dc-wx">
+            <div class="dc-tag">PRIORITAS #3</div>
+            <span class="dc-icon">🌪️</span>
+            <div class="dc-name">Cuaca Ekstrem</div>
+            <div class="dc-loss">Rp 245M</div>
+            <div class="dc-desc">Angin kencang dan petir adalah "biang rusak" perangkat elektronik dan antena. Kerusakannya lebih cepat diperbaiki, tapi kalau sering kena, biaya pemeliharaan jangka panjangnya bisa membengkak.</div>
+          </div>
+          <div class="dc dc-fire">
+            <div class="dc-tag">PRIORITAS #4</div>
+            <span class="dc-icon">🔥</span>
+            <div class="dc-name">Kebakaran Hutan</div>
+            <div class="dc-loss">Rp 152M</div>
+            <div class="dc-desc">Kebakaran gambut di Sumatera & Kalimantan bukan cuma rusak fisik tower-nya — asapnya pun bisa gangguin transmisi sinyal. BTS terpencil yang kena kebakaran bisa mati tanpa ada yang tahu.</div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <div class="chart-card">
+            <div class="cc-badge">PERBANDINGAN KERUGIAN</div>
+            <div class="cc-title">Banjir Mendominasi Jauh dari Bencana Lain</div>
+            <div class="comp-bar">
+              <div class="cb-row"><div class="cb-label">🌊 Banjir</div><div class="cb-track"><div class="cb-fill" style="width:100%;background:#3b82f6"></div></div><div class="cb-val">Rp 1,4T</div></div>
+              <div class="cb-row"><div class="cb-label">⛰️ Longsor</div><div class="cb-track"><div class="cb-fill" style="width:27%;background:#f5a623"></div></div><div class="cb-val">Rp 380M</div></div>
+              <div class="cb-row"><div class="cb-label">🌪️ Cuaca Ekst.</div><div class="cb-track"><div class="cb-fill" style="width:17.5%;background:#16a34a"></div></div><div class="cb-val">Rp 245M</div></div>
+              <div class="cb-row"><div class="cb-label">🔥 Kebakaran</div><div class="cb-track"><div class="cb-fill" style="width:10.9%;background:#ea580c"></div></div><div class="cb-val">Rp 152M</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="insight ins-blue">
+          <div class="ins-ico">🧭</div>
+          <div class="ins-body">
+            <div class="ins-title">Insight Strategi: Satu Solusi Nggak Cukup untuk Semua Bencana</div>
+            <div class="ins-text">Banjir → butuh <strong>elevated cabinet & flood barrier</strong>. Longsor → perlu <strong>penguatan pondasi geoteknik</strong>. Cuaca ekstrem → pasang <strong>arrester petir yang lebih kuat</strong>. Kebakaran → perlu <strong>sensor suhu jarak jauh & fireproofing</strong>. Jadi strategi mitigasinya harus disesuaikan per lokasi dan per jenis ancaman.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████
+         PAGE 6 — ANALISIS GRUP
+    ████████████████████████████ -->
+    <div class="page" id="pg-5">
+      <div class="page-header"><span class="ph-section">Analisis Grup BTS</span><span class="ph-sep">·</span><span class="ph-section">Group Analysis</span><span class="ph-page">Hal. 6</span></div>
+      <div class="page-content">
+        <div class="kicker">Platinum → Bronze</div>
+        <h2 class="sectitle">Dari Tower Sultan sampai Tower Pejuang — Siapa Paling Rentan?</h2>
+
+        <div class="grp-cards">
+          <div class="gc gc-plat">
+            <div class="gc-badge">💎 TIER 1</div>
+            <div class="gc-name">Platinum</div>
+            <div class="gc-stat"><span class="gc-k">Jumlah BTS</span><span class="gc-v">1.204</span></div>
+            <div class="gc-stat"><span class="gc-k">Est. Kerugian</span><span class="gc-v">Rp 780M</span></div>
+            <div class="gc-stat"><span class="gc-k">Revenue/Bulan</span><span class="gc-v">Rp 45M</span></div>
+            <div class="gc-stat"><span class="gc-k">Avg. Downtime</span><span class="gc-v">8,2 hari</span></div>
+            <div class="gc-stat"><span class="gc-k">Kerugian/jam</span><span class="gc-v" style="color:#ffd166">Rp 62,5jt</span></div>
+          </div>
+          <div class="gc gc-gold">
+            <div class="gc-badge">🥇 TIER 2</div>
+            <div class="gc-name">Gold</div>
+            <div class="gc-stat"><span class="gc-k">Jumlah BTS</span><span class="gc-v">2.891</span></div>
+            <div class="gc-stat"><span class="gc-k">Est. Kerugian</span><span class="gc-v" style="color:#b45309">Rp 620M</span></div>
+            <div class="gc-stat"><span class="gc-k">Revenue/Bulan</span><span class="gc-v">Rp 28M</span></div>
+            <div class="gc-stat"><span class="gc-k">Avg. Downtime</span><span class="gc-v">7,5 hari</span></div>
+            <div class="gc-stat"><span class="gc-k">Kerugian/jam</span><span class="gc-v">Rp 38,9jt</span></div>
+          </div>
+          <div class="gc gc-silv">
+            <div class="gc-badge">🥈 TIER 3</div>
+            <div class="gc-name">Silver</div>
+            <div class="gc-stat"><span class="gc-k">Jumlah BTS</span><span class="gc-v">3.447</span></div>
+            <div class="gc-stat"><span class="gc-k">Est. Kerugian</span><span class="gc-v" style="color:#475569">Rp 480M</span></div>
+            <div class="gc-stat"><span class="gc-k">Revenue/Bulan</span><span class="gc-v">Rp 16M</span></div>
+            <div class="gc-stat"><span class="gc-k">Avg. Downtime</span><span class="gc-v">9,1 hari</span></div>
+            <div class="gc-stat"><span class="gc-k">Kerugian/jam</span><span class="gc-v">Rp 22,2jt</span></div>
+          </div>
+          <div class="gc gc-bron">
+            <div class="gc-badge">🥉 TIER 4</div>
+            <div class="gc-name">Bronze</div>
+            <div class="gc-stat"><span class="gc-k">Jumlah BTS</span><span class="gc-v">2.464</span></div>
+            <div class="gc-stat"><span class="gc-k">Est. Kerugian</span><span class="gc-v" style="color:#92400e">Rp 300M</span></div>
+            <div class="gc-stat"><span class="gc-k">Revenue/Bulan</span><span class="gc-v">Rp 8M</span></div>
+            <div class="gc-stat"><span class="gc-k">Avg. Downtime</span><span class="gc-v">11,4 hari</span></div>
+            <div class="gc-stat"><span class="gc-k">Kerugian/jam</span><span class="gc-v">Rp 11,1jt</span></div>
+          </div>
+        </div>
+
+        <div class="insight ins-purple">
+          <div class="ins-ico">🏆</div>
+          <div class="ins-body">
+            <div class="ins-title">Ironi Bronze: Downtime Terlama, Revenue Paling Kecil</div>
+            <div class="ins-text">BTS Bronze rata-rata "mati" <strong>11,4 hari per kejadian bencana</strong> — paling lama dari semua tier. Kenapa? Karena tower Bronze biasanya ada di tempat terpencil, susah dijangkau teknisi. Nilai rupiahnya kecil, tapi <strong>dampak sosialnya besar</strong> — kadang itu satu-satunya sinyal yang ada di satu kecamatan.</div>
+          </div>
+        </div>
+        <div class="insight ins-default">
+          <div class="ins-ico">💰</div>
+          <div class="ins-body">
+            <div class="ins-title">Platinum: Setiap Jam Downtime = Rp 62,5 Juta Melayang</div>
+            <div class="ins-text">Meski downtime-nya lebih pendek (8,2 hari), nilai revenue Platinum sangat tinggi. Hitung aja: Rp 45M ÷ 30 hari ÷ 24 jam = <strong>Rp 62,5 juta per jam</strong>. Artinya setiap menit BTS Platinum mati karena banjir, kita kehilangan lebih dari Rp 1 juta. Ini yang bikin Platinum tetap jadi prioritas mitigasi finansial nomor satu.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████
+         PAGE 7 — PROFIL PROVINSI
+    ████████████████████████████ -->
+    <div class="page" id="pg-6">
+      <div class="page-header"><span class="ph-section">Profil Provinsi</span><span class="ph-sep">·</span><span class="ph-section">Province Spotlight</span><span class="ph-page">Hal. 7</span></div>
+      <div class="page-content">
+        <div class="kicker">Hotspot Wilayah</div>
+        <h2 class="sectitle">Dari Sabang sampai Merauke — Siapa yang Paling Perlu Perhatian?</h2>
+
+        <div class="insight ins-red" style="margin-bottom:14px">
+          <div class="ins-ico">🗺️</div>
+          <div class="ins-body">
+            <div class="ins-title">Jawa Menanggung Beban Terbesar Secara Absolut</div>
+            <div class="ins-text">3 provinsi Jawa (Jabar, Jatim, Jateng) punya <strong>45% dari total BTS Indosat</strong> dan ~32% total kerugian. Tapi proporsi risiko per BTS-nya lebih rendah. Yang justru perlu perhatian lebih adalah <strong>Kalimantan</strong> — rasio BTS berisiko tingginya mencapai 28–30%, jauh di atas rata-rata nasional.</div>
+          </div>
+        </div>
+
+        <div class="col2" style="align-items:start">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:rgba(0,0,0,.4);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">Klik provinsi untuk detail</div>
+            <div id="prov-list-inner"></div>
+          </div>
+          <div id="prov-detail">
+            <div id="pd-name" style="font-family:var(--fh);font-size:20px;font-weight:900;margin-bottom:4px">—</div>
+            <div id="pd-sub" style="font-size:11.5px;color:rgba(0,0,0,.38);margin-bottom:14px">Pilih provinsi di sebelah kiri</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+              <div style="background:var(--smoke);border-radius:8px;padding:10px 12px"><div style="font-size:8.5px;font-family:var(--fm);letter-spacing:.09em;text-transform:uppercase;color:rgba(0,0,0,.35);margin-bottom:4px">Jumlah BTS</div><div id="pd-cnt" style="font-family:var(--fd);font-size:20px;letter-spacing:.02em">—</div></div>
+              <div style="background:var(--smoke);border-radius:8px;padding:10px 12px"><div style="font-size:8.5px;font-family:var(--fm);letter-spacing:.09em;text-transform:uppercase;color:rgba(0,0,0,.35);margin-bottom:4px">Est. Kerugian</div><div id="pd-loss" style="font-family:var(--fd);font-size:20px;letter-spacing:.02em;color:var(--r)">—</div></div>
+              <div style="background:var(--smoke);border-radius:8px;padding:10px 12px"><div style="font-size:8.5px;font-family:var(--fm);letter-spacing:.09em;text-transform:uppercase;color:rgba(0,0,0,.35);margin-bottom:4px">% Risiko Tinggi</div><div id="pd-high" style="font-family:var(--fd);font-size:20px;letter-spacing:.02em">—</div></div>
+            </div>
+            <div style="font-size:10.5px;font-weight:700;color:rgba(0,0,0,.38);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Distribusi Hazard Level</div>
+            <div class="phb" id="pd-hbar"></div>
+            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+              <span style="font-size:9px;display:flex;align-items:center;gap:3px;color:rgba(0,0,0,.4)"><span style="width:8px;height:8px;border-radius:50%;background:#dc2626;display:inline-block"></span>VH</span>
+              <span style="font-size:9px;display:flex;align-items:center;gap:3px;color:rgba(0,0,0,.4)"><span style="width:8px;height:8px;border-radius:50%;background:#ea580c;display:inline-block"></span>H</span>
+              <span style="font-size:9px;display:flex;align-items:center;gap:3px;color:rgba(0,0,0,.4)"><span style="width:8px;height:8px;border-radius:50%;background:#d97706;display:inline-block"></span>M</span>
+              <span style="font-size:9px;display:flex;align-items:center;gap:3px;color:rgba(0,0,0,.4)"><span style="width:8px;height:8px;border-radius:50%;background:#16a34a;display:inline-block"></span>L</span>
+              <span style="font-size:9px;display:flex;align-items:center;gap:3px;color:rgba(0,0,0,.4)"><span style="width:8px;height:8px;border-radius:50%;background:#3b82f6;display:inline-block"></span>VL</span>
+            </div>
+            <div id="pd-analysis" style="font-size:12px;color:rgba(0,0,0,.58);line-height:1.65;background:var(--smoke);border-radius:10px;padding:12px 14px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████
+         PAGE 8 — METODOLOGI PART 1
+    ████████████████████████████ -->
+    <div class="page" id="pg-7">
+      <div class="page-header"><span class="ph-section">Metodologi</span><span class="ph-sep">·</span><span class="ph-section">Bagian 1: Dasar-Dasar</span><span class="ph-page">Hal. 8</span></div>
+      <div class="page-content">
+        <div class="kicker">Behind The Numbers</div>
+        <h2 class="sectitle">Angka Rp 2 Triliun Itu Dari Mana? Yuk Bongkar Caranya!</h2>
+
+        <div class="col2-6040" style="margin-bottom:16px">
+          <div class="body-text">
+            <p>Semua angka kerugian dalam laporan ini nggak muncul tiba-tiba. Ada metodologi ilmiah di baliknya yang dikembangkan tim Risk Management Indosat dan disahkan secara internal. Simpelnya, ada dua "alat ukur" utama yang dipakai:</p>
+          </div>
+          <div class="photo" style="height:130px">
+            <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=500&q=80" style="height:130px" alt="data analysis">
+            <div class="photo-cap">Analisis spasial + model finansial = estimasi kerugian akurat</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+          <div style="background:linear-gradient(135deg,var(--ink),#1e1e36);border-radius:12px;padding:18px;color:white">
+            <div style="font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px">Model 1</div>
+            <div style="font-family:var(--fh);font-size:17px;font-weight:700;color:white;margin-bottom:8px">Pivot Eksposur Revenue</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.55;margin-bottom:10px">Menjawab pertanyaan: <em style="color:#7dd3fc">"Berapa revenue kita yang berisiko di tiap zona bencana?"</em></div>
+            <div style="font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.5">Cocok untuk: screening awal, laporan ke manajemen, negosiasi asuransi, alokasi CAPEX mitigasi.</div>
+          </div>
+          <div style="background:white;border:2px solid var(--ink);border-radius:12px;padding:18px">
+            <div style="font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,0,0,.3);margin-bottom:8px">Model 2</div>
+            <div style="font-family:var(--fh);font-size:17px;font-weight:700;margin-bottom:8px">Skenario Kerugian</div>
+            <div style="font-size:12px;color:rgba(0,0,0,.58);line-height:1.55;margin-bottom:10px">Menjawab pertanyaan: <em style="color:var(--b)">"Kalau bencana beneran terjadi, berapa ruginya?"</em></div>
+            <div style="font-size:11.5px;color:rgba(0,0,0,.45);line-height:1.5">Cocok untuk: stress-test portofolio, perencanaan anggaran mitigasi, ESG reporting, proyeksi jangka panjang.</div>
+          </div>
+        </div>
+
+        <h3 class="subsec" style="margin-top:16px">🔢 Dua Indeks Kunci yang Perlu Kamu Tahu</h3>
+        <div class="col2" style="gap:10px">
+          <div style="background:var(--smoke);border-radius:10px;padding:14px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:6px">📍 Hazard Index (HI)</div>
+            <div style="font-size:12px;color:rgba(0,0,0,.58);line-height:1.55">Angka 0–1 yang ngukur <strong>seberapa berbahaya lokasi BTS</strong> terhadap suatu bencana. Dihitung dari overlay peta risiko bencana BNPB dengan koordinat GPS BTS kita. Nilai 0 = aman total, nilai 1 = zona bahaya ekstrem. Satu BTS bisa punya HI beda-beda tergantung jenis bencana.</div>
+          </div>
+          <div style="background:var(--smoke);border-radius:10px;padding:14px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:6px">💥 Damage Index (DI)</div>
+            <div style="font-size:12px;color:rgba(0,0,0,.58);line-height:1.55">Angka 0–1 yang ngukur <strong>seberapa parah BTS bakal rusak</strong> kalau bencana beneran terjadi. DI gabungin dua hal: kerusakan fisik tower (50%) + lamanya tower mati/downtime (50%). Nilai DI tergantung skenario — Low, Moderate, atau High.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████
+         PAGE 9 — METODOLOGI PART 2
+    ████████████████████████████ -->
+    <div class="page" id="pg-8">
+      <div class="page-header"><span class="ph-section">Metodologi</span><span class="ph-sep">·</span><span class="ph-section">Bagian 2: Formula & Skenario</span><span class="ph-page">Hal. 9</span></div>
+      <div class="page-content">
+        <div class="kicker">Rumus & Skenario</div>
+        <h2 class="sectitle">Formula Saktinya: 3 Komponen × 7 Langkah Kalkulasi</h2>
+
+        <div class="formula">
+          <div class="form-label">Formula Utama Model 2 — Potensi Kerugian</div>
+          <div class="form-eq">
+            <span class="hl2">Kerugian (Rp)</span> = <span class="hl">Revenue</span> × <span class="hl2">Hazard Index (HI)</span> × <span class="hl3">Damage Index (DI)</span>
+          </div>
+          <div class="form-note">Revenue = pendapatan bulanan BTS (pakai data Oktober) · HI = tingkat bahaya lokasi (0–1) · DI = tingkat kerusakan estimasi (0–1, dari tabel skenario)</div>
+        </div>
+
+        <div class="formula" style="margin-top:10px">
+          <div class="form-label">Formula Damage Index (DI) — Detail</div>
+          <div class="form-eq">DI = MIN[ (<span class="hl">0,5 × Kerusakan Fisik</span> + <span class="hl2">0,5 × DowntimeIndex</span>) × <span class="hl3">FaktorBencana</span>, 1 ]</div>
+          <div class="form-note">DowntimeIndex = Downtime(hari) ÷ 365 · FaktorBencana: Banjir=1,0 · Cuaca Ekstrem=0,9 · Longsor=1,1 · Kebakaran=1,05</div>
+        </div>
+
+        <h3 class="subsec" style="margin-top:16px;font-size:14px">📊 Parameter Skenario (Resmi dari Dokumen Metodologi)</h3>
+        <table class="sc-table">
+          <thead>
+            <tr><th>Bencana</th><th>Skenario</th><th>Rusak Fisik</th><th>Downtime</th><th>Penurunan Rev.</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>🌊 Banjir</td><td><span class="sc-badge low">Low</span></td><td>20%</td><td>2 hari</td><td>15%</td></tr>
+            <tr><td>🌊 Banjir</td><td><span class="sc-badge mod">Moderate</span></td><td>60%</td><td>7 hari</td><td>45%</td></tr>
+            <tr><td>🌊 Banjir</td><td><span class="sc-badge high">High</span></td><td>100%</td><td>20 hari</td><td>90%</td></tr>
+            <tr><td>⛰️ Longsor</td><td><span class="sc-badge low">Low</span></td><td>30%</td><td>4 hari</td><td>25%</td></tr>
+            <tr><td>⛰️ Longsor</td><td><span class="sc-badge high">High</span></td><td>100%</td><td>30 hari</td><td>95%</td></tr>
+            <tr><td>🔥 Kebakaran</td><td><span class="sc-badge mod">Moderate</span></td><td>75%</td><td>8 hari</td><td>60%</td></tr>
+            <tr><td>🔥 Kebakaran</td><td><span class="sc-badge high">High</span></td><td>100%</td><td>25 hari</td><td>95%</td></tr>
+          </tbody>
+        </table>
+
+        <div class="insight ins-default" style="margin-top:12px">
+          <div class="ins-ico">📌</div>
+          <div class="ins-body">
+            <div class="ins-title">Kenapa Ada "Faktor Bencana" yang Beda-Beda?</div>
+            <div class="ins-text">Longsor punya faktor <strong>1,1 (paling tinggi)</strong> karena pemulihan pasca longsor paling kompleks — perlu perbaikan pondasi sipil, akses jalan yang mungkin tertutup berhari-hari, bahkan relokasi tower. Sebaliknya cuaca ekstrem cuma <strong>0,9</strong> karena kerusakannya lebih terlokalisir dan pemulihannya lebih cepat.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████
+         PAGE 10 — REKOMENDASI
+    ████████████████████████████ -->
+    <div class="page" id="pg-9">
+      <div class="page-header"><span class="ph-section">Rekomendasi</span><span class="ph-sep">·</span><span class="ph-section">Langkah Aksi</span><span class="ph-page">Hal. 10</span></div>
+      <div class="page-content">
+        <div class="kicker">Action Plan</div>
+        <h2 class="sectitle">Oke, Kita Udah Tahu Masalahnya. Sekarang Ngapain?</h2>
+
+        <p class="body-text" style="margin-bottom:14px">Dokumen metodologi resmi Indosat sudah ngejabarkan roadmap pengembangan ke depan. Ini versi "bahasa manusianya":</p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">🎯 Fokus ke 1.543 BTS Prioritas Dulu</div>
+              <div class="step-desc">BTS Very High & High hazard hanya 15% dari total tapi tanggung 60% kerugian. Buat daftar prioritas intervensi berdasarkan kombinasi: <strong>hazard level + nilai revenue + aksesibilitas lokasi</strong>. Mulai dari yang paling high-value dan paling berisiko.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">📊 Kalibrasi Parameter dengan Data Historis NOC</div>
+              <div class="step-desc">Parameter skenario saat ini adalah estimasi awal. Tim NOC punya data historis downtime dan kerusakan BTS akibat bencana — data ini harus dipakai untuk <strong>mengkalibrasi ulang angka kerusakan & downtime</strong> supaya proyeksi kerugiannya makin akurat.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">💧 Perbaiki Data Hazard Index yang Kosong</div>
+              <div class="step-desc">Banyak BTS saat ini punya HI = 0 bukan karena aman, tapi karena datanya belum terisi. Ini bikin Model 2 hasilkan angka kerugian Rp 0 padahal lokasinya sebenarnya berisiko. <strong>Prioritaskan pengisian data HI</strong> untuk wilayah Jawa, Sumatera, dan Kalimantan dulu.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-title">🔄 Masukkan Biaya Recovery, Bukan Cuma Revenue Loss</div>
+              <div class="step-desc">Model saat ini <strong>hanya hitung kerugian revenue</strong> (penghasilan yang hilang). Padahal ada biaya perbaikan fisik, upah teknisi, material, bahkan relokasi tower yang belum terhitung. Total kerugian sesungguhnya bisa <strong>jauh lebih besar</strong> dari yang tertera sekarang.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <div class="step-title">🌐 Integrasikan dengan Data BMKG Real-Time</div>
+              <div class="step-desc">Langkah jangka menengah: hubungkan model ini dengan feed peringatan dini BMKG dan BNPB. Dengan begitu, tim bisa dapat <strong>alert otomatis</strong> ketika BTS di zona tertentu terancam bencana, dan bisa preventif sebelum kerusakan terjadi.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:14px">
+          <div class="co-eye">💡 Bottom Line</div>
+          <div class="co-title">ROI Mitigasi Sangat Menarik</div>
+          <div class="co-body">Kalau biaya proteksi 1.543 BTS prioritas (misalnya flood barrier, arrester upgrade, monitoring IoT) rata-rata Rp 50–100 juta per BTS, total investasinya sekitar <strong>Rp 77–154 miliar</strong> — tapi potensi kerugian yang bisa dicegah lebih dari <strong>Rp 1,3 triliun</strong>. Rasio return-nya di atas 8×!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████
+         PAGE 11 — KETERBATASAN MODEL
+    ████████████████████████████ -->
+    <div class="page" id="pg-10">
+      <div class="page-header"><span class="ph-section">Catatan Penting</span><span class="ph-sep">·</span><span class="ph-section">Asumsi & Keterbatasan</span><span class="ph-page">Hal. 11</span></div>
+      <div class="page-content">
+        <div class="kicker">Disclaimer & Caveats</div>
+        <h2 class="sectitle">Jujur-Jujuran: Apa Saja Batasan dari Analisis Ini?</h2>
+
+        <p class="body-text" style="margin-bottom:14px">Dokumen metodologi Indosat sendiri sudah <em>jujur</em> soal ini — dan itu adalah tanda bahwa analisis ini dibuat secara profesional dan bertanggung jawab. Ini hal-hal yang perlu diingat saat baca angka-angka di majalah ini:</p>
+
+        <div class="limit-grid">
+          <div class="limit-chip">
+            <div class="lc-icon">📅</div>
+            <div class="lc-title">Revenue Pakai Data Oktober Saja</div>
+            <div class="lc-text">Revenue BTS bisa berfluktuasi musiman. Oktober dipilih sebagai bulan referensi, tapi banjir biasanya paling parah di Januari–Februari. Ini bisa bikin estimasi kerugian di musim banjir justru <em>lebih kecil dari kenyataan</em>.</div>
+          </div>
+          <div class="limit-chip">
+            <div class="lc-icon">🗂️</div>
+            <div class="lc-title">Banyak BTS yang HI-nya Belum Terisi</div>
+            <div class="lc-text">Sebagian besar BTS punya HI = 0, bukan karena aman, tapi karena datanya belum ada. Akibatnya Model 2 menghasilkan kerugian Rp 0 untuk BTS-BTS itu, meskipun sebenarnya berisiko.</div>
+          </div>
+          <div class="limit-chip">
+            <div class="lc-icon">🔗</div>
+            <div class="lc-title">Tidak Ada Efek Domino antar BTS</div>
+            <div class="lc-text">Kalau BTS A mati, BTS B dan C di sekitarnya bisa ikut kelebihan beban. Model ini belum memperhitungkan efek kaskade seperti ini — kerugian nyatanya mungkin lebih besar.</div>
+          </div>
+          <div class="limit-chip">
+            <div class="lc-icon">🎲</div>
+            <div class="lc-title">Deterministik, Bukan Probabilistik</div>
+            <div class="lc-text">Model saat ini memilih <em>satu nilai</em> per skenario — tidak ada distribusi probabilitas atau confidence interval. Pengembangan ke depan disarankan pakai simulasi Monte Carlo untuk hasilkan range kerugian.</div>
+          </div>
+          <div class="limit-chip">
+            <div class="lc-icon">🔧</div>
+            <div class="lc-title">Recovery Cost Belum Dihitung</div>
+            <div class="lc-text">Biaya perbaikan fisik (material, teknisi, relokasi tower) belum masuk model. Yang dihitung baru revenue yang hilang — jadi total kerugian ekonomi sesungguhnya lebih besar dari angka yang tertera.</div>
+          </div>
+          <div class="limit-chip">
+            <div class="lc-icon">📍</div>
+            <div class="lc-title">Faktor Bencana Konstan per Jenis</div>
+            <div class="lc-text">FaktorBencana (pengali kompleksitas pemulihan) diasumsikan sama untuk semua lokasi. Padahal BTS di daerah terpencil Papua jelas lebih sulit dipulihkan dibanding BTS di Jakarta — faktor ini idealnya bervariasi per geografi.</div>
+          </div>
+        </div>
+
+        <div class="insight ins-green" style="margin-top:14px">
+          <div class="ins-ico">✅</div>
+          <div class="ins-body">
+            <div class="ins-title">Tapi Keterbatasan Ini Bukan Alasan untuk Nggak Pakai Modelnya!</div>
+            <div class="ins-text">Setiap model analisis punya keterbatasan — yang penting adalah kita <strong>tahu dan akui</strong> batasannya, sambil terus memperbaiki. Angka Rp 2,18 triliun ini adalah <strong>estimasi terbaik saat ini</strong> berdasarkan data yang tersedia. Lebih baik punya estimasi dengan keterbatasan yang diakui, daripada tidak punya estimasi sama sekali.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████
+         PAGE 12 — PENUTUP / BACK COVER
+    ████████████████████████████ -->
+    <div class="page p-dark" id="pg-11">
+      <div class="page-header"><span class="ph-section">Penutup</span><span class="ph-sep">·</span><span class="ph-section">Closing</span><span class="ph-page">Hal. 12</span></div>
+      <div class="page-content">
+        <div class="kicker" style="color:#ff6b7a">Kesimpulan</div>
+        <h2 class="sectitle" style="color:white;font-size:28px">TL;DR — Kalau Cuma Punya 3 Menit, Baca Ini</h2>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin:16px 0">
+          <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;display:flex;gap:12px">
+            <span style="font-size:22px">🌊</span>
+            <div>
+              <div style="font-weight:700;font-size:13.5px;color:white;margin-bottom:4px">Banjir adalah musuh nomor satu</div>
+              <div style="font-size:12.5px;color:rgba(255,255,255,.55);line-height:1.55">64% kerugian (Rp 1,4T) datang dari banjir. Bukan cuma merusak, tapi juga menghalangi pemulihan.</div>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;display:flex;gap:12px">
+            <span style="font-size:22px">🎯</span>
+            <div>
+              <div style="font-weight:700;font-size:13.5px;color:white;margin-bottom:4px">1.543 BTS = prioritas utama</div>
+              <div style="font-size:12.5px;color:rgba(255,255,255,.55);line-height:1.55">15% BTS bermasalah tapi tanggung 60% kerugian. Fokus di sini = efisiensi mitigasi paling tinggi.</div>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;display:flex;gap:12px">
+            <span style="font-size:22px">💎</span>
+            <div>
+              <div style="font-weight:700;font-size:13.5px;color:white;margin-bottom:4px">BTS Platinum: setiap jam = Rp 62,5 juta</div>
+              <div style="font-size:12.5px;color:rgba(255,255,255,.55);line-height:1.55">Revenue tinggi = dampak downtime lebih besar. Proteksi BTS Platinum harus jadi prioritas finansial.</div>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;display:flex;gap:12px">
+            <span style="font-size:22px">🏔️</span>
+            <div>
+              <div style="font-weight:700;font-size:13.5px;color:white;margin-bottom:4px">Kalimantan: kecil tapi berisiko tinggi</div>
+              <div style="font-size:12.5px;color:rgba(255,255,255,.55);line-height:1.55">Rasio BTS berisiko di Kalimantan 28–30% — jauh di atas rata-rata. Kebakaran gambut + banjir = kombinasi mematikan.</div>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;display:flex;gap:12px">
+            <span style="font-size:22px">📊</span>
+            <div>
+              <div style="font-weight:700;font-size:13.5px;color:white;margin-bottom:4px">ROI mitigasi di atas 8×</div>
+              <div style="font-size:12.5px;color:rgba(255,255,255,.55);line-height:1.55">Investasi proteksi ~Rp 77–154 miliar bisa cegah kerugian >Rp 1,3 triliun. Worthit banget!</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:linear-gradient(135deg,rgba(232,25,44,.15),rgba(212,0,106,.1));border:1px solid rgba(232,25,44,.2);border-radius:14px;padding:18px;margin-top:14px">
+          <div style="font-family:var(--fh);font-size:16px;font-style:italic;color:rgba(255,255,255,.8);line-height:1.5;margin-bottom:10px">"Perubahan iklim bukan ancaman masa depan yang abstrak — dia sudah mengetuk pintu gardu BTS kita hari ini. Data ini bukan untuk menakut-nakuti, tapi untuk menyiapkan kita."</div>
+          <div style="width:20px;height:2px;background:var(--r);margin:8px 0"></div>
+          <div style="font-size:10.5px;color:rgba(255,255,255,.35);letter-spacing:.05em">Tim Risk Management · Indosat Ooredoo Hutchison · Maret 2025</div>
+        </div>
+
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:flex-end">
+          <div>
+            <div style="font-family:var(--fh);font-size:18px;font-weight:700;color:white;margin-bottom:4px">SINYAL</div>
+            <div style="font-family:var(--fm);font-size:9.5px;color:rgba(255,255,255,.3);letter-spacing:.08em">Majalah Risiko Iklim BTS · Edisi 1 · 2025</div>
+          </div>
+          <div style="font-family:var(--fm);font-size:9.5px;color:rgba(255,255,255,.25);letter-spacing:.04em;text-align:right;line-height:1.7">Internal · Terbatas<br>© 2025 Indosat Ooredoo Hutchison</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end page-viewport -->
+</div><!-- end magazine -->
+
+<!-- Navigation Arrows -->
+<button class="nav-arrow" id="btn-prev" onclick="changePage(-1)" disabled>‹</button>
+<button class="nav-arrow" id="btn-next" onclick="changePage(1)">›</button>
+
+<!-- Dot Nav -->
+<div id="dot-nav"></div>
+
+<!-- TOC Overlay -->
+<div id="toc-overlay">
+  <div class="toc-close" onclick="toggleToc()">✕</div>
+  <div class="toc-title">📖 Daftar Isi</div>
+  <div class="toc-grid">
+    <div class="toc-item" onclick="goTo(0);toggleToc()"><div class="toc-num">1</div><div class="toc-info"><div class="toc-label">Cover</div><div class="toc-page-title">Halaman Sampul</div></div></div>
+    <div class="toc-item" onclick="goTo(1);toggleToc()"><div class="toc-num">2</div><div class="toc-info"><div class="toc-label">Daftar Isi</div><div class="toc-page-title">Navigasi Isi</div></div></div>
+    <div class="toc-item" onclick="goTo(2);toggleToc()"><div class="toc-num">3</div><div class="toc-info"><div class="toc-label">Ringkasan</div><div class="toc-page-title">Gambaran Besar & KPI</div></div></div>
+    <div class="toc-item" onclick="goTo(3);toggleToc()"><div class="toc-num">4</div><div class="toc-info"><div class="toc-label">Peta Hazard</div><div class="toc-page-title">Distribusi Level Bahaya</div></div></div>
+    <div class="toc-item" onclick="goTo(4);toggleToc()"><div class="toc-num">5</div><div class="toc-info"><div class="toc-label">Bencana</div><div class="toc-page-title">4 Musuh Jaringan Kita</div></div></div>
+    <div class="toc-item" onclick="goTo(5);toggleToc()"><div class="toc-num">6</div><div class="toc-info"><div class="toc-label">Grup BTS</div><div class="toc-page-title">Platinum vs Bronze</div></div></div>
+    <div class="toc-item" onclick="goTo(6);toggleToc()"><div class="toc-num">7</div><div class="toc-info"><div class="toc-label">Provinsi</div><div class="toc-page-title">Hotspot Wilayah</div></div></div>
+    <div class="toc-item" onclick="goTo(7);toggleToc()"><div class="toc-num">8</div><div class="toc-info"><div class="toc-label">Metodologi 1</div><div class="toc-page-title">Dasar-Dasar & Indeks</div></div></div>
+    <div class="toc-item" onclick="goTo(8);toggleToc()"><div class="toc-num">9</div><div class="toc-info"><div class="toc-label">Metodologi 2</div><div class="toc-page-title">Formula & Skenario</div></div></div>
+    <div class="toc-item" onclick="goTo(9);toggleToc()"><div class="toc-num">10</div><div class="toc-info"><div class="toc-label">Rekomendasi</div><div class="toc-page-title">Action Plan 5 Langkah</div></div></div>
+    <div class="toc-item" onclick="goTo(10);toggleToc()"><div class="toc-num">11</div><div class="toc-info"><div class="toc-label">Keterbatasan</div><div class="toc-page-title">Asumsi & Caveats</div></div></div>
+    <div class="toc-item" onclick="goTo(11);toggleToc()"><div class="toc-num">12</div><div class="toc-info"><div class="toc-label">Penutup</div><div class="toc-page-title">TL;DR & Kesimpulan</div></div></div>
+  </div>
+</div>
+
+<script>
+/* ─── PAGE MANAGEMENT ─── */
+const TOTAL = 12;
+let current = 0;
+
+const pages = () => document.querySelectorAll('.page');
+const dots  = () => document.querySelectorAll('.dnav-dot');
+
+function goTo(n) {
+  if (n < 0 || n >= TOTAL) return;
+  const pg = document.querySelectorAll('.page');
+  pg[current].classList.remove('active');
+  pg[current].classList.add(n > current ? 'prev-out' : 'next-in');
+  setTimeout(() => { pg[current].classList.remove('prev-out','next-in'); }, 750);
+
+  current = n;
+  pg[current].classList.add('active');
+  pg[current].scrollTop = 0;
+
+  updateUI();
+  initPageCharts(current);
+}
+
+function changePage(dir) { goTo(current + dir); }
+
+function updateUI() {
+  document.getElementById('tb-pinfo').textContent = `Halaman ${current+1} dari ${TOTAL}`;
+  document.getElementById('btn-prev').disabled = current === 0;
+  document.getElementById('btn-next').disabled = current === TOTAL - 1;
+  dots().forEach((d,i) => d.classList.toggle('active', i === current));
+}
+
+/* Build dot nav */
+(function(){
+  const nav = document.getElementById('dot-nav');
+  for(let i=0;i<TOTAL;i++){
+    const d = document.createElement('div');
+    d.className = 'dnav-dot' + (i===0?' active':'');
+    d.onclick = () => goTo(i);
+    nav.appendChild(d);
+  }
+})();
+
+/* ─── TOC ─── */
+function toggleToc() {
+  document.getElementById('toc-overlay').classList.toggle('open');
+}
+
+/* ─── KEYBOARD NAV ─── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changePage(1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changePage(-1);
+  if (e.key === 'Escape') document.getElementById('toc-overlay').classList.remove('open');
+});
+
+/* ─── SWIPE ─── */
+let touchX = 0;
+document.getElementById('page-viewport').addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+document.getElementById('page-viewport').addEventListener('touchend', e => {
+  const dx = touchX - e.changedTouches[0].clientX;
+  if (Math.abs(dx) > 50) changePage(dx > 0 ? 1 : -1);
+});
+
+/* ─── CHARTS ─── */
+Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+Chart.defaults.color = 'rgba(0,0,0,.45)';
+const chartInited = {};
+
+function initPageCharts(pg) {
+  if (chartInited[pg]) return;
+  chartInited[pg] = true;
+
+  if (pg === 3) { // Hazard page
+    // Donut
+    const c1 = document.getElementById('cHaz1');
+    if(c1) new Chart(c1, {
+      type:'doughnut',
+      data:{
+        labels:['Very High','High','Moderate','Low','Very Low','No Hazard'],
+        datasets:[{data:[312,1231,2847,3124,1956,536],backgroundColor:['#dc2626','#ea580c','#d97706','#16a34a','#3b82f6','#9ca3af'],borderWidth:3,borderColor:'white',hoverBorderWidth:4}]
+      },
+      options:{plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,font:{size:10}}},tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed.toLocaleString('id')} BTS`}}},cutout:'60%',maintainAspectRatio:false}
+    });
+    // Bar
+    const c2 = document.getElementById('cHaz2');
+    if(c2) new Chart(c2, {
+      type:'bar',
+      data:{labels:['VH','High','Mod','Low','VL'],datasets:[{label:'Kerugian (Rp M)',data:[620,820,480,180,80],backgroundColor:['rgba(220,38,38,.82)','rgba(234,88,12,.82)','rgba(217,119,6,.82)','rgba(22,163,74,.82)','rgba(59,130,246,.82)'],borderRadius:6,borderSkipped:false}]},
+      options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Rp ${ctx.parsed.y}M`}}},scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,.06)'}},y:{ticks:{callback:v=>`${v}M`,font:{size:9}},grid:{color:'rgba(0,0,0,.04)'},border:{display:false}}},maintainAspectRatio:false}
+    });
+  }
+}
+
+/* ─── PROVINCE DATA ─── */
+const PROVS = [
+  {n:'Jawa Barat',bts:1842,loss:'Rp 284M',hp:'18%',vh:8,h:10,m:28,l:32,vl:17,nh:5,a:'Jawa Barat punya BTS terbanyak tapi dibantu infrastruktur respons yang relatif baik. Risiko terbesar dari banjir DAS Citarum dan longsor di Bandung Selatan. Prioritas: flood barrier untuk BTS di dataran rendah Citarum.'},
+  {n:'Jawa Timur',bts:1456,loss:'Rp 210M',hp:'14%',vh:5,h:9,m:30,l:34,vl:16,nh:6,a:'Risiko lebih rendah dibanding Jabar. Ancaman utama dari banjir Bengawan Solo dan angin kencang pesisir. BTS di Madura & kepulauan butuh perhatian karena keterbatasan akses pemulihan.'},
+  {n:'Jawa Tengah',bts:1234,loss:'Rp 192M',hp:'15%',vh:6,h:9,m:29,l:33,vl:17,nh:6,a:'Klaten, Magelang, Banjarnegara masuk zona hazard tinggi — kombinasi longsor lereng Merapi-Merbabu dan banjir musiman. BTS di Semarang juga menghadapi ancaman rob yang kian meningkat setiap tahunnya.'},
+  {n:'Sumatera Utara',bts:876,loss:'Rp 168M',hp:'22%',vh:10,h:12,m:26,l:30,vl:15,nh:7,a:'Fakta nyata: Nov 2025, 495 BTS offline akibat banjir dan longsor sekaligus. Tapanuli Selatan dan Mandailing Natal adalah hotspot longsor yang butuh hardening pondasi segera.'},
+  {n:'Sumatera Selatan',bts:645,loss:'Rp 142M',hp:'24%',vh:12,h:12,m:25,l:29,vl:14,nh:8,a:'OKI, Musi Banyuasin, Banyuasin: triple ancaman banjir + kebakaran gambut. Kebakaran 2023 hanguskan ribuan hektar gambut — BTS di koridor Palembang-Jambi paling terekspos.'},
+  {n:'Kalimantan Barat',bts:412,loss:'Rp 98M',hp:'28%',vh:14,h:14,m:24,l:26,vl:14,nh:8,a:'28% BTS risiko tinggi — salah satu rasio tertinggi nasional. Banjir Kapuas berulang tiap tahun + kebakaran gambut 2023. BTS remote butuh IoT monitoring untuk early warning.'},
+  {n:'Kalimantan Tengah',bts:334,loss:'Rp 88M',hp:'30%',vh:16,h:14,m:22,l:25,vl:14,nh:9,a:'Rasio risiko tinggi terbesar ke-2 nasional: 30%! Palangka Raya = episentrum kebakaran gambut. Isolasi geografis bikin downtime 2–3× lebih lama dari rata-rata nasional.'},
+  {n:'Sulawesi Selatan',bts:528,loss:'Rp 72M',hp:'16%',vh:7,h:9,m:27,l:33,vl:17,nh:7,a:'Makassar punya risiko banjir rob yang terus meningkat akibat kenaikan muka laut. Toraja dan Enrekang rentan longsor. Cuaca ekstrem Selat Makassar tambah risiko BTS pesisir.'},
+  {n:'Riau',bts:398,loss:'Rp 68M',hp:'20%',vh:9,h:11,m:27,l:31,vl:15,nh:7,a:'Hotspot kebakaran gambut berulang — Riau masuk top 3 emisi kebakaran nasional. Kabut asap bisa gangguin transmisi sinyal microwave. Kepulauan Riau tambah risiko cuaca ekstrem dan rob.'},
+  {n:'Aceh',bts:278,loss:'Rp 58M',hp:'25%',vh:13,h:12,m:24,l:28,vl:15,nh:8,a:'Nov 2025: 799 BTS offline dari 1 kejadian banjir saja! Subulussalam dan Aceh Tenggara = hotspot longsor. Infrastruktur respons yang masih terbatas bikin downtime lebih lama.'},
+  {n:'DKI Jakarta',bts:312,loss:'Rp 52M',hp:'10%',vh:4,h:6,m:26,l:36,vl:20,nh:8,a:'Hanya 10% BTS berisiko tinggi, tapi value finansialnya sangat besar karena revenue BTS Jakarta tertinggi nasional. Banjir rob + kiriman ancaman utama. Tapi infrastruktur respons Jakarta juga terbaik — recovery lebih cepat.'},
+  {n:'Papua',bts:214,loss:'Rp 44M',hp:'19%',vh:9,h:10,m:25,l:32,vl:16,nh:8,a:'BTS sedikit tapi risiko per BTS sangat tinggi karena isolasi ekstrem. Satu BTS offline di Papua bisa putus koneksi ribuan warga. Biaya recovery 5–8× lebih mahal dari Jawa karena harus logistik udara.'},
+];
+
+const provListEl = document.getElementById('prov-list-inner');
+PROVS.forEach((p,i)=>{
+  const el = document.createElement('div');
+  el.className='pi'+(i===0?' active':'');
+  el.innerHTML=`<span class="pi-name">${p.n}</span><span class="pi-cnt">${p.bts.toLocaleString('id')} BTS</span>`;
+  el.onclick=()=>selProv(p,el);
+  provListEl.appendChild(el);
+});
+
+function selProv(p,el){
+  document.querySelectorAll('.pi').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('pd-name').textContent=p.n;
+  document.getElementById('pd-sub').textContent='Analisis risiko iklim & estimasi kerugian finansial';
+  document.getElementById('pd-cnt').textContent=p.bts.toLocaleString('id');
+  document.getElementById('pd-loss').textContent=p.loss;
+  document.getElementById('pd-high').textContent=p.hp;
+  document.getElementById('pd-hbar').innerHTML=[
+    `<div class="phbs" style="background:#dc2626;width:${p.vh}%"></div>`,
+    `<div class="phbs" style="background:#ea580c;width:${p.h}%"></div>`,
+    `<div class="phbs" style="background:#d97706;width:${p.m}%"></div>`,
+    `<div class="phbs" style="background:#16a34a;width:${p.l}%"></div>`,
+    `<div class="phbs" style="background:#3b82f6;width:${p.vl}%"></div>`,
+    `<div class="phbs" style="background:#9ca3af;width:${p.nh}%"></div>`,
+  ].join('');
+  document.getElementById('pd-analysis').textContent=p.a;
+}
+selProv(PROVS[0],document.querySelector('.pi'));
+
+/* Init first page */
+updateUI();
+</script>
+</body>
+</html>
