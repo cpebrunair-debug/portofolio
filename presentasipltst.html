@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kajian PLTS Terapung RUPTL 2025–2034 | PT PLN (Persero)</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Aptos+Display:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a2342;
+    --blue-deep: #1a3f6f;
+    --blue-mid: #1e5fa8;
+    --blue-light: #4a9fd4;
+    --blue-pale: #c8e6f7;
+    --blue-ultra: #e8f4fb;
+    --gold: #f5a800;
+    --gold-light: #ffd166;
+    --gold-pale: #fff3cc;
+    --white: #ffffff;
+    --gray-light: #f5f7fa;
+    --gray-mid: #dde4ee;
+    --text-dark: #0d1b2a;
+    --text-mid: #2c4a6e;
+    --text-light: #5c7ca0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #0d1b2e;
+    color: var(--text-dark);
+    overflow: hidden;
+  }
+
+  /* SLIDE CONTAINER */
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; }
+
+  /* NAVIGATION */
+  .nav-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(10,35,66,0.96);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 24px;
+    z-index: 999;
+    border-top: 2px solid var(--gold);
+  }
+  .nav-bar button {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 20px;
+    border: 1.5px solid var(--gold);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .nav-bar button:hover { background: var(--gold); color: var(--navy); }
+  .nav-bar button:disabled { opacity: 0.3; cursor: default; }
+  .nav-bar .progress-info {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+  .nav-bar .slide-dots {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    max-width: 60%;
+    justify-content: center;
+  }
+  .nav-bar .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .nav-bar .dot.active { background: var(--gold); }
+
+  /* === TYPOGRAPHY === */
+  .slide-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+  h1.title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 900;
+    line-height: 1.1;
+  }
+  h2.slide-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(20px, 2.5vw, 32px);
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  p, li { font-size: 14px; line-height: 1.65; }
+
+  /* === LAYOUT HELPERS === */
+  .slide-body {
+    flex: 1;
+    padding: 36px 52px 80px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .slide-body.two-col {
+    flex-direction: row;
+    gap: 32px;
+  }
+  .col { flex: 1; }
+
+  /* === BACKGROUNDS === */
+  .bg-cover {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue-deep) 40%, var(--blue-mid) 100%);
+    color: var(--white);
+  }
+  .bg-white { background: var(--white); }
+  .bg-light { background: var(--blue-ultra); }
+  .bg-navy { background: var(--navy); color: var(--white); }
+  .bg-gradient-blue {
+    background: linear-gradient(160deg, #f0f7ff 0%, #daeeff 100%);
+  }
+
+  /* === HEADER STRIP === */
+  .slide-header {
+    padding: 22px 52px 16px;
+    border-bottom: 2px solid;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .slide-header.blue { border-color: var(--blue-mid); background: var(--white); }
+  .slide-header.gold { border-color: var(--gold); background: var(--navy); }
+  .slide-header.light { border-color: var(--blue-pale); background: var(--blue-ultra); }
+
+  .slide-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  /* === CARDS === */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--gray-mid);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+  }
+  .card-blue {
+    background: var(--blue-ultra);
+    border: 1.5px solid var(--blue-pale);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+  }
+  .card-gold {
+    background: var(--gold-pale);
+    border: 1.5px solid var(--gold-light);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+  }
+  .card-navy {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+  }
+
+  /* === METRICS === */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 12px 0;
+  }
+  .metric-box {
+    background: var(--white);
+    border: 1px solid var(--gray-mid);
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .metric-box.blue { background: var(--blue-ultra); border-color: var(--blue-pale); }
+  .metric-box.gold { background: var(--gold-pale); border-color: var(--gold-light); }
+  .metric-box.navy { background: var(--navy); border-color: var(--blue-mid); }
+  .metric-val {
+    font-size: clamp(22px, 3vw, 36px);
+    font-weight: 900;
+    color: var(--blue-mid);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .metric-box.navy .metric-val { color: var(--gold); }
+  .metric-box.gold .metric-val { color: var(--navy); }
+  .metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text-light);
+    text-transform: uppercase;
+  }
+  .metric-box.navy .metric-label { color: rgba(255,255,255,0.6); }
+  .metric-box.gold .metric-label { color: var(--text-mid); }
+
+  /* === BADGE === */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-right: 4px;
+  }
+  .badge-gold { background: var(--gold); color: var(--navy); }
+  .badge-blue { background: var(--blue-mid); color: white; }
+  .badge-green { background: #1a7a4a; color: white; }
+  .badge-red { background: #c0392b; color: white; }
+  .badge-gray { background: var(--gray-mid); color: var(--text-mid); }
+
+  /* === TABLE === */
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th {
+    background: var(--navy);
+    color: var(--white);
+    padding: 9px 12px;
+    font-weight: 700;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--gray-mid); }
+  tr:nth-child(even) td { background: var(--blue-ultra); }
+
+  /* === BULLET LIST === */
+  ul.check-list { list-style: none; padding: 0; }
+  ul.check-list li {
+    padding: 6px 0 6px 24px;
+    position: relative;
+    font-size: 13.5px;
+    border-bottom: 1px solid rgba(200,220,240,0.5);
+  }
+  ul.check-list li::before {
+    content: '►';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 10px;
+    top: 9px;
+  }
+
+  /* === RISK MATRIX === */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .risk-item {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border-left: 4px solid;
+  }
+  .risk-high { border-color: #c0392b; background: #fdf3f2; }
+  .risk-med { border-color: var(--gold); background: var(--gold-pale); }
+  .risk-low { border-color: #27ae60; background: #f0faf4; }
+
+  /* === PRIORITY MATRIX VISUAL === */
+  .quadrant-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    height: 100%;
+  }
+  .quadrant {
+    border-radius: 8px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+  }
+  .q1 { background: #1a7a4a; color: white; }
+  .q2 { background: var(--blue-mid); color: white; }
+  .q3 { background: var(--gold); color: var(--navy); }
+  .q4 { background: var(--gray-mid); color: var(--text-mid); }
+
+  .q-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; opacity: 0.8; }
+  .q-title { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+  .q-desc { font-size: 12px; line-height: 1.5; }
+
+  /* === DIVIDER === */
+  .gold-divider { width: 60px; height: 4px; background: var(--gold); border-radius: 2px; margin: 12px 0; }
+  .blue-divider { width: 40px; height: 3px; background: var(--blue-mid); border-radius: 2px; margin: 8px 0; }
+
+  /* === COVER SLIDE === */
+  .cover-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 52px;
+    position: relative;
+    z-index: 2;
+  }
+  .cover-deco {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 40%;
+    background: linear-gradient(135deg, rgba(245,168,0,0.12), rgba(74,159,212,0.08));
+    clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);
+  }
+  .cover-deco2 {
+    position: absolute;
+    right: 0; top: 0;
+    width: 35%;
+    height: 100%;
+    border-left: 3px solid rgba(245,168,0,0.3);
+    transform: skewX(-8deg);
+    transform-origin: top right;
+  }
+
+  /* === SECTION DIVIDER SLIDE === */
+  .section-slide {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue-deep) 60%, var(--blue-mid) 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px;
+  }
+  .section-slide .section-num {
+    font-size: 80px;
+    font-weight: 900;
+    color: rgba(245,168,0,0.15);
+    line-height: 1;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: -16px;
+  }
+
+  /* === FOOTER STRIP === */
+  .footer-strip {
+    position: absolute;
+    bottom: 56px; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--blue-mid), transparent);
+  }
+
+  /* === PROGRESS BAR === */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--blue-light));
+    transition: width 0.3s ease;
+    z-index: 1000;
+  }
+
+  /* === ICON BOX === */
+  .icon-stat {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-mid);
+  }
+  .icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--blue-ultra);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    border: 1px solid var(--blue-pale);
+  }
+  .icon-box.gold { background: var(--gold-pale); border-color: var(--gold-light); }
+
+  /* === RECOMMENDATION CARD === */
+  .rec-card {
+    display: flex;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 7px;
+    background: var(--white);
+    border: 1px solid var(--gray-mid);
+    margin-bottom: 8px;
+    align-items: flex-start;
+  }
+  .rec-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--blue-mid);
+    color: white;
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .rec-num.gold-bg { background: var(--gold); color: var(--navy); }
+
+  /* === TIMELINE === */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--blue-mid), var(--gold));
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 14px;
+    padding-left: 20px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -19px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid white;
+    z-index: 1;
+  }
+
+  /* === SCATTER VISUAL === */
+  .scatter-visual {
+    position: relative;
+    height: 200px;
+    border: 1px solid var(--gray-mid);
+    border-radius: 8px;
+    background: white;
+    overflow: hidden;
+  }
+  .scatter-label-x {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  .scatter-label-y {
+    position: absolute;
+    left: -36px;
+    top: 50%;
+    transform: rotate(-90deg) translateX(50%);
+    font-size: 11px;
+    color: var(--text-light);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .scatter-dot {
+    position: absolute;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    cursor: default;
+  }
+
+  .mini-bar-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .mini-bar-label { font-size: 12px; width: 130px; flex-shrink: 0; color: var(--text-mid); }
+  .mini-bar-track { flex: 1; background: var(--gray-mid); border-radius: 3px; height: 8px; overflow: hidden; }
+  .mini-bar-fill { height: 100%; border-radius: 3px; }
+  .mini-bar-val { font-size: 12px; font-weight: 700; width: 40px; text-align: right; color: var(--text-dark); }
+</style>
+</head>
+<body>
+
+<div id="progress-bar" style="width:2.7%"></div>
+
+<div class="deck">
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 1: COVER
+  ═══════════════════════════════════════════ -->
+  <div class="slide active bg-cover" id="slide-1">
+    <div class="cover-deco"></div>
+    <div class="cover-deco2"></div>
+    <div class="cover-content">
+      <div style="display:inline-flex; align-items:center; gap:10px; margin-bottom:28px;">
+        <div style="width:6px; height:48px; background:var(--gold); border-radius:3px;"></div>
+        <div>
+          <div style="font-size:11px; font-weight:700; letter-spacing:3px; color:var(--gold-light); text-transform:uppercase; margin-bottom:4px;">Kajian Percepatan Pembangunan</div>
+          <div style="font-size:11px; font-weight:600; letter-spacing:2px; color:rgba(255,255,255,0.5); text-transform:uppercase;">PT PLN (Persero) · Fase 1</div>
+        </div>
+      </div>
+      <h1 class="title" style="color:white; margin-bottom:8px;">PLTS Terapung</h1>
+      <h1 class="title" style="color:var(--gold);">RUPTL 2025–2034</h1>
+      <div class="gold-divider" style="margin:20px 0;"></div>
+      <p style="color:rgba(255,255,255,0.75); font-size:15px; max-width:580px; line-height:1.7;">
+        Prioritisasi Percepatan Pengembangan Berbasis Risiko Intermitensi dan ESG pada 108 Lokasi Waduk Indonesia
+      </p>
+      <div style="margin-top:32px; display:flex; gap:24px; flex-wrap:wrap;">
+        <div style="font-size:12px; color:rgba(255,255,255,0.5);">
+          <span style="color:var(--gold); font-weight:700;">Tim Ahli:</span><br>Prof. Iman Harymawan, Ph.D.
+        </div>
+        <div style="font-size:12px; color:rgba(255,255,255,0.5);">
+          <span style="color:var(--gold); font-weight:700;">Penerbit:</span><br>Center for ESG Studies, Universitas Airlangga
+        </div>
+        <div style="font-size:12px; color:rgba(255,255,255,0.5);">
+          <span style="color:var(--gold); font-weight:700;">Versi:</span><br>Draft 14 April 2026
+        </div>
+      </div>
+    </div>
+    <div class="footer-strip"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 2: DAFTAR ISI
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-2">
+    <div class="slide-header blue">
+      <span class="slide-num">02</span>
+      <h2 class="slide-title" style="color:var(--navy);">Daftar Isi Kajian</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="card-blue" style="display:flex; align-items:center; gap:14px; padding:12px 16px;">
+            <div style="width:36px; height:36px; background:var(--blue-mid); border-radius:6px; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:14px; flex-shrink:0;">01</div>
+            <div><div style="font-size:13px; font-weight:700; color:var(--navy);">Latar Belakang & Konteks Strategis</div><div style="font-size:11px; color:var(--text-light);">Indonesia Emas 2045 · RUPTL · Net Zero 2060</div></div>
+          </div>
+          <div class="card-blue" style="display:flex; align-items:center; gap:14px; padding:12px 16px;">
+            <div style="width:36px; height:36px; background:var(--blue-mid); border-radius:6px; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:14px; flex-shrink:0;">02</div>
+            <div><div style="font-size:13px; font-weight:700; color:var(--navy);">Potensi PLTS Terapung Indonesia</div><div style="font-size:11px; color:var(--text-light);">108 Waduk · 13,9 GW · Distribusi Geografis</div></div>
+          </div>
+          <div class="card-blue" style="display:flex; align-items:center; gap:14px; padding:12px 16px;">
+            <div style="width:36px; height:36px; background:var(--blue-mid); border-radius:6px; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:14px; flex-shrink:0;">03</div>
+            <div><div style="font-size:13px; font-weight:700; color:var(--navy);">Metodologi Kajian</div><div style="font-size:11px; color:var(--text-light);">AHP · Normalisasi · Scoring ESG</div></div>
+          </div>
+          <div class="card-blue" style="display:flex; align-items:center; gap:14px; padding:12px 16px;">
+            <div style="width:36px; height:36px; background:var(--blue-mid); border-radius:6px; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:14px; flex-shrink:0;">04</div>
+            <div><div style="font-size:13px; font-weight:700; color:var(--navy);">Risiko Intermitensi & Meteorologis</div><div style="font-size:11px; color:var(--text-light);">9 Jenis Risiko · PVOUT · BESS</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="card-gold" style="display:flex; align-items:center; gap:14px; padding:12px 16px;">
+            <div style="width:36px; height:36px; background:var(--gold); border-radius:6px; display:flex; align-items:center; justify-content:center; color:var(--navy); font-weight:900; font-size:14px; flex-shrink:0;">05</div>
+            <div><div style="font-size:13px; font-weight:700; color:var(--navy);">Risiko ESG – Dimensi Lingkungan</div><div style="font-size:11px; color:var(--text-light);">14 Kategori · Ekosistem · Bencana</div></div>
+          </div>
+          <div class="card-gold" style="display:flex; align-items:center; gap:14px; padding:12px 16px;">
+            <div style="width:36px; height:36px; background:var(--gold); border-radius:6px; display:flex; align-items:center; justify-content:center; color:var(--navy); font-weight:900; font-size:14px; flex-shrink:0;">06</div>
+            <div><div style="font-size:13px; font-weight:700; color:var(--navy);">Risiko ESG – Dimensi Sosial</div><div style="font-size:11px; color:var(--text-light);">Nelayan · FPIC · Keadilan Energi</div></div>
+          </div>
+          <div class="card-gold" style="display:flex; align-items:center; gap:14px; padding:12px 16px;">
+            <div style="width:36px; height:36px; background:var(--gold); border-radius:6px; display:flex; align-items:center; justify-content:center; color:var(--navy); font-weight:900; font-size:14px; flex-shrink:0;">07</div>
+            <div><div style="font-size:13px; font-weight:700; color:var(--navy);">Risiko ESG – Dimensi Governance</div><div style="font-size:11px; color:var(--text-light);">Perizinan · Koordinasi Kelembagaan</div></div>
+          </div>
+          <div class="card-navy" style="display:flex; align-items:center; gap:14px; padding:12px 16px;">
+            <div style="width:36px; height:36px; background:var(--gold); border-radius:6px; display:flex; align-items:center; justify-content:center; color:var(--navy); font-weight:900; font-size:14px; flex-shrink:0;">08</div>
+            <div><div style="font-size:13px; font-weight:700; color:white;">Prioritas & Rekomendasi Strategis</div><div style="font-size:11px; color:rgba(255,255,255,0.5);">Matriks 4 Klaster · Top-10 Lokasi · Kebijakan</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 3: LATAR BELAKANG
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-3">
+    <div class="slide-header blue">
+      <span class="slide-num">03</span>
+      <h2 class="slide-title" style="color:var(--navy);">Latar Belakang: Mengapa PLTS Terapung?</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="card" style="border-left:4px solid var(--blue-mid); margin-bottom:12px;">
+          <h3 style="color:var(--navy); margin-bottom:6px;">Indonesia Emas 2045</h3>
+          <p style="font-size:13px; color:var(--text-mid);">Target PDB per kapita <strong>USD 30.300</strong> pada 2045 membutuhkan pertumbuhan konsumsi listrik <strong>9–12% per tahun</strong> — dari 1.522 kWh saat ini menjadi >8.500 kWh/kapita.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--gold); margin-bottom:12px;">
+          <h3 style="color:var(--navy); margin-bottom:6px;">Net Zero 2060</h3>
+          <p style="font-size:13px; color:var(--text-mid);">Sektor ketenagalistrikan wajib dekarbonisasi. EBT dominasi penambahan kapasitas RUPTL 2025–2034 sebesar <strong>76%</strong> dari 69,5 GW total.</p>
+        </div>
+        <div class="card" style="border-left:4px solid #1a7a4a;">
+          <h3 style="color:var(--navy); margin-bottom:6px;">Gap Realisasi PLTS Terapung</h3>
+          <p style="font-size:13px; color:var(--text-mid);">Dari 109 waduk terencana, baru <strong>Cirata 192 MWp</strong> beroperasi. Potensi 13,89 GW belum termanfaatkan — gap antara rencana dan realisasi sangat besar.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="metric-grid" style="grid-template-columns: 1fr 1fr; margin-bottom:14px;">
+          <div class="metric-box navy">
+            <div class="metric-val">USD 4.925</div>
+            <div class="metric-label">PDB/Kapita 2024</div>
+          </div>
+          <div class="metric-box gold">
+            <div class="metric-val">USD 30.300</div>
+            <div class="metric-label">Target 2045</div>
+          </div>
+          <div class="metric-box blue">
+            <div class="metric-val">1.522 kWh</div>
+            <div class="metric-label">Konsumsi listrik kini</div>
+          </div>
+          <div class="metric-box blue">
+            <div class="metric-val">>8.500 kWh</div>
+            <div class="metric-label">Target 2045</div>
+          </div>
+        </div>
+        <div class="card-blue">
+          <h3 style="color:var(--navy); font-size:13px; margin-bottom:8px;">Tantangan yang Belum Terjawab</h3>
+          <ul class="check-list">
+            <li>Penilaian risiko intermitensi per lokasi waduk belum komprehensif</li>
+            <li>Profil ESG dari 108 lokasi belum dipetakan sistematis</li>
+            <li>Fragmentasi perizinan lintas kementerian menghambat eksekusi</li>
+            <li>Kesiapan rantai pasok & kontraktor EPC belum terukur</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 4: KONTEKS RUPTL
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-gradient-blue" id="slide-4">
+    <div class="slide-header light">
+      <span class="slide-num">04</span>
+      <h2 class="slide-title" style="color:var(--navy);">RUPTL 2025–2034: Dominasi EBT 76%</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="card-navy" style="margin-bottom:14px;">
+          <p style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:4px;">TOTAL PENAMBAHAN KAPASITAS</p>
+          <div style="font-size:44px; font-weight:900; color:var(--gold); line-height:1;">69,5 GW</div>
+          <p style="color:rgba(255,255,255,0.7); font-size:13px;">2025–2034 | 76% dari EBT</p>
+        </div>
+        <h3 style="color:var(--navy); margin-bottom:10px;">Komposisi Penambahan EBT</h3>
+        <div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label">Tenaga Surya (PLTS)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:32%; background:var(--gold);"></div></div><div class="mini-bar-val">17,1 GW</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label">Hidro</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:22%; background:var(--blue-mid);"></div></div><div class="mini-bar-val">11,7 GW</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label">Bayu (Angin)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:14%; background:#4ac8a4;"></div></div><div class="mini-bar-val">7,2 GW</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label">Panas Bumi</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:10%; background:#e05d44;"></div></div><div class="mini-bar-val">5,2 GW</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label">BESS</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:11%; background:#8a63d2;"></div></div><div class="mini-bar-val">6,0 GW</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label">Gas + Batu Bara</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:31%; background:var(--gray-mid);"></div></div><div class="mini-bar-val">16,6 GW</div></div>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:12px;">Posisi Strategis PLTS Terapung</h3>
+        <div class="metric-grid" style="grid-template-columns:1fr;">
+          <div class="icon-stat">
+            <div class="icon-box gold">☀️</div>
+            <div>
+              <div style="font-size:13px; font-weight:700; color:var(--navy);">Potensi Teknis Surya Indonesia</div>
+              <div style="font-size:22px; font-weight:900; color:var(--blue-mid);">3.295 GW</div>
+              <div style="font-size:11px; color:var(--text-light);">Terpasang 2024 baru ~909 MW (0,03%)</div>
+            </div>
+          </div>
+          <div class="icon-stat">
+            <div class="icon-box">🌊</div>
+            <div>
+              <div style="font-size:13px; font-weight:700; color:var(--navy);">Keunggulan PLTS Terapung vs Darat</div>
+              <div style="font-size:13px; color:var(--text-mid); margin-top:4px;">Tidak butuh pembebasan lahan · Efisiensi +6% (pendinginan air) · Co-location dengan PLTA · Konstruksi ~7 bulan/100 MWp</div>
+            </div>
+          </div>
+          <div class="icon-stat">
+            <div class="icon-box gold">💰</div>
+            <div>
+              <div style="font-size:13px; font-weight:700; color:var(--navy);">Daya Tarik ESG Finansial</div>
+              <div style="font-size:13px; color:var(--text-mid); margin-top:4px;">IEA: Investasi energi bersih global ~USD 2T di 2024. Green investment masuk sektor EBT Indonesia semakin besar.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 5: SEBARAN 108 WADUK
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-5">
+    <div class="slide-header blue">
+      <span class="slide-num">05</span>
+      <h2 class="slide-title" style="color:var(--navy);">108 Waduk RUPTL: 13,9 GW Potensi Nasional</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr 1fr; margin-bottom:14px;">
+          <div class="metric-box navy">
+            <div class="metric-val">108</div>
+            <div class="metric-label">Waduk RUPTL</div>
+          </div>
+          <div class="metric-box gold">
+            <div class="metric-val">13,9 GW</div>
+            <div class="metric-label">Potensi kapasitas</div>
+          </div>
+          <div class="metric-box blue">
+            <div class="metric-val">8,2 jt</div>
+            <div class="metric-label">Rumah tangga</div>
+          </div>
+        </div>
+        <h3 style="color:var(--navy); margin-bottom:10px;">Status Pembangunan Waduk</h3>
+        <div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:110px;">Eksisting (operasi)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:56%; background:#1a7a4a;"></div></div><div class="mini-bar-val">61</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:110px;">Selesai dibangun</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:17%; background:var(--blue-mid);"></div></div><div class="mini-bar-val">18</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:110px;">On Going</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:18%; background:var(--gold);"></div></div><div class="mini-bar-val">19</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:110px;">Perencanaan Baru</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:9%; background:#c0392b;"></div></div><div class="mini-bar-val">10</div></div>
+        </div>
+        <div class="card-blue" style="margin-top:14px;">
+          <p style="font-size:12px; color:var(--text-mid);">61 waduk eksisting sudah punya infrastruktur dasar: genangan, akses jalan, koneksi jaringan — siap dikembangkan jangka pendek.</p>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Waduk Kapasitas Terbesar</h3>
+        <table>
+          <tr><th>Waduk</th><th>Luas (ha)</th><th>Potensi (MWp)</th><th>Wilayah</th></tr>
+          <tr><td><strong>Jatiluhur/Djuanda</strong></td><td>8.130</td><td style="color:var(--blue-mid);font-weight:700;">1.626</td><td>Jawa Barat</td></tr>
+          <tr><td><strong>Wonogiri</strong></td><td>6.386</td><td style="color:var(--blue-mid);font-weight:700;">1.277</td><td>Jawa Tengah</td></tr>
+          <tr><td><strong>Kedung Ombo</strong></td><td>4.600</td><td style="color:var(--blue-mid);font-weight:700;">920</td><td>Jawa Tengah</td></tr>
+          <tr><td>Margatiga</td><td>2.314</td><td style="color:var(--gold);font-weight:700;">463</td><td>Lampung</td></tr>
+          <tr><td>Batu Tegi</td><td>2.100</td><td style="color:var(--gold);font-weight:700;">420</td><td>Lampung</td></tr>
+        </table>
+        <div class="card-gold" style="margin-top:14px;">
+          <p style="font-size:12px; color:var(--text-dark);">Konsentrasi terbesar di Jawa (dekat beban listrik utama). Potensi substansial juga di Lampung, Sulawesi Selatan, dan NTB.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 6: METODOLOGI
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-6">
+    <div class="slide-header blue">
+      <span class="slide-num">06</span>
+      <h2 class="slide-title" style="color:var(--navy);">Metodologi: AHP + Scoring ESG Dua Tingkat</h2>
+    </div>
+    <div class="slide-body">
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:14px;">
+        <div class="card" style="border-top:4px solid var(--blue-mid);">
+          <h3 style="color:var(--blue-mid); font-size:14px;">Theoretical Potential</h3>
+          <p style="font-size:12.5px; color:var(--text-mid);">Potensi iradiasi, PVOUT, variabilitas, intermitensi, kebutuhan BESS. Berbasis data SOLARGIS & ERA5.</p>
+        </div>
+        <div class="card" style="border-top:4px solid var(--gold);">
+          <h3 style="color:#b07800; font-size:14px;">Practical Potential (ESG)</h3>
+          <p style="font-size:12.5px; color:var(--text-mid);">Analisis risiko lingkungan, sosial, dan tata kelola berbasis GIS + data sekunder spasial.</p>
+        </div>
+        <div class="card" style="border-top:4px solid #1a7a4a;">
+          <h3 style="color:#1a7a4a; font-size:14px;">Matriks Prioritas</h3>
+          <p style="font-size:12.5px; color:var(--text-mid);">Kombinasi skor intermitensi & ESG → 4 klaster prioritas pengembangan.</p>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div>
+          <h3 style="color:var(--navy); margin-bottom:8px;">Alur Metodologi</h3>
+          <div class="timeline">
+            <div class="timeline-item"><strong style="font-size:13px;">Data Collection</strong><br><span style="font-size:12px; color:var(--text-light);">Spasial (GIS), BMKG, SOLARGIS, MCP KPK, BIG</span></div>
+            <div class="timeline-item"><strong style="font-size:13px;">AHP Weighting</strong><br><span style="font-size:12px; color:var(--text-light);">Pembobotan 2 tingkat · Uji konsistensi CR < 0,1</span></div>
+            <div class="timeline-item"><strong style="font-size:13px;">Normalisasi Skor 1–5</strong><br><span style="font-size:12px; color:var(--text-light);">Raw data → skor terbobot ESG per dimensi</span></div>
+            <div class="timeline-item"><strong style="font-size:13px;">Prioritas Matriks</strong><br><span style="font-size:12px; color:var(--text-light);">Plotting 4 kuadran: Quick Win, Premium, Persiapan, Tunda</span></div>
+          </div>
+        </div>
+        <div>
+          <h3 style="color:var(--navy); margin-bottom:8px;">Sumber & Triangulasi Data</h3>
+          <ul class="check-list">
+            <li>Diskusi teknis mendalam: PLTS Cirata (HEPE/PLN), Karangkates, Tembesi Batam (progress 56,5%)</li>
+            <li>SOLARGIS Proxy Dataset Indonesia 2022 untuk iradiasi & PVOUT</li>
+            <li>Data BMKG AWS untuk suhu, kelembapan, curah hujan, angin</li>
+            <li>GIS: BIG (peta poligon), KLHK (hutan lindung), BNPB (bahaya)</li>
+            <li>MCP KPK untuk scoring tata kelola daerah</li>
+          </ul>
+          <div class="badge badge-blue" style="margin-top:8px; font-size:11px; padding:5px 10px;">89 dari 108 waduk memiliki data ESG lengkap</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 7: SECTION — RISIKO INTERMITENSI
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="slide-7">
+    <div class="section-slide">
+      <div class="section-num">01</div>
+      <h2 style="font-size:clamp(24px,3.5vw,44px); font-weight:900; margin-bottom:12px; color:white;">Risiko Intermitensi<br><span style="color:var(--gold);">& Meteorologis</span></h2>
+      <div class="gold-divider"></div>
+      <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:600px; margin-top:12px;">9 risiko meteorologis material yang berdampak langsung pada keandalan dan kelayakan PLTS Terapung di iklim tropis Indonesia</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 8: PROFIL METEOROLOGI INDONESIA
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-8">
+    <div class="slide-header blue">
+      <span class="slide-num">08</span>
+      <h2 class="slide-title" style="color:var(--navy);">Profil Meteorologi Indonesia vs Dunia</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr;">
+          <div class="metric-box navy">
+            <div class="metric-val">75,6%</div>
+            <div class="metric-label">Rata-rata tutupan awan nasional</div>
+          </div>
+          <div class="metric-box navy">
+            <div class="metric-val">82,1%</div>
+            <div class="metric-label">Kelembapan relatif rata-rata</div>
+          </div>
+          <div class="metric-box blue">
+            <div class="metric-val">4,0–5,8</div>
+            <div class="metric-label">GHI kWh/m²/hari</div>
+          </div>
+          <div class="metric-box gold">
+            <div class="metric-val">8–22%</div>
+            <div class="metric-label">Koef. variasi output tahunan</div>
+          </div>
+        </div>
+        <div class="card-blue" style="margin-top:12px;">
+          <h3 style="color:var(--navy); font-size:13px; margin-bottom:6px;">Perbandingan GHI: Indonesia vs Kawasan Lain</h3>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:120px;">Timur Tengah</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:92%; background:var(--gold);"></div></div><div class="mini-bar-val">6,0–7,5</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:120px;">Indonesia</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:62%; background:var(--blue-mid);"></div></div><div class="mini-bar-val">4,0–5,8</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:120px;">Eropa Selatan</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:50%; background:#4ac8a4;"></div></div><div class="mini-bar-val">3,5–5,0</div></div>
+          <p style="font-size:11px; color:var(--text-light); margin-top:6px;">Kompetitif secara ekonomi berkat skala kapasitas waduk yang besar</p>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Dampak ENSO & Musiman</h3>
+        <div class="card" style="border-left:4px solid var(--blue-mid); margin-bottom:10px;">
+          <p style="font-size:13px; font-weight:700; color:var(--navy);">Musim Kemarau vs Hujan</p>
+          <p style="font-size:12.5px; color:var(--text-mid);">Output kemarau 30–45% lebih tinggi dari musim hujan di Jawa & NTT. Seasonal index 1,3–2,1 → tantangan dispatch signifikan.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--gold); margin-bottom:10px;">
+          <p style="font-size:13px; font-weight:700; color:var(--navy);">El Niño Effect (2023 — Cirata)</p>
+          <p style="font-size:12.5px; color:var(--text-mid);">GHI meningkat 8–15%, produksi naik — tapi muka air turun drastis. Tim O&M Cirata hadapi tantangan aksesibilitas jauh lebih besar.</p>
+        </div>
+        <div class="card" style="border-left:4px solid #1a7a4a;">
+          <p style="font-size:13px; font-weight:700; color:var(--navy);">Keunggulan Unik FSPV di Atas Air</p>
+          <p style="font-size:12.5px; color:var(--text-mid);">Efek pendinginan evaporatif: suhu modul 4–8°C lebih rendah dari PLTS darat → efisiensi +6,2% (Cirata 2023). Keuntungan sistemik sepanjang umur proyek.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 9: 9 RISIKO METEOROLOGIS
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-9">
+    <div class="slide-header blue">
+      <span class="slide-num">09</span>
+      <h2 class="slide-title" style="color:var(--navy);">9 Risiko Meteorologis Material PLTS Terapung</h2>
+    </div>
+    <div class="slide-body">
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:9px;">
+        <div class="risk-item risk-high">
+          <div style="font-size:11px; font-weight:700; color:#c0392b; margin-bottom:3px;">M-1 · KRITIS</div>
+          <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Variabilitas Awan Tropis</div>
+          <p style="font-size:12px; color:#555;">CoV output 8–22%/tahun. Wonogiri & Kedung Ombo: CoV bulanan 28% saat musim transisi.</p>
+        </div>
+        <div class="risk-item risk-high">
+          <div style="font-size:11px; font-weight:700; color:#c0392b; margin-bottom:3px;">M-2 · KRITIS</div>
+          <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Ramp Rate Tinggi</div>
+          <p style="font-size:12px; color:#555;">Penurunan daya 40–60% dalam 1–5 menit. Jatigede: 45% dalam 3 menit → gangguan frekuensi grid.</p>
+        </div>
+        <div class="risk-item risk-med">
+          <div style="font-size:11px; font-weight:700; color:#8a6000; margin-bottom:3px;">M-3 · SEDANG-TINGGI</div>
+          <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Penurunan Efisiensi Termal</div>
+          <p style="font-size:12px; color:#555;">-0,38–0,45%/°C di atas 25°C. FSPV unggul 6,2% vs darat berkat pendinginan air (Cirata).</p>
+        </div>
+        <div class="risk-item risk-med">
+          <div style="font-size:11px; font-weight:700; color:#8a6000; margin-bottom:3px;">M-4 · SEDANG</div>
+          <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Ketidakseimbangan Musiman</div>
+          <p style="font-size:12px; color:#555;">Seasonal index 1,3–2,1. NTT tertinggi (1,9–2,1). Solusi: co-location PLTS+PLTA.</p>
+        </div>
+        <div class="risk-item risk-med">
+          <div style="font-size:11px; font-weight:700; color:#8a6000; margin-bottom:3px;">M-5 · SEDANG</div>
+          <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Curah Hujan Intensitas Tinggi</div>
+          <p style="font-size:12px; color:#555;">CH nasional 213,5 mm/bln. Keureuto (Aceh) 395 mm/bln — self-cleaning tapi meningkatkan intermitensi.</p>
+        </div>
+        <div class="risk-item risk-med">
+          <div style="font-size:11px; font-weight:700; color:#8a6000; margin-bottom:3px;">M-6 · SEDANG</div>
+          <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Kecepatan Angin Ekstrem</div>
+          <p style="font-size:12px; color:#555;">Rata-rata 1,17 m/s, namun Sermo (DIY) squall ≥15 m/s. Desain mooring untuk 150% kecepatan historis.</p>
+        </div>
+        <div class="risk-item risk-high">
+          <div style="font-size:11px; font-weight:700; color:#c0392b; margin-bottom:3px;">M-7 · KRITIS</div>
+          <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Degradasi Kelembapan & Korosi</div>
+          <p style="font-size:12px; color:#555;">RH >85%: risiko PID 3–5x lipat. Degradasi 0,7–1,1%/tahun (vs 0,5% standar IEC). Cirata: konektor DC diganti 18 bulan lebih awal.</p>
+        </div>
+        <div class="risk-item risk-low">
+          <div style="font-size:11px; font-weight:700; color:#1a7a4a; margin-bottom:3px;">M-8 · RENDAH-SEDANG</div>
+          <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Soiling Loss</div>
+          <p style="font-size:12px; color:#555;">FSPV lebih rendah dari darat (self-cleaning hujan). Risiko biofilm alga unik FSPV — perlu monitoring rutin.</p>
+        </div>
+        <div class="risk-item risk-low">
+          <div style="font-size:11px; font-weight:700; color:#1a7a4a; margin-bottom:3px;">M-9 · RENDAH</div>
+          <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Radiasi Difus Tinggi</div>
+          <p style="font-size:12px; color:#555;">Difus fraction 50–70% di iklim tropis. Tracker tidak optimal. Fixed-tilt + bifasial lebih cost-effective.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 10: KEBUTUHAN BESS
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-gradient-blue" id="slide-10">
+    <div class="slide-header light">
+      <span class="slide-num">10</span>
+      <h2 class="slide-title" style="color:var(--navy);">Kebutuhan BESS: 43 Lokasi Direkomendasikan</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr; margin-bottom:14px;">
+          <div class="metric-box navy">
+            <div class="metric-val">65</div>
+            <div class="metric-label">Tidak perlu BESS</div>
+          </div>
+          <div class="metric-box gold">
+            <div class="metric-val">43</div>
+            <div class="metric-label">BESS direkomendasikan</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:13px; margin-bottom:6px;">Faktor Pembeda Utama</h3>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:150px;">Jarak ke GI (BESS)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:80%; background:#c0392b;"></div></div><div class="mini-bar-val">33,4 km</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:150px;">Jarak ke GI (Non-BESS)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:19%; background:#1a7a4a;"></div></div><div class="mini-bar-val">7,7 km</div></div>
+          <p style="font-size:12px; color:var(--text-light); margin-top:6px;">Kebutuhan BESS lebih berkorelasi dengan konteks sistem kelistrikan daripada kualitas waduk itu sendiri.</p>
+        </div>
+        <div class="card-gold" style="margin-top:10px;">
+          <h3 style="font-size:13px; margin-bottom:6px; color:var(--navy);">Tren Biaya BESS Global</h3>
+          <p style="font-size:13px; color:var(--text-dark);">USD 1.500/kWh (2012) → <strong>USD 150/kWh (2024)</strong> — turun >80% dalam satu dekade. Lokasi "BESS direkomendasikan" perlu re-evaluasi tiap 3–5 tahun.</p>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Implikasi Strategis BESS</h3>
+        <div class="rec-card">
+          <div class="rec-num">1</div>
+          <div><strong style="font-size:13px;">Tahap Pertama: Quick Win tanpa BESS</strong><br><span style="font-size:12px; color:var(--text-mid);">Fokus 65 lokasi dekat GI, skor ESG tinggi, tanpa kebutuhan storage tambahan.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num">2</div>
+          <div><strong style="font-size:13px;">Tahap Kedua: Hibrid FPV+BESS</strong><br><span style="font-size:12px; color:var(--text-mid);">Wadas Lintang, Sempor, Jatigede — skor ESG kompetitif meski perlu BESS.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num">3</div>
+          <div><strong style="font-size:13px;">Co-location dengan PLTA Eksisting</strong><br><span style="font-size:12px; color:var(--text-mid);">PLTA sebagai natural buffer intermitensi. India NTPC Simhadri 25MW FPV+25MWh BESS: tarif USD 0,038–0,042/kWh.</span></div>
+        </div>
+        <div class="card-blue" style="margin-top:6px;">
+          <p style="font-size:12px; color:var(--text-mid);"><strong>Kebutuhan regulasi mendesak:</strong> Permen ESDM penyimpanan energi, capacity payment PLN untuk FPV+BESS, insentif fiskal storage analog panel surya.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 11: SECTION — RISIKO LINGKUNGAN
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="slide-11">
+    <div class="section-slide">
+      <div class="section-num">02</div>
+      <h2 style="font-size:clamp(24px,3.5vw,44px); font-weight:900; margin-bottom:12px; color:white;">Risiko ESG:<br><span style="color:var(--gold);">Dimensi Lingkungan</span></h2>
+      <div class="gold-divider"></div>
+      <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:600px; margin-top:12px;">14 kategori risiko ekologis dari ekosistem perairan, bencana alam, hingga pengelolaan end-of-life panel</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 12: RISIKO LINGKUNGAN UTAMA
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-12">
+    <div class="slide-header blue">
+      <span class="slide-num">12</span>
+      <h2 class="slide-title" style="color:var(--navy);">Risiko Lingkungan: 14 Kategori Kritis</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div style="font-size:12px; font-weight:700; color:var(--text-light); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px;">Risiko Kritis (Dampak Tinggi)</div>
+        <div class="risk-item risk-high" style="margin-bottom:7px; border-radius:6px; border-left:4px solid #c0392b;">
+          <div style="font-size:11px; font-weight:700; color:#c0392b;">E-5 · KATASTROFIK</div>
+          <div style="font-size:13px; font-weight:700;">Gempa Bumi & Kerusakan Struktural</div>
+          <p style="font-size:12px; color:#555;">Indonesia di Ring of Fire: >500 gempa/tahun. Sermo (DIY) di zona sesar Opak aktif. Desain seismik wajib SNI 1726:2019.</p>
+        </div>
+        <div class="risk-item risk-high" style="margin-bottom:7px; border-radius:6px; border-left:4px solid #c0392b;">
+          <div style="font-size:11px; font-weight:700; color:#c0392b;">E-6 · TINGGI</div>
+          <div style="font-size:13px; font-weight:700;">Penurunan Muka Air (Kekeringan)</div>
+          <p style="font-size:12px; color:#555;">El Niño 2023: Kedung Ombo turun 4,8 m. 43 dari 109 waduk alami penurunan >2 m. Platform kandas, mooring terlalu tegang.</p>
+        </div>
+        <div class="risk-item risk-high" style="margin-bottom:7px; border-radius:6px; border-left:4px solid #c0392b;">
+          <div style="font-size:11px; font-weight:700; color:#c0392b;">E-1 · TINGGI</div>
+          <div style="font-size:13px; font-weight:700;">Penurunan Kualitas Air & DO</div>
+          <p style="font-size:12px; color:#555;">DO turun 8–18% di zona tertutup. Cirata 2023: turun 8% vs kontrol. Risiko terbesar pada waduk eutrofik.</p>
+        </div>
+        <div class="risk-item risk-high" style="border-radius:6px; border-left:4px solid #c0392b;">
+          <div style="font-size:11px; font-weight:700; color:#c0392b;">E-11 · TINGGI</div>
+          <div style="font-size:13px; font-weight:700;">Bahaya Longsor di Lereng Waduk</div>
+          <p style="font-size:12px; color:#555;">Karangkates: 7 titik rawan longsor (BNPB). Gelombang impulsif 3–8x tinggi tanah longsor dapat merusak platform.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div style="font-size:12px; font-weight:700; color:var(--text-light); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px;">Risiko Sedang</div>
+        <div class="risk-item risk-med" style="margin-bottom:7px; border-radius:6px;">
+          <div style="font-size:11px; font-weight:700; color:#8a6000;">E-3 · SEDANG-TINGGI</div>
+          <div style="font-size:13px; font-weight:700;">Kontaminasi Material Panel</div>
+          <p style="font-size:12px; color:#555;">Floater HDPE Cirata berlubang akibat serangan Teredo sp. (rayap air) dari KJA aktif — panel tenggelam sebelum terdeteksi. Mitigasi: aditif anti-biofouling.</p>
+        </div>
+        <div class="risk-item risk-med" style="margin-bottom:7px; border-radius:6px;">
+          <div style="font-size:11px; font-weight:700; color:#8a6000;">E-2 · SEDANG</div>
+          <div style="font-size:13px; font-weight:700;">Gangguan Keanekaragaman Hayati</div>
+          <p style="font-size:12px; color:#555;">PAR turun 60–75% di bawah panel (cakupan >40%). Biomassa fitoplankton turun 35–60%. Survey baseline 6 bulan sebelum konstruksi wajib.</p>
+        </div>
+        <div class="card-gold" style="margin-top:4px;">
+          <h3 style="font-size:13px; color:var(--navy); margin-bottom:6px;">Studi Kasus: Jatiluhur — Paradoks Terbesar</h3>
+          <p style="font-size:12px;">Potensi tertinggi (1.626 MWp) namun profil risiko lingkungan paling kompleks: TSI >50 (eutrofik), KJA 2.800 ha (34% luas), 42 spesies ikan. <strong>Rekomendasi:</strong> cakupan maks. 10–15% fase pertama, studi ekologi ≥12 bulan terlebih dahulu.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 13: SECTION — RISIKO SOSIAL
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="slide-13">
+    <div class="section-slide">
+      <div class="section-num">03</div>
+      <h2 style="font-size:clamp(24px,3.5vw,44px); font-weight:900; margin-bottom:12px; color:white;">Risiko ESG:<br><span style="color:var(--gold);">Dimensi Sosial</span></h2>
+      <div class="gold-divider"></div>
+      <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:600px; margin-top:12px;">35% keterlambatan proyek EBT Asia disebabkan resistensi sosial yang tidak diantisipasi — dimensi yang paling sering diabaikan</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 14: RISIKO SOSIAL UTAMA
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-14">
+    <div class="slide-header blue">
+      <span class="slide-num">14</span>
+      <h2 class="slide-title" style="color:var(--navy);">Risiko Sosial: Konflik Nelayan & Penerimaan Publik</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="card" style="border-top:4px solid #c0392b; margin-bottom:10px;">
+          <div style="font-size:11px; font-weight:700; color:#c0392b; margin-bottom:4px;">S-1 · SKOR TERTINGGI (P=5, I=5)</div>
+          <h3 style="color:var(--navy);">Konflik Komunitas Nelayan & KJA</h3>
+          <ul class="check-list" style="margin-top:6px;">
+            <li>Cirata: 24 bulan negosiasi, 1.200 keluarga KJA dari 3 kabupaten</li>
+            <li>Rajasthan India: 50 MW ditunda 18 bulan akibat protes nelayan</li>
+            <li>Biaya eskalasi konflik: 1,2–2,4% CAPEX per bulan keterlambatan</li>
+            <li>17.000 KK nelayan waduk terdampak langsung rencana FSPV nasional</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top:4px solid var(--gold);">
+          <div style="font-size:11px; font-weight:700; color:#8a6000; margin-bottom:4px;">S-5 · DAMPAK TINGGI (I=5)</div>
+          <h3 style="color:var(--navy);">Hak Masyarakat Adat (FPIC)</h3>
+          <p style="font-size:12.5px; color:var(--text-mid);">Kalola & Paselloreng (Sulsel): tanah adat To Lotang. Merancang (Kaltim): Dayak Basap. Bangladesh: proyek Pabna dibatalkan permanen karena melanggar hak adat Chakma di forum UNHRC.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card-navy" style="margin-bottom:12px; padding:16px;">
+          <h3 style="color:var(--gold); margin-bottom:8px;">Benchmark: Cirata 192 MW</h3>
+          <ul class="check-list" style="color:rgba(255,255,255,0.85);">
+            <li style="border-color:rgba(255,255,255,0.15);">Konsultasi 24 bulan pra-konstruksi</li>
+            <li style="border-color:rgba(255,255,255,0.15);">Biaya proses sosial hanya 3,2% CAPEX</li>
+            <li style="border-color:rgba(255,255,255,0.15);">Revenue sharing 0,5% via BUMDes — model terbaik ASEAN</li>
+            <li style="border-color:rgba(255,255,255,0.15);">Mencegah eskalasi konflik setara 15–20% CAPEX</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left:4px solid #1a7a4a;">
+          <h3 style="color:var(--navy); font-size:13px; margin-bottom:6px;">Risiko Sosial Lain yang Perlu Perhatian</h3>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:4px;">
+            <div style="font-size:12px; padding:6px 8px; background:var(--gray-light); border-radius:4px;"><strong>S-2</strong> Kepadatan penduduk & konsultasi publik kompleks</div>
+            <div style="font-size:12px; padding:6px 8px; background:var(--gray-light); border-radius:4px;"><strong>S-9</strong> Ketahanan pangan & produktivitas perikanan</div>
+            <div style="font-size:12px; padding:6px 8px; background:var(--gray-light); border-radius:4px;"><strong>S-6</strong> Infrastruktur listrik lemah di luar Jawa</div>
+            <div style="font-size:12px; padding:6px 8px; background:var(--gray-light); border-radius:4px;"><strong>S-8</strong> Pemerataan manfaat & keadilan energi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 15: SECTION — RISIKO GOVERNANCE
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="slide-15">
+    <div class="section-slide">
+      <div class="section-num">04</div>
+      <h2 style="font-size:clamp(24px,3.5vw,44px); font-weight:900; margin-bottom:12px; color:white;">Risiko ESG:<br><span style="color:var(--gold);">Dimensi Governance</span></h2>
+      <div class="gold-divider"></div>
+      <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:600px; margin-top:12px;">Rata-rata perizinan EBT Indonesia 3,5 tahun — hampir 2x rata-rata ASEAN. Kasus Tembesi: hambatan nyata yang menghentikan proyek PSN</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 16: RISIKO GOVERNANCE
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-16">
+    <div class="slide-header blue">
+      <span class="slide-num">16</span>
+      <h2 class="slide-title" style="color:var(--navy);">Governance: Tumpang Tindih Kewenangan Lintas Lembaga</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr; margin-bottom:12px;">
+          <div class="metric-box navy">
+            <div class="metric-val">3,5 thn</div>
+            <div class="metric-label">Rata-rata perizinan EBT Indonesia</div>
+          </div>
+          <div class="metric-box gold">
+            <div class="metric-val">1,9 thn</div>
+            <div class="metric-label">Rata-rata ASEAN</div>
+          </div>
+        </div>
+        <div class="card" style="border-left:4px solid #c0392b;">
+          <h3 style="color:#c0392b; font-size:14px; margin-bottom:6px;">Studi Kasus: PLTS Tembesi Batam (100 MWp)</h3>
+          <ul class="check-list">
+            <li>Progress konstruksi <strong>56,5%</strong> — terhenti bukan karena teknis/finansial</li>
+            <li>PPKH Darat (izin kawasan hutan) dari KLHK belum terbit</li>
+            <li>Tumpang tindih peta KLHK vs tata ruang industri BP Batam</li>
+            <li>PP 25 & 28 terbit di tengah proses → izin harus diulang dari awal</li>
+            <li>Komponen senilai ratusan miliar terekspos cuaca berbulan-bulan</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Tiga Lapis Tumpang Tindih Governance</h3>
+        <div class="rec-card">
+          <div class="rec-num" style="background:#c0392b;">1</div>
+          <div><strong style="font-size:13px;">Antarkementerian Sektoral</strong><br><span style="font-size:12px; color:var(--text-mid);">ESDM · PUPR · KLHK · KKP — regulasi tumpang tindih tanpa mekanisme resolusi yang jelas.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num" style="background:var(--blue-mid);">2</div>
+          <div><strong style="font-size:13px;">Antartingkatan Pemerintahan</strong><br><span style="font-size:12px; color:var(--text-mid);">Pusat–Provinsi–Kabupaten/Kota — interpretasi berbeda antara satu instansi dengan instansi lain.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num" style="background:var(--gold); color:var(--navy);">3</div>
+          <div><strong style="font-size:13px;">Antarlembaga Pengelola Waduk</strong><br><span style="font-size:12px; color:var(--text-mid);">Jasa Tirta I/II · BBWS · Pemda · BUMN — yurisdiksi saling tumpang tindih.</span></div>
+        </div>
+        <div class="card-gold" style="margin-top:8px;">
+          <p style="font-size:12px; color:var(--text-dark);"><strong>Kasus Tembesi:</strong> argumen kuat untuk memprioritaskan waduk yang bebas sengketa yurisdiksi antar instansi sebagai prasyarat due diligence pertama.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 17: SECTION — HASIL TEORETIKAL
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="slide-17">
+    <div class="section-slide">
+      <div class="section-num">05</div>
+      <h2 style="font-size:clamp(24px,3.5vw,44px); font-weight:900; margin-bottom:12px; color:white;">Hasil Kajian<br><span style="color:var(--gold);">Teoretikal</span></h2>
+      <div class="gold-divider"></div>
+      <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:640px; margin-top:12px;">Ringkasan hasil potensi iradiasi, output energi, dan risiko intermitensi yang membentuk skor theoretical potential sebelum pemetaan klaster.</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 18: IRADIASI NASIONAL
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-18">
+    <div class="slide-header blue">
+      <span class="slide-num">18</span>
+      <h2 class="slide-title" style="color:var(--navy);">Hasil Teoretikal 1 — Sebaran Iradiasi Nasional</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr; margin-bottom:12px;">
+          <div class="metric-box navy"><div class="metric-val">132–254</div><div class="metric-label">W/m² tahunan</div></div>
+          <div class="metric-box gold"><div class="metric-val">200–251</div><div class="metric-label">W/m² DJF terbaik di Nusa Tenggara</div></div>
+          <div class="metric-box blue"><div class="metric-val">202–239</div><div class="metric-label">W/m² JJA Jawa Timur–NTT</div></div>
+          <div class="metric-box blue"><div class="metric-val">10 tahun</div><div class="metric-label">Komposit ERA5/ECMWF</div></div>
+        </div>
+        <div class="card-blue">
+          <h3 style="font-size:13px; color:var(--navy);">Temuan utama</h3>
+          <ul class="check-list">
+            <li>Jawa Timur, Bali, NTB, dan NTT konsisten berada pada pita iradiasi tertinggi.</li>
+            <li>Kalimantan, Sumatera, dan Papua cenderung lebih rendah karena dominasi awan konvektif.</li>
+            <li>Musim basah memperlebar gap antarwilayah; musim kering memperkuat keunggulan wilayah selatan.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Implikasi perencanaan</h3>
+        <div class="rec-card"><div class="rec-num gold-bg">1</div><div><strong style="font-size:13px;">NTB–NTT unggul untuk produktivitas spesifik</strong><br><span style="font-size:12px; color:var(--text-mid);">Lokasi berkapasitas sedang dapat menghasilkan PVOUT tinggi karena kualitas sumber daya surya sangat baik.</span></div></div>
+        <div class="rec-card"><div class="rec-num">2</div><div><strong style="font-size:13px;">Jamali tetap strategis untuk volume sistem</strong><br><span style="font-size:12px; color:var(--text-mid);">Meski iradiasi tidak selalu tertinggi, kedekatan ke pusat beban membuat output absolut tetap penting.</span></div></div>
+        <div class="card-gold"><p style="font-size:12px; color:var(--text-dark);"><strong>Pesan kunci:</strong> kapasitas besar dan kualitas iradiasi adalah dua dimensi berbeda; lokasi terbaik tidak selalu yang paling luas.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 19: OUTPUT ENERGI
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-19">
+    <div class="slide-header blue">
+      <span class="slide-num">19</span>
+      <h2 class="slide-title" style="color:var(--navy);">Hasil Teoretikal 2 — Output Energi Absolut vs Produktivitas</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col" style="flex:1.2;">
+        <table>
+          <tr><th>Rank</th><th>Waduk</th><th>Kapasitas</th><th>Output Tahunan</th><th>Catatan</th></tr>
+          <tr><td>1</td><td><strong>Jatiluhur/Djuanda</strong></td><td>341 MWp</td><td><strong style="color:var(--blue-mid);">540.278 MWh</strong></td><td>Output absolut tertinggi</td></tr>
+          <tr><td>2</td><td><strong>Wonogiri/Gadjah Mungkur</strong></td><td>268 MWp</td><td><strong style="color:var(--blue-mid);">403.319 MWh</strong></td><td>Skala Jamali besar</td></tr>
+          <tr><td>3</td><td><strong>Kedung Ombo</strong></td><td>193 MWp</td><td><strong style="color:var(--blue-mid);">307.815 MWh</strong></td><td>Basis beban Jawa Tengah</td></tr>
+          <tr><td>4</td><td>Jatigede</td><td>173 MWp</td><td>267.366 MWh</td><td>Portofolio skala besar</td></tr>
+          <tr><td>5</td><td>Margatiga</td><td>97 MWp</td><td>145.239 MWh</td><td>Top Sumatera</td></tr>
+        </table>
+      </div>
+      <div class="col">
+        <div class="card-navy" style="margin-bottom:12px;">
+          <p style="font-size:12px; color:rgba(255,255,255,0.6);">Kontras utama hasil</p>
+          <p style="font-size:13px; color:white; line-height:1.65;">Peringkat output absolut didominasi waduk Jamali berkapasitas besar, tetapi produktivitas spesifik terbaik justru muncul di lokasi seperti Gegurik (NTB) yang mempunyai kualitas radiasi lebih tinggi per kWp.</p>
+        </div>
+        <div class="rec-card"><div class="rec-num gold-bg">A</div><div><strong style="font-size:13px;">Absolut = skala sistem</strong><br><span style="font-size:12px; color:var(--text-mid);">Relevan untuk target bauran energi besar, terutama di Jawa–Bali.</span></div></div>
+        <div class="rec-card"><div class="rec-num">B</div><div><strong style="font-size:13px;">Spesifik = efisiensi investasi</strong><br><span style="font-size:12px; color:var(--text-mid);">Relevan untuk lokasi dengan CAPEX/kWp harus dioptimalkan.</span></div></div>
+        <div class="card-blue"><p style="font-size:12px; color:var(--text-mid);"><strong>Kesimpulan:</strong> prioritisasi teoretikal perlu memisahkan logika volume energi absolut dari mutu sumber daya surya.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 20: MUSIMAN
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-gradient-blue" id="slide-20">
+    <div class="slide-header light">
+      <span class="slide-num">20</span>
+      <h2 class="slide-title" style="color:var(--navy);">Hasil Teoretikal 3 — Perbedaan Musiman Output</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Pola umum</h3>
+        <div class="risk-grid">
+          <div class="risk-item risk-low"><strong style="font-size:13px;">Musim kering unggul</strong><br><span style="font-size:12px; color:var(--text-mid);">Mayoritas lokasi Jamali menghasilkan energi 10–30% lebih tinggi pada musim kering.</span></div>
+          <div class="risk-item risk-med"><strong style="font-size:13px;">DJF paling kritis</strong><br><span style="font-size:12px; color:var(--text-mid);">Musim basah menjadi periode kebutuhan fleksibilitas sistem tertinggi.</span></div>
+          <div class="risk-item risk-low"><strong style="font-size:13px;">NTB–NTT lebih stabil</strong><br><span style="font-size:12px; color:var(--text-mid);">Penurunan musim basah tidak setajam wilayah barat Indonesia.</span></div>
+          <div class="risk-item risk-high"><strong style="font-size:13px;">Anomali lokal</strong><br><span style="font-size:12px; color:var(--text-mid);">Tapin dan Sei Gong justru lebih tinggi saat musim basah, menandakan pola lokal khas.</span></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card-blue">
+          <h3 style="font-size:13px; color:var(--navy);">Makna operasional</h3>
+          <ul class="check-list">
+            <li>Dispatch dan kebutuhan cadangan daya tidak bisa diseragamkan nasional.</li>
+            <li>Musim basah menjadi dasar sizing BESS untuk lokasi-lokasi dengan tutupan awan tinggi.</li>
+            <li>Portofolio multiwilayah memberi nilai karena menurunkan ketergantungan pada satu pola musim.</li>
+          </ul>
+        </div>
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr;">
+          <div class="metric-box gold"><div class="metric-val">DJF</div><div class="metric-label">musim dengan tekanan terbesar</div></div>
+          <div class="metric-box blue"><div class="metric-val">JJA</div><div class="metric-label">musim produksi optimum</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 21: INTERMITENSI
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-21">
+    <div class="slide-header blue">
+      <span class="slide-num">21</span>
+      <h2 class="slide-title" style="color:var(--navy);">Hasil Teoretikal 4 — Risiko Variabilitas dan Intermitensi</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col" style="flex:1.1;">
+        <table>
+          <tr><th>Wilayah</th><th>Intermitensi Maks</th><th>Rata-rata</th><th>Waktu Puncak</th></tr>
+          <tr><td><strong>Kalimantan</strong></td><td style="color:#c0392b;font-weight:700;">37,70%</td><td>9,840%</td><td>30 Mar 2025 · 14:00</td></tr>
+          <tr><td><strong>Jamali</strong></td><td style="color:#c0392b;font-weight:700;">37,69%</td><td>9,997%</td><td>22 Mar 2025 · 14:00</td></tr>
+          <tr><td>Sumatera</td><td>31,19%</td><td>9,815%</td><td>4 Apr 2025 · 14:00</td></tr>
+          <tr><td>Sulawesi</td><td>28,86%</td><td style="color:#1a7a4a;font-weight:700;">9,692%</td><td>18 Apr 2025 · 15:00</td></tr>
+          <tr><td>Mapana</td><td>27,43%</td><td style="color:var(--gold);font-weight:700;">10,471%</td><td>12 Nov 2025 · 14:00</td></tr>
+        </table>
+      </div>
+      <div class="col">
+        <div class="card-blue">
+          <h3 style="font-size:13px; color:var(--navy);">Interpretasi hasil</h3>
+          <ul class="check-list">
+            <li>Kalimantan dan Jamali mencatat lonjakan sesaat tertinggi; artinya kebutuhan balancing lebih sensitif.</li>
+            <li>Sulawesi paling stabil secara rata-rata dan cocok untuk proyek awal dengan risiko teknis moderat.</li>
+            <li>Mapana memiliki pola fluktuasi yang lebih persisten, bukan semata lonjakan ekstrem sesaat.</li>
+          </ul>
+        </div>
+        <div class="card-gold"><p style="font-size:12px; color:var(--text-dark);"><strong>Catatan penting:</strong> puncak intermitensi terjadi pada jam 14:00–15:00, saat sistem masih sangat mengandalkan output surya.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 22: SECTION — HASIL PRAKTIKAL
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="slide-22">
+    <div class="section-slide">
+      <div class="section-num">06</div>
+      <h2 style="font-size:clamp(24px,3.5vw,44px); font-weight:900; margin-bottom:12px; color:white;">Hasil Kajian<br><span style="color:var(--gold);">Praktikal / ESG</span></h2>
+      <div class="gold-divider"></div>
+      <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:640px; margin-top:12px;">Ringkasan hasil risiko lingkungan, aksesibilitas, kedalaman waduk, bencana, serta prioritas practical potential sebelum pemetaan empat klaster.</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 23: LOGISTIK
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-23">
+    <div class="slide-header blue">
+      <span class="slide-num">23</span>
+      <h2 class="slide-title" style="color:var(--navy);">Hasil Praktikal 1 — Aksesibilitas Logistik ke Pelabuhan</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr 1fr; margin-bottom:12px;">
+          <div class="metric-box navy"><div class="metric-val">13,21</div><div class="metric-label">km terdekat</div></div>
+          <div class="metric-box gold"><div class="metric-val">121,39</div><div class="metric-label">km median</div></div>
+          <div class="metric-box blue"><div class="metric-val">330,04</div><div class="metric-label">km terjauh</div></div>
+        </div>
+        <table>
+          <tr><th>10 Terdekat</th><th>Jarak</th><th>10 Terjauh</th><th>Jarak</th></tr>
+          <tr><td>Gegurik</td><td>13,21 km</td><td>Jatigede</td><td>330,04 km</td></tr>
+          <tr><td>Jati Barang</td><td>21,55 km</td><td>Lolak</td><td>320,79 km</td></tr>
+          <tr><td>Kuwil Kawangkoan</td><td>22,76 km</td><td>Bendo</td><td>271,58 km</td></tr>
+        </table>
+      </div>
+      <div class="col">
+        <div class="card-blue">
+          <h3 style="font-size:13px; color:var(--navy);">Makna biaya</h3>
+          <ul class="check-list">
+            <li>Tambahan 100 km angkut material berat dapat menambah sekitar 3–7% CAPEX.</li>
+            <li>Lokasi di atas 200 km cenderung memerlukan staging area, inspeksi berlapis, dan pergantian moda.</li>
+            <li>Keunggulan logistik tidak hanya ada di Jawa; NTB, Sulut, dan Kaltim juga menonjol.</li>
+          </ul>
+        </div>
+        <div class="card-gold"><p style="font-size:12px; color:var(--text-dark);"><strong>Pelajaran Cirata:</strong> akses ke pelabuhan utama dan staging area di tepi waduk dapat menekan biaya logistik tahap akhir sekitar 8–12%.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 24: KEDALAMAN
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-24">
+    <div class="slide-header blue">
+      <span class="slide-num">24</span>
+      <h2 class="slide-title" style="color:var(--navy);">Hasil Praktikal 2 — Kesesuaian Kedalaman Waduk</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr; margin-bottom:12px;">
+          <div class="metric-box gold"><div class="metric-val">5–30 m</div><div class="metric-label">zona kedalaman ideal</div></div>
+          <div class="metric-box navy"><div class="metric-val">85/89</div><div class="metric-label">waduk memenuhi ambang</div></div>
+          <div class="metric-box blue"><div class="metric-val">56,60%</div><div class="metric-label">median area sesuai</div></div>
+          <div class="metric-box blue"><div class="metric-val">4</div><div class="metric-label">waduk belum capai 20%</div></div>
+        </div>
+        <div class="card-blue"><p style="font-size:12px; color:var(--text-mid);">Keureuto, Cipanas, Paselloreng, Batu Bulan, Batu Tegi, Jatigede, dan Karian termasuk kelompok dengan porsi area sesuai tertinggi.</p></div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Lokasi yang perlu desain khusus</h3>
+        <div class="rec-card"><div class="rec-num" style="background:#c0392b;">!</div><div><strong style="font-size:13px;">Lempake</strong><br><span style="font-size:12px; color:var(--text-mid);">10,53% area 5–30 m — butuh mikro-batimetri rinci.</span></div></div>
+        <div class="rec-card"><div class="rec-num" style="background:#c0392b;">!</div><div><strong style="font-size:13px;">Gondang</strong><br><span style="font-size:12px; color:var(--text-mid);">12,39% area sesuai — layout array akan lebih kaku.</span></div></div>
+        <div class="rec-card"><div class="rec-num" style="background:#c0392b;">!</div><div><strong style="font-size:13px;">Salomekko & Parangjoho</strong><br><span style="font-size:12px; color:var(--text-mid);">Perlu sistem mooring yang lebih adaptif terhadap kontur dan fluktuasi muka air.</span></div></div>
+        <div class="card-gold"><p style="font-size:12px; color:var(--text-dark);"><strong>Insight:</strong> isu kedalaman bukan penghambat dominan pada mayoritas portofolio, tetapi tetap penting bagi biaya FEED dan anchoring.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 25: BENCANA
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-gradient-blue" id="slide-25">
+    <div class="slide-header light">
+      <span class="slide-num">25</span>
+      <h2 class="slide-title" style="color:var(--navy);">Hasil Praktikal 3 — Keterpaparan Bencana</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="risk-grid">
+          <div class="risk-item risk-high"><strong style="font-size:13px;">Longsor tertinggi</strong><br><span style="font-size:12px; color:var(--text-mid);">Selorejo, Tanju, Raknamo — risiko impulse wave dan sedimentasi tepi waduk.</span></div>
+          <div class="risk-item risk-high"><strong style="font-size:13px;">Gempa tertinggi</strong><br><span style="font-size:12px; color:var(--text-mid);">Batujai, Beringin Sila, Gegurik — dominan di NTB.</span></div>
+          <div class="risk-item risk-med"><strong style="font-size:13px;">Kekeringan tertinggi</strong><br><span style="font-size:12px; color:var(--text-mid);">Rukoh, Cipanas, Sempor — perlu skenario muka air rendah.</span></div>
+          <div class="risk-item risk-high"><strong style="font-size:13px;">Banjir tertinggi</strong><br><span style="font-size:12px; color:var(--text-mid);">Wonorejo, Bendo, Sermo, Kuwil Kawangkoan.</span></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card-blue">
+          <h3 style="font-size:13px; color:var(--navy);">Temuan lintas sub-risiko</h3>
+          <ul class="check-list">
+            <li>Kalimantan relatif unggul untuk longsor dan gempa karena stabilitas topografi dan tektonik.</li>
+            <li>Nusa Tenggara kuat secara iradiasi, tetapi beberapa lokasi menghadapi risiko seismik tinggi.</li>
+            <li>Terdapat 21 lokasi dengan data bahaya N.A. karena poligon waduk belum terdefinisi.</li>
+          </ul>
+        </div>
+        <div class="card-gold"><p style="font-size:12px; color:var(--text-dark);"><strong>Pesan kebijakan:</strong> kebutuhan standar desain bencana FPV nasional sangat mendesak sebelum portofolio diperluas.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 26: SINTESIS PRAKTIKAL
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-26">
+    <div class="slide-header blue">
+      <span class="slide-num">26</span>
+      <h2 class="slide-title" style="color:var(--navy);">Hasil Praktikal 4 — Sintesis ESG & Jembatan ke Klasterisasi</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col" style="flex:1.2;">
+        <table>
+          <tr><th>Top ESG</th><th>Total Skor</th><th>Kekuatan utama</th></tr>
+          <tr><td><strong>Marangkayu</strong></td><td style="color:#1a7a4a;font-weight:700;">0,691</td><td>Risiko lingkungan rendah, governance kuat</td></tr>
+          <tr><td><strong>Jatiluhur/Djuanda</strong></td><td style="color:#1a7a4a;font-weight:700;">0,687</td><td>Skala besar + governance solid</td></tr>
+          <tr><td>Karangkates/Sutami</td><td>0,680</td><td>Portofolio matang di Jamali</td></tr>
+          <tr><td>Kedung Ombo</td><td>0,674</td><td>Practical kuat dan dekat beban</td></tr>
+          <tr><td>Bili Bili</td><td>0,673</td><td>Lingkungan kuat, portofolio luar Jawa</td></tr>
+        </table>
+      </div>
+      <div class="col">
+        <div class="card-navy" style="margin-bottom:12px;">
+          <p style="font-size:12px; color:rgba(255,255,255,0.6);">Kesimpulan practical potential</p>
+          <p style="font-size:13px; color:white; line-height:1.7;">Skor ESG tinggi cenderung muncul pada waduk dengan kombinasi akses logistik baik, paparan bencana terkendali, konflik sosial rendah, dan governance daerah yang lebih siap. Inilah sumbu vertikal sebelum matriks klasterisasi dibangun.</p>
+        </div>
+        <div class="card-blue">
+          <ul class="check-list">
+            <li>Quick win praktikal tidak selalu identik dengan iradiasi tertinggi.</li>
+            <li>Lokasi dengan isu tunggal yang terukur masih bisa diproses sebagai kandidat prioritas.</li>
+            <li>Klasterisasi diperlukan untuk mempertemukan keunggulan teoretikal dan kesiapan ESG secara bersamaan.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ═══════════════════════════════════════════
+       SLIDE 27: SECTION — PRIORITAS
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="slide-27">
+    <div class="section-slide">
+      <div class="section-num">07</div>
+      <h2 style="font-size:clamp(24px,3.5vw,44px); font-weight:900; margin-bottom:12px; color:white;">Analisis Prioritas<br><span style="color:var(--gold);">Matriks 4 Klaster</span></h2>
+      <div class="gold-divider"></div>
+      <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:600px; margin-top:12px;">Pemetaan 89 lokasi dalam 4 klaster berdasarkan skor intermitensi (theoretical potential) × skor ESG (practical potential)</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 28: MATRIKS PRIORITAS
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-28">
+    <div class="slide-header blue">
+      <span class="slide-num">28</span>
+      <h2 class="slide-title" style="color:var(--navy);">Matriks 4 Klaster Prioritas PLTS Terapung</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col" style="flex:1.2;">
+        <div style="position:relative; margin-bottom:12px;">
+          <div style="text-align:center; font-size:11px; font-weight:700; color:var(--text-light); letter-spacing:1px; margin-bottom:6px; text-transform:uppercase;">Skor ESG (Practical Potential) →</div>
+          <div style="display:flex; gap:6px;">
+            <div style="font-size:10px; font-weight:700; color:var(--text-light); writing-mode:vertical-rl; text-orientation:mixed; transform:rotate(180deg); white-space:nowrap; letter-spacing:1px; padding-right:4px;">← Skor Intermitensi (Theoretical)</div>
+            <div style="flex:1;">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; height:240px;">
+                <div class="quadrant q2" style="opacity:0.9;">
+                  <div class="q-label">KLASTER B</div>
+                  <div class="q-title">Potensial Kuat</div>
+                  <div class="q-desc">Sumber surya prima, tantangan ESG moderat. Butuh mitigasi spesifik.</div>
+                </div>
+                <div class="quadrant q1" style="opacity:0.9;">
+                  <div class="q-label">KLASTER A — PRIORITAS</div>
+                  <div class="q-title">Quick Win</div>
+                  <div class="q-desc">Iradiasi tinggi + ESG baik. Akselerasi penuh. Marangkayu, Kedung Ombo, Randugunting.</div>
+                </div>
+                <div class="quadrant q4">
+                  <div class="q-label">KLASTER D</div>
+                  <div class="q-title">Tunda & Review</div>
+                  <div class="q-desc">Hambatan ganda. Butuh studi mendalam sebelum dilanjutkan.</div>
+                </div>
+                <div class="quadrant q3">
+                  <div class="q-label">KLASTER C</div>
+                  <div class="q-title">Persiapan ESG</div>
+                  <div class="q-desc">Potensi surya terbatas, ESG baik. Kembangkan sebagai kapasitas pelengkap beban lokal.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:5px;"><div style="width:12px; height:12px; background:#1a7a4a; border-radius:2px;"></div><span style="font-size:11px;">A: Quick Win</span></div>
+          <div style="display:flex; align-items:center; gap:5px;"><div style="width:12px; height:12px; background:var(--blue-mid); border-radius:2px;"></div><span style="font-size:11px;">B: Potensial Kuat</span></div>
+          <div style="display:flex; align-items:center; gap:5px;"><div style="width:12px; height:12px; background:var(--gold); border-radius:2px;"></div><span style="font-size:11px;">C: Persiapan ESG</span></div>
+          <div style="display:flex; align-items:center; gap:5px;"><div style="width:12px; height:12px; background:var(--gray-mid); border-radius:2px;"></div><span style="font-size:11px;">D: Tunda</span></div>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Pembacaan Strategis</h3>
+        <div class="rec-card">
+          <div class="rec-num gold-bg">A</div>
+          <div><strong style="font-size:13px;">Quick Win (KLASTER A)</strong><br><span style="font-size:12px; color:var(--text-mid);">Prioritas pertama. Bebas catatan hutan, pengelola jelas, tanpa BESS mandatory. Langsung akselerasi pengembangan.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num">B</div>
+          <div><strong style="font-size:13px;">Potensial Kuat (KLASTER B)</strong><br><span style="font-size:12px; color:var(--text-mid);">Proses paralel dengan Klaster A. Butuh resolusi isu spesifik (izin, sosial, BESS) sebelum FID.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num" style="background:var(--gold); color:var(--navy);">C</div>
+          <div><strong style="font-size:13px;">Persiapan ESG (KLASTER C)</strong><br><span style="font-size:12px; color:var(--text-mid);">Posisikan sebagai kapasitas pelengkap beban lokal dan off-grid. Mini-grid untuk daerah terisolir.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num" style="background:var(--gray-mid); color:var(--text-mid);">D</div>
+          <div><strong style="font-size:13px;">Tunda & Review (KLASTER D)</strong><br><span style="font-size:12px; color:var(--text-mid);">Tidak dieksekusi sebelum studi ekologi, sosial, dan governance mendalam selesai.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 29: TOP 10 LOKASI PRIORITAS
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-29">
+    <div class="slide-header blue">
+      <span class="slide-num">29</span>
+      <h2 class="slide-title" style="color:var(--navy);">Top 10 Lokasi Prioritas Berdasarkan Skor ESG</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col" style="flex:1.4;">
+        <table>
+          <tr>
+            <th>Rank</th>
+            <th>Waduk</th>
+            <th>Skor E</th>
+            <th>Skor S</th>
+            <th>Skor G</th>
+            <th>Total</th>
+            <th>Wilayah</th>
+          </tr>
+          <tr><td><strong style="color:var(--gold);">1</strong></td><td><strong>Marangkayu</strong></td><td>0,298</td><td>0,175</td><td>0,218</td><td><strong style="color:#1a7a4a;">0,691</strong></td><td>Kaltim</td></tr>
+          <tr><td><strong style="color:var(--gold);">2</strong></td><td><strong>Jatiluhur/Djuanda</strong></td><td>0,266</td><td>0,115</td><td>0,305</td><td><strong style="color:#1a7a4a;">0,687</strong></td><td>Jabar</td></tr>
+          <tr><td>3</td><td>Karangkates/Sutami</td><td>0,264</td><td>0,110</td><td>0,305</td><td><strong style="color:var(--blue-mid);">0,680</strong></td><td>Jatim</td></tr>
+          <tr><td>4</td><td>Kedung Ombo</td><td>0,273</td><td>0,125</td><td>0,276</td><td><strong style="color:var(--blue-mid);">0,674</strong></td><td>Jateng</td></tr>
+          <tr><td>5</td><td>Kedung Bendo</td><td>0,266</td><td>0,131</td><td>0,276</td><td><strong style="color:var(--blue-mid);">0,674</strong></td><td>Jatim</td></tr>
+          <tr><td>6</td><td>Bili Bili</td><td>0,301</td><td>0,135</td><td>0,237</td><td><strong style="color:var(--blue-mid);">0,673</strong></td><td>Sulsel</td></tr>
+          <tr><td>7</td><td>Gapit</td><td>0,248</td><td>0,224</td><td>0,198</td><td><strong style="color:var(--blue-mid);">0,670</strong></td><td>NTB</td></tr>
+          <tr><td>8</td><td>Sengguruh</td><td>0,255</td><td>0,106</td><td>0,305</td><td><strong style="color:var(--blue-mid);">0,666</strong></td><td>Jatim</td></tr>
+          <tr><td>9</td><td>Randugunting</td><td>0,287</td><td>0,151</td><td>0,218</td><td><strong style="color:var(--blue-mid);">0,655</strong></td><td>Jateng</td></tr>
+          <tr><td>10</td><td>Keuliling</td><td>0,284</td><td>0,148</td><td>0,218</td><td><strong style="color:var(--blue-mid);">0,650</strong></td><td>Aceh</td></tr>
+        </table>
+      </div>
+      <div class="col">
+        <div class="card-navy" style="margin-bottom:12px;">
+          <p style="font-size:12px; color:rgba(255,255,255,0.6);">Portofolio Quick Win Terbaik</p>
+          <p style="font-size:13px; color:white; line-height:1.6;">Marangkayu · Kedung Ombo · Bili Bili · Gapit · Jatiluhur/Djuanda · Randugunting · Karangkates · Keuliling · Keureuto · Tiu Kulit</p>
+          <div style="margin-top:8px; font-size:11px; color:rgba(255,255,255,0.5);">Bebas catatan hutan lindung, skor ESG tinggi, tanpa BESS wajib</div>
+        </div>
+        <div class="card-blue">
+          <h3 style="font-size:13px; color:var(--navy); margin-bottom:6px;">Catatan Penting</h3>
+          <ul class="check-list">
+            <li>Batu Tegi (skor tertinggi 0,706) perlu verifikasi spasial kawasan hutan lindung</li>
+            <li>19 lokasi N.A. (poligon belum terdefinisi) — bukan tidak prospektif</li>
+            <li>Skor perlu diperbarui tiap 2 tahun seiring perubahan infrastruktur GI & governance daerah</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 30: ANALISIS PVOUT & INTERMITENSI
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-gradient-blue" id="slide-30">
+    <div class="slide-header light">
+      <span class="slide-num">30</span>
+      <h2 class="slide-title" style="color:var(--navy);">Potensi Iradiasi & PVOUT: Rentang Nasional</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr; margin-bottom:14px;">
+          <div class="metric-box navy">
+            <div class="metric-val">1.250–1.680</div>
+            <div class="metric-label">PVOUT kWh/kWp (variasi 34%)</div>
+          </div>
+          <div class="metric-box gold">
+            <div class="metric-val">4,8 jam</div>
+            <div class="metric-label">Peak Sun Hours rata-rata</div>
+          </div>
+        </div>
+        <h3 style="color:var(--navy); margin-bottom:10px;">PVOUT Tertinggi vs Terendah</h3>
+        <div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:120px;">NTT (Raknamo)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:95%; background:#c0392b;"></div></div><div class="mini-bar-val">~1.680</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:120px;">NTB (Gapit)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:88%; background:var(--gold);"></div></div><div class="mini-bar-val">~1.600</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:120px;">Jawa (Cirata)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:70%; background:var(--blue-mid);"></div></div><div class="mini-bar-val">~1.400</div></div>
+          <div class="mini-bar-wrap"><div class="mini-bar-label" style="width:120px;">Aceh (Keureuto)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:60%; background:#4ac8a4;"></div></div><div class="mini-bar-val">~1.250</div></div>
+        </div>
+        <div class="card" style="margin-top:12px;">
+          <p style="font-size:12.5px; color:var(--text-mid);">PVOUT lebih tinggi di wilayah semi-arid (NTT, NTB) — cocok untuk sistem tracker. Kalimantan & Maluku: diffuse fraction tinggi (55–68%), fixed-tilt lebih cost-effective.</p>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Variabilitas & Seasonal Index</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+          <div class="card-blue">
+            <div style="font-size:22px; font-weight:900; color:var(--blue-mid);">1,9–2,1</div>
+            <div style="font-size:11px; color:var(--text-light); text-transform:uppercase; font-weight:600;">Seasonal Index NTT</div>
+            <p style="font-size:12px; color:var(--text-mid); margin-top:4px;">Musim kemarau sangat panjang → variasi output ekstrem</p>
+          </div>
+          <div class="card-blue">
+            <div style="font-size:22px; font-weight:900; color:var(--blue-mid);">1,3–1,5</div>
+            <div style="font-size:11px; color:var(--text-light); text-transform:uppercase; font-weight:600;">Seasonal Index Jawa Tengah</div>
+            <p style="font-size:12px; color:var(--text-mid); margin-top:4px;">Lebih stabil — ideal untuk operasi grid utama</p>
+          </div>
+        </div>
+        <div class="card-gold">
+          <h3 style="font-size:13px; color:var(--navy); margin-bottom:6px;">Implikasi Desain Sistem</h3>
+          <ul class="check-list">
+            <li>Lokasi variabilitas tinggi: BESS 2–4 jam minimum + prediksi NWP</li>
+            <li>Co-location FSPV+PLTMH eksisting: natural load balancing musiman</li>
+            <li>Degradasi 0,7–1,1%/tahun (tropis) — koreksi model keuangan dari generik 0,5%</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 31: INSIGHT GOVERNANCE INDIA
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-31">
+    <div class="slide-header blue">
+      <span class="slide-num">31</span>
+      <h2 class="slide-title" style="color:var(--navy);">Benchmark Internasional: India & Korea</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="card-navy" style="margin-bottom:12px;">
+          <h3 style="color:var(--gold); margin-bottom:8px;">India — Ekosistem Regulasi FPV Matang</h3>
+          <ul class="check-list" style="color:rgba(255,255,255,0.85);">
+            <li style="border-color:rgba(255,255,255,0.15);">Panduan teknis MNRE: standardisasi spesifikasi platform, mooring, persyaratan izin nasional</li>
+            <li style="border-color:rgba(255,255,255,0.15);">Mekanisme lelang CPSU-SECI dengan PPA 25 tahun & tarif fix di awal lelang</li>
+            <li style="border-color:rgba(255,255,255,0.15);">Kapasitas FPV terpasang >3 GW pada 2024, pipeline 15+ GW</li>
+            <li style="border-color:rgba(255,255,255,0.15);">NTPC Simhadri: 25 MW FPV + 25 MWh BESS. Tarif USD 0,038–0,042/kWh — kompetitif tanpa subsidi</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left:4px solid var(--blue-mid);">
+          <h3 style="color:var(--navy); font-size:13px; margin-bottom:6px;">Korea Selatan — Desain untuk Ketahanan Ekstrem</h3>
+          <p style="font-size:12.5px; color:var(--text-mid);">FSPV Saemangeum: kerusakan mooring saat typhoon Haishen 2020 (18 m/s). Mendorong standar desain mooring 150% dari kecepatan maksimum historis 50 tahun terakhir — diadopsi sebagai best practice global.</p>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Relevansi untuk Indonesia</h3>
+        <div class="rec-card">
+          <div class="rec-num gold-bg">1</div>
+          <div><strong style="font-size:13px;">MNRE Guidelines Indonesia</strong><br><span style="font-size:12px; color:var(--text-mid);">Panduan teknis nasional FPV yang standarkan spesifikasi minimal, prosedur uji, dan jalur perizinan — developer tidak negosiasi standar dari nol.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num">2</div>
+          <div><strong style="font-size:13px;">Mekanisme Lelang FPV Terpusat</strong><br><span style="font-size:12px; color:var(--text-mid);">PPA standar mengurangi waktu negosiasi kontrak individual secara dramatis — seperti SECI India.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num">3</div>
+          <div><strong style="font-size:13px;">One-Stop Service Perizinan</strong><br><span style="font-size:12px; color:var(--text-mid);">Integrasi modul khusus FPV di OSS yang ada, menggabungkan KLHK, PUPR, KESDM, Pemda dalam satu alur.</span></div>
+        </div>
+        <div class="card-gold" style="margin-top:6px;">
+          <p style="font-size:12px; color:var(--text-dark);">Kecepatan eksekusi India bukan karena kondisi alam lebih baik — tapi karena kepastian regulasi & standar teknis yang jelas dan terprediksi.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 32: REKOMENDASI TEKNIS
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-32">
+    <div class="slide-header blue">
+      <span class="slide-num">32</span>
+      <h2 class="slide-title" style="color:var(--navy);">Rekomendasi Teknis & Desain Sistem</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Mitigasi Risiko Meteorologis</h3>
+        <div class="card" style="border-left:4px solid var(--blue-mid); margin-bottom:8px;">
+          <h3 style="font-size:13px; color:var(--navy);">Modul & Platform</h3>
+          <ul class="check-list">
+            <li>Temperatur koefisien modul &lt;0,38%/°C — pilih monokristalin bifasial</li>
+            <li>Celah udara panel-platform ≥15 cm untuk disipasi panas optimal</li>
+            <li>IP68 minimum semua komponen elektrikal eksterior (RH kronik 82%+)</li>
+            <li>Material aluminium/SS 316L/HDPE + coating epoxy anti-korosi</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left:4px solid var(--gold); margin-bottom:8px;">
+          <h3 style="font-size:13px; color:var(--navy);">Mooring & Struktur</h3>
+          <ul class="check-list">
+            <li>Desain toleransi fluktuasi muka air ±5–8 m (kekeringan El Niño)</li>
+            <li>Kabel mooring adjustable + EWS hidrologi terintegrasi BMKG</li>
+            <li>Desain seismik SNI 1726:2019 untuk zona seismik aktif</li>
+            <li>Survey anemometri ≥12 bulan sebelum desain akhir</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Mitigasi Risiko Ekologis & Material</h3>
+        <div class="card" style="border-left:4px solid #1a7a4a; margin-bottom:8px;">
+          <h3 style="font-size:13px; color:var(--navy);">Proteksi Ekosistem Perairan</h3>
+          <ul class="check-list">
+            <li>Batasi cakupan panel maksimum 30–40% luas permukaan</li>
+            <li>Baseline survey ekologi 6 bulan sebelum konstruksi (wajib)</li>
+            <li>Aerator mekanis di zona tertutup + monitoring DO real-time IoT</li>
+            <li>Rotasi zona penutupan berkala untuk pemulihan ekosistem</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left:4px solid #c0392b;">
+          <h3 style="font-size:13px; color:var(--navy);">Risiko Spesifik Waduk KJA Aktif</h3>
+          <ul class="check-list">
+            <li>Uji ketahanan floater terhadap Teredo sp. sebelum pengadaan</li>
+            <li>HDPE dengan aditif anti-biofouling atau injeksi poliuretan</li>
+            <li>Inspeksi bawah air triwulanan + SOP perbaikan darurat</li>
+            <li>Klausul take-back panel + dana sinking fund decommissioning</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 33: REKOMENDASI SOSIAL
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-33">
+    <div class="slide-header blue">
+      <span class="slide-num">33</span>
+      <h2 class="slide-title" style="color:var(--navy);">Rekomendasi Sosial: Penerimaan Masyarakat</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <div class="card-navy" style="padding:16px; margin-bottom:12px;">
+          <h3 style="color:var(--gold); font-size:14px; margin-bottom:8px;">Model Cirata: Standar ASEAN</h3>
+          <ul class="check-list" style="color:rgba(255,255,255,0.85);">
+            <li style="border-color:rgba(255,255,255,0.15);">24 bulan konsultasi pra-konstruksi dengan 1.200 KK</li>
+            <li style="border-color:rgba(255,255,255,0.15);">Revenue sharing 0,5% via BUMDes — pemangku kepentingan permanen</li>
+            <li style="border-color:rgba(255,255,255,0.15);">Biaya proses sosial 3,2% CAPEX vs potensi eskalasi 15–20% CAPEX</li>
+            <li style="border-color:rgba(255,255,255,0.15);">Program nelayan → teknisi pemeliharaan (alih profesi terstruktur)</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left:4px solid var(--blue-mid);">
+          <h3 style="font-size:13px; color:var(--navy); margin-bottom:6px;">Persyaratan Minimum Setiap Proyek</h3>
+          <ul class="check-list">
+            <li>SIA & pemetaan mata pencaharian 6 bulan sebelum desain</li>
+            <li>Proses FPIC (ILO-169, UNDRIP) untuk wilayah dekat tanah adat</li>
+            <li>Livelihood restoration plan sesuai IFC Performance Standard 5</li>
+            <li>Mekanisme pengaduan multi-kanal dengan respons &lt;30 hari</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Pendekatan Gender & Keadilan Energi</h3>
+        <div class="rec-card">
+          <div class="rec-num gold-bg">G</div>
+          <div><strong style="font-size:13px;">Gender Impact Assessment</strong><br><span style="font-size:12px; color:var(--text-mid);">Perempuan 42% tenaga kerja informal perikanan waduk — hampir tidak pernah terwakili dalam konsultasi konvensional. Keterwakilan minimal 30%.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num">E</div>
+          <div><strong style="font-size:13px;">Pemerataan Manfaat (SDG7)</strong><br><span style="font-size:12px; color:var(--text-mid);">60% proyek EBT Indonesia tidak punya mekanisme local benefit sharing terstruktur. Adopsi REIPPP Afrika Selatan: Community Benefit Fund wajib &gt;5 MW.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num">P</div>
+          <div><strong style="font-size:13px;">Pariwisata & Nilai Budaya</strong><br><span style="font-size:12px; color:var(--text-mid);">Sermo (DIY): >150.000 pengunjung/tahun. Wonogiri: PDRB pariwisata >Rp15 miliar. Program eco-solar tourism sebagai kompensasi nilai estetika.</span></div>
+        </div>
+        <div class="card-gold" style="margin-top:6px;">
+          <p style="font-size:12px;">Keterlibatan masyarakat yang substantif — bukan konsultasi seremonial — adalah satu-satunya cara menutup 'social gap' antara penerimaan umum EBT dan penolakan lokasi spesifik.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 34: REKOMENDASI KEBIJAKAN
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-gradient-blue" id="slide-34">
+    <div class="slide-header light">
+      <span class="slide-num">34</span>
+      <h2 class="slide-title" style="color:var(--navy);">Rekomendasi Kebijakan Integratif</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Deregulasi & Percepatan Perizinan</h3>
+        <div class="rec-card">
+          <div class="rec-num gold-bg">1</div>
+          <div><strong style="font-size:13px;">One-Stop Service FPV via OSS</strong><br><span style="font-size:12px; color:var(--text-mid);">Modul khusus FPV mengintegrasikan KLHK, PUPR, KESDM, Pemda dalam satu alur digital.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num gold-bg">2</div>
+          <div><strong style="font-size:13px;">Peta Kawasan Izin FPV</strong><br><span style="font-size:12px; color:var(--text-mid);">Identifikasi eksplisit waduk bebas konflik tata ruang → kepastian hukum awal bagi investor.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num gold-bg">3</div>
+          <div><strong style="font-size:13px;">Tim Koordinasi Nasional FPV</strong><br><span style="font-size:12px; color:var(--text-mid);">KESDM + PUPR + KLHK + PLN — wewenang selesaikan konflik antarkementerian dalam batas waktu tertentu.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num gold-bg">4</div>
+          <div><strong style="font-size:13px;">Rating Governance Daerah Spesifik EBT</strong><br><span style="font-size:12px; color:var(--text-mid);">Track record penyelesaian izin EBT per kabupaten — sinyal lebih akurat untuk investor dari MCP KPK generik.</span></div>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Institusionalisasi Framework ESG</h3>
+        <div class="rec-card">
+          <div class="rec-num">5</div>
+          <div><strong style="font-size:13px;">Adopt Framework ESG sebagai Standar KESDM</strong><br><span style="font-size:12px; color:var(--text-mid);">Metodologi kajian ini → standar evaluasi proyek FPV dalam RUPTL & tender nasional. Transparansi dan konsistensi lintas proyek.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num">6</div>
+          <div><strong style="font-size:13px;">Pembaruan Skor ESG Tiap 2 Tahun</strong><br><span style="font-size:12px; color:var(--text-mid);">Ikuti perubahan infrastruktur GI, perbaikan governance daerah (MCP KPK), dan status fisik waduk on-going.</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-num">7</div>
+          <div><strong style="font-size:13px;">Platform Data Terbuka (PUPR + BIG)</strong><br><span style="font-size:12px; color:var(--text-mid);">Percepat publikasi poligon waduk dan batimetri format terbuka — 19 lokasi N.A. bisa dianalisis lebih cepat.</span></div>
+        </div>
+        <div class="card-navy" style="margin-top:10px; padding:12px 16px;">
+          <p style="font-size:12px; color:rgba(255,255,255,0.8);">Investment facilitation proaktif BKPM+KESDM: single-point-of-contact untuk investor di top-15 lokasi — mempercepat koneksi dengan pengelola waduk, instansi izin, dan PLN.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 35: KETERBATASAN & FASE BERIKUTNYA
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-white" id="slide-35">
+    <div class="slide-header blue">
+      <span class="slide-num">35</span>
+      <h2 class="slide-title" style="color:var(--navy);">Keterbatasan Kajian & Agenda Fase 2</h2>
+    </div>
+    <div class="slide-body two-col">
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Keterbatasan Kajian Fase 1</h3>
+        <div class="card" style="border-left:4px solid #c0392b; margin-bottom:10px;">
+          <h3 style="font-size:13px; color:var(--navy);">Data Tidak Lengkap</h3>
+          <p style="font-size:12.5px; color:var(--text-mid);">19 dari 108 lokasi berstatus N.A. karena poligon waduk belum terdefinisi (waduk belum selesai atau data spasial belum tersedia). Skor rendah ≠ tidak prospektif — cermin kekurangan data dasar.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--gold); margin-bottom:10px;">
+          <h3 style="font-size:13px; color:var(--navy);">Snapshot Data</h3>
+          <p style="font-size:12.5px; color:var(--text-mid);">Skor ESG bersifat snapshot — perlu diperbarui tiap 2 tahun. Biaya BESS yang turun cepat berarti klasifikasi "BESS direkomendasikan" relevan untuk re-evaluasi 3–5 tahun ke depan.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--blue-mid);">
+          <h3 style="font-size:13px; color:var(--navy);">Cakupan Fase 1</h3>
+          <p style="font-size:12.5px; color:var(--text-mid);">Fase 1 mengidentifikasi risiko dan prioritas. Kajian belum mencakup kelayakan finansial detail, studi grid connection per lokasi, dan penilaian kesiapan EPC/kontraktor.</p>
+        </div>
+      </div>
+      <div class="col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">Agenda Kajian Fase 2</h3>
+        <div class="timeline" style="margin-top:8px;">
+          <div class="timeline-item">
+            <strong style="font-size:13px; color:var(--navy);">Feasibility Study Top-15 Lokasi</strong>
+            <p style="font-size:12px; color:var(--text-light); margin-top:2px;">Grid connection feasibility, kapasitas terserap jaringan PLN, dan dimensioning BESS spesifik per lokasi.</p>
+          </div>
+          <div class="timeline-item">
+            <strong style="font-size:13px; color:var(--navy);">Kesiapan EPC & Rantai Pasok</strong>
+            <p style="font-size:12px; color:var(--text-light); margin-top:2px;">Pemetaan kapasitas kontraktor FPV nasional, ketersediaan modul dan floater, logistik ke lokasi terpencil.</p>
+          </div>
+          <div class="timeline-item">
+            <strong style="font-size:13px; color:var(--navy);">Pre-Feasibility Terpilih</strong>
+            <p style="font-size:12px; color:var(--text-light); margin-top:2px;">Studi ekologi baseline 6–12 bulan, SIA komprehensif, dan due diligence tata ruang untuk top-15 lokasi prioritas.</p>
+          </div>
+          <div class="timeline-item">
+            <strong style="font-size:13px; color:var(--navy);">Model Finansial Detail</strong>
+            <p style="font-size:12px; color:var(--text-light); margin-top:2px;">LCOE per lokasi dengan site-specific degradation rate, struktur PPA optimal, dan opsi pembiayaan blended finance.</p>
+          </div>
+        </div>
+        <div class="card-gold" style="margin-top:8px;">
+          <p style="font-size:12px;"><strong>Prioritas Segera:</strong> Klarifikasi status kawasan (overlay hutan lindung, sempadan air) sebagai due diligence tahap pertama mutlak sebelum keputusan investasi apapun — pelajaran utama dari kasus Tembesi.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 36: RINGKASAN EKSEKUTIF
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-gradient-blue" id="slide-36">
+    <div class="slide-header light">
+      <span class="slide-num">36</span>
+      <h2 class="slide-title" style="color:var(--navy);">Ringkasan Eksekutif: 7 Temuan Utama</h2>
+    </div>
+    <div class="slide-body">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:9px;">
+        <div class="rec-card" style="background:var(--white);">
+          <div class="rec-num gold-bg" style="font-size:16px;">1</div>
+          <div><strong style="font-size:13px; color:var(--navy);">Potensi 13,9 GW: Terkonsentrasi di Jawa, Siap Dipercepat</strong><br><span style="font-size:12px; color:var(--text-mid);">61 waduk eksisting siap jangka pendek. Jawa dominan (dekat beban) tapi potensi substansial juga di Lampung, Sulsel, NTB.</span></div>
+        </div>
+        <div class="rec-card" style="background:var(--white);">
+          <div class="rec-num gold-bg" style="font-size:16px;">2</div>
+          <div><strong style="font-size:13px; color:var(--navy);">Risiko Intermitensi: Kronis, Tapi Dapat Dikelola</strong><br><span style="font-size:12px; color:var(--text-mid);">Variabilitas awan (M-1) & ramp rate (M-2) paling kritis. BESS wajib 43 lokasi; 65 lokasi tak perlu BESS — mulai dari sini.</span></div>
+        </div>
+        <div class="rec-card" style="background:var(--white);">
+          <div class="rec-num gold-bg" style="font-size:16px;">3</div>
+          <div><strong style="font-size:13px; color:var(--navy);">Governance: Hambatan Terbesar Realisasi</strong><br><span style="font-size:12px; color:var(--text-mid);">Kasus Tembesi (terhenti 56,5%) membuktikan konflik yurisdiksi KLHK-PUPR-ESDM lebih berbahaya dari risiko teknis manapun.</span></div>
+        </div>
+        <div class="rec-card" style="background:var(--white);">
+          <div class="rec-num gold-bg" style="font-size:16px;">4</div>
+          <div><strong style="font-size:13px; color:var(--navy);">Sosial: Investasi, Bukan Biaya</strong><br><span style="font-size:12px; color:var(--text-mid);">Cirata membuktikan 3,2% CAPEX untuk proses sosial mencegah eskalasi konflik 15–20% CAPEX. Revenue sharing BUMDes = model terbaik ASEAN.</span></div>
+        </div>
+        <div class="rec-card" style="background:var(--white);">
+          <div class="rec-num gold-bg" style="font-size:16px;">5</div>
+          <div><strong style="font-size:13px; color:var(--navy);">Top 10 Quick Win: Marangkayu, Kedung Ombo, Bili Bili, dst.</strong><br><span style="font-size:12px; color:var(--text-mid);">Portofolio 10 lokasi bebas hutan lindung, skor ESG >0,65, tanpa BESS wajib — siap akselerasi segera.</span></div>
+        </div>
+        <div class="rec-card" style="background:var(--white);">
+          <div class="rec-num gold-bg" style="font-size:16px;">6</div>
+          <div><strong style="font-size:13px; color:var(--navy);">Jatiluhur: Potensial Tinggi, Kehati-hatian Ekstra</strong><br><span style="font-size:12px; color:var(--text-mid);">1.626 MWp terbesar — tapi kondisi eutrofik dan KJA 2.800 ha menuntut studi ekologi ≥12 bulan + cakupan panel maks. 10–15% fase pertama.</span></div>
+        </div>
+        <div class="rec-card" style="background:var(--white); grid-column:1/-1;">
+          <div class="rec-num gold-bg" style="font-size:16px;">7</div>
+          <div><strong style="font-size:13px; color:var(--navy);">Framework ESG Ini Adalah Titik Awal — Bukan Akhir</strong><br><span style="font-size:12px; color:var(--text-mid);">Perlu diinstitusionalisasi KESDM sebagai standar evaluasi FPV, diperbarui tiap 2 tahun, dan dilengkapi dengan feasibility study, grid connection study, dan pre-feasibility lengkap per lokasi prioritas.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 37: CLOSING
+  ═══════════════════════════════════════════ -->
+  <div class="slide bg-cover" id="slide-37">
+    <div class="cover-deco"></div>
+    <div class="cover-deco2"></div>
+    <div class="cover-content">
+      <div style="font-size:11px; font-weight:700; letter-spacing:3px; color:var(--gold-light); text-transform:uppercase; margin-bottom:24px;">Kesimpulan</div>
+      <h2 style="font-size:clamp(22px,3.5vw,42px); font-weight:900; color:white; line-height:1.2; margin-bottom:16px;">Indonesia memiliki semua bahan untuk menjadi pemimpin PLTS Terapung ASEAN.</h2>
+      <div class="gold-divider"></div>
+      <p style="color:rgba(255,255,255,0.75); font-size:15px; max-width:640px; line-height:1.8; margin-top:18px;">
+        Yang dibutuhkan bukan hanya potensi alam — sudah ada. Bukan hanya teknologi — sudah tersedia. Yang dibutuhkan adalah <strong style="color:var(--gold);">kepastian regulasi</strong>, <strong style="color:var(--gold);">koordinasi kelembagaan</strong>, dan <strong style="color:var(--gold);">keterlibatan sosial yang substantif</strong> sejak tahap perencanaan.
+      </p>
+      <div style="margin-top:36px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:580px;">
+        <div style="text-align:center;">
+          <div style="font-size:28px; font-weight:900; color:var(--gold); line-height:1;">108</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.5); margin-top:4px;">Lokasi Teranalisis</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:28px; font-weight:900; color:var(--gold); line-height:1;">13,9 GW</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.5); margin-top:4px;">Potensi Nasional</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:28px; font-weight:900; color:var(--gold); line-height:1;">Top 10</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.5); margin-top:4px;">Siap Dipercepat</div>
+        </div>
+      </div>
+      <div style="margin-top:36px;">
+        <p style="font-size:12px; color:rgba(255,255,255,0.4);">Center for Environmental, Social, and Governance Studies · Universitas Airlangga</p>
+        <p style="font-size:12px; color:rgba(255,255,255,0.4);">Kajian untuk PT PLN (Persero) | Draft 14 April 2026</p>
+      </div>
+    </div>
+    <div class="footer-strip"></div>
+  </div>
+
+</div><!-- end .deck -->
+
+<!-- NAVIGATION BAR -->
+<nav class="nav-bar">
+  <button id="btn-prev" onclick="changeSlide(-1)" disabled>← Prev</button>
+  <div class="slide-dots" id="dots-container"></div>
+  <span class="progress-info" id="slide-counter">1 / 37</span>
+  <button id="btn-next" onclick="changeSlide(1)">Next →</button>
+</nav>
+
+<script>
+  const TOTAL = 37;
+  let current = 1;
+
+  function getSlide(n) {
+    return document.getElementById('slide-' + n);
+  }
+
+  function buildDots() {
+    const c = document.getElementById('dots-container');
+    for (let i = 1; i <= TOTAL; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 1 ? ' active' : '');
+      d.onclick = () => goTo(i);
+      c.appendChild(d);
+    }
+  }
+
+  function updateDots() {
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i + 1 === current);
+    });
+  }
+
+  function updateProgress() {
+    const pct = (current / TOTAL) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('slide-counter').textContent = current + ' / ' + TOTAL;
+    document.getElementById('btn-prev').disabled = current === 1;
+    document.getElementById('btn-next').disabled = current === TOTAL;
+  }
+
+  function goTo(n) {
+    if (n < 1 || n > TOTAL) return;
+    getSlide(current).classList.remove('active');
+    current = n;
+    getSlide(current).classList.add('active');
+    updateDots();
+    updateProgress();
+  }
+
+  function changeSlide(dir) {
+    goTo(current + dir);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
+
+  buildDots();
+  updateProgress();
+</script>
+</body>
+</html>
