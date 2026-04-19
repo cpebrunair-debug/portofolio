@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kajian PLTS Terapung RUPTL 2025–2034 | Fase 2 | PT PLN (Persero)</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b3d91;
+    --blue-deep: #1457b8;
+    --blue-mid: #0066cc;
+    --blue-light: #2ea8ff;
+    --blue-pale: #d9ebff;
+    --blue-ultra: #f4f9ff;
+    --gold: #ffd100;
+    --gold-light: #ffe066;
+    --gold-pale: #fff8cc;
+    --white: #ffffff;
+    --gray-light: #f7f7f5;
+    --gray-mid: #d9dfe8;
+    --text-dark: #111111;
+    --text-mid: #2a4f80;
+    --text-light: #5b78a0;
+    --green: #1a7a4a;
+    --red: #c0392b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #ffffff;
+    color: var(--text-dark);
+    overflow: hidden;
+  }
+
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; }
+
+  /* NAV BAR */
+  .nav-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(255,255,255,0.98);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 24px;
+    z-index: 999;
+    border-top: 2px solid var(--blue-mid);
+  }
+  .nav-bar button {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 600;
+    padding: 8px 20px;
+    border: 1.5px solid var(--gold); border-radius: 4px;
+    background: transparent; color: var(--navy); cursor: pointer;
+    transition: all 0.2s; letter-spacing: 0.5px;
+  }
+  .nav-bar button:hover { background: var(--gold); color: var(--navy); }
+  .nav-bar button:disabled { opacity: 0.3; cursor: default; }
+  .progress-info { font-size: 12px; color: var(--text-light); font-weight: 600; letter-spacing: 1px; }
+  .slide-dots { display: flex; gap: 5px; flex-wrap: wrap; max-width: 60%; justify-content: center; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(11,61,145,0.16); cursor: pointer; transition: background 0.2s; }
+  .dot.active { background: var(--gold); }
+
+  /* TYPOGRAPHY */
+  h2.slide-title { font-size: clamp(18px, 2.2vw, 28px); font-weight: 800; line-height: 1.2; }
+  h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  p, li { font-size: 13px; line-height: 1.65; }
+
+  /* LAYOUT */
+  .slide-body {
+    flex: 1; padding: 20px 40px 58px;
+    overflow: hidden; display: flex; flex-direction: column;
+    justify-content: flex-start; gap: 12px;
+  }
+  .slide-body.two-col { flex-direction: row; gap: 24px; }
+  .col { flex: 1; display: flex; flex-direction: column; }
+
+  /* BACKGROUNDS */
+  .bg-cover { background: #ffffff; color: var(--text-dark); }
+  .bg-white { background: var(--white); }
+  .bg-light { background: var(--blue-ultra); }
+  .bg-navy { background: var(--navy); color: var(--white); }
+  .bg-gradient-blue { background: linear-gradient(180deg, #ffffff 0%, #f4f9ff 100%); }
+
+  /* HEADER STRIP */
+  .slide-header {
+    padding: 16px 44px 12px;
+    border-bottom: 2px solid;
+    display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+  }
+  .slide-header.blue { border-color: var(--blue-mid); background: var(--white); }
+  .slide-header.gold { border-color: var(--gold); background: var(--white); }
+  .slide-header.light { border-color: var(--blue-pale); background: var(--blue-ultra); }
+  .slide-header.navy { border-color: var(--gold); background: var(--navy); }
+
+  .slide-num {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    padding: 4px 10px; border-radius: 3px;
+    background: var(--gold); color: var(--navy);
+  }
+
+  /* LOGO BAR */
+  .logo-bar {
+    display: flex; align-items: center; gap: 14px; margin-left: auto;
+  }
+  .logo-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 9px; font-weight: 700; color: var(--text-light); letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .logo-pln {
+    width: 28px; height: 28px; background: var(--navy); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; font-weight: 900; color: var(--gold); letter-spacing: 0.3px;
+  }
+  .logo-cesgs {
+    font-size: 8px; font-weight: 800; color: var(--blue-mid);
+    border: 1.5px solid var(--blue-mid); border-radius: 3px; padding: 2px 5px;
+  }
+  .logo-unair {
+    font-size: 8px; font-weight: 800; color: var(--navy);
+    border: 1.5px solid var(--navy); border-radius: 3px; padding: 2px 5px;
+    background: var(--gold-pale);
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--white); border: 1px solid var(--gray-mid);
+    border-radius: 8px; padding: 14px 16px; margin-bottom: 9px;
+  }
+  .card-blue { background: var(--blue-ultra); border: 1.5px solid var(--blue-pale); border-radius: 8px; padding: 14px 17px; margin-bottom: 10px; }
+  .card-gold { background: var(--gold-pale); border: 1.5px solid var(--gold-light); border-radius: 8px; padding: 14px 17px; margin-bottom: 10px; }
+  .card-navy { background: var(--navy); color: var(--white); border-radius: 8px; padding: 14px 16px; margin-bottom: 9px; }
+  .card-green { background: #f0faf4; border: 1.5px solid #a8d5b5; border-radius: 8px; padding: 14px 17px; margin-bottom: 10px; }
+  .card-red { background: #fdf3f2; border: 1.5px solid #e8b0aa; border-radius: 8px; padding: 14px 17px; margin-bottom: 10px; }
+
+  /* METRIC */
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 12px 0; }
+  .metric-box { background: var(--white); border: 1px solid var(--gray-mid); border-radius: 8px; padding: 12px 14px; text-align: center; }
+  .metric-box.blue { background: var(--blue-ultra); border-color: var(--blue-pale); }
+  .metric-box.gold { background: var(--gold-pale); border-color: var(--gold-light); }
+  .metric-box.navy { background: var(--navy); border-color: var(--blue-mid); }
+  .metric-val { font-size: clamp(18px, 2.5vw, 30px); font-weight: 900; color: var(--blue-mid); line-height: 1; margin-bottom: 4px; }
+  .metric-box.navy .metric-val { color: var(--gold); }
+  .metric-box.gold .metric-val { color: var(--navy); }
+  .metric-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; color: var(--text-light); text-transform: uppercase; }
+  .metric-box.navy .metric-lbl { color: rgba(255,255,255,0.6); }
+
+  /* BADGE */
+  .badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 3px; margin-right: 4px; }
+  .badge-gold { background: var(--gold); color: var(--navy); }
+  .badge-blue { background: var(--blue-mid); color: white; }
+  .badge-green { background: var(--green); color: white; }
+  .badge-red { background: var(--red); color: white; }
+  .badge-gray { background: var(--gray-mid); color: var(--text-mid); }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  th { background: var(--navy); color: var(--white); padding: 9px 12px; font-weight: 700; text-align: left; font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--gray-mid); }
+  tr:nth-child(even) td { background: var(--blue-ultra); }
+
+  /* LIST */
+  ul.check-list { list-style: none; padding: 0; }
+  ul.check-list li { padding: 6px 0 6px 22px; position: relative; font-size: 12.5px; border-bottom: 1px solid rgba(200,220,240,0.5); }
+  ul.check-list li::before { content: '►'; position: absolute; left: 0; color: var(--gold); font-size: 9px; top: 8px; }
+
+  /* DIVIDERS */
+  .gold-divider { width: 60px; height: 4px; background: var(--gold); border-radius: 2px; margin: 10px 0; }
+  .blue-divider { width: 40px; height: 3px; background: var(--blue-mid); border-radius: 2px; margin: 8px 0; }
+
+  /* PROGRESS BAR */
+  .mini-bar-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .mini-bar-label { font-size: 11px; color: var(--text-mid); width: 140px; flex-shrink: 0; }
+  .mini-bar-track { flex: 1; height: 7px; background: var(--gray-mid); border-radius: 3px; overflow: hidden; }
+  .mini-bar-fill { height: 100%; border-radius: 3px; background: var(--blue-mid); }
+  .mini-bar-val { font-size: 11px; font-weight: 700; color: var(--text-dark); width: 70px; text-align: right; }
+
+  /* COVER */
+  .cover-content { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 48px; position: relative; z-index: 2; }
+  .cover-deco { position: absolute; right: 0; top: 0; bottom: 0; width: 42%; background: linear-gradient(135deg, rgba(0,102,204,0.06), rgba(255,209,0,0.16)); clip-path: polygon(18% 0, 100% 0, 100% 100%, 0% 100%); }
+  .cover-deco2 { position: absolute; right: 0; top: 0; width: 35%; height: 100%; border-left: 3px solid rgba(0,102,204,0.28); transform: skewX(-8deg); transform-origin: top right; }
+
+  /* SECTION BREAK SLIDE */
+  .section-slide { background: #ffffff; color: var(--text-dark); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; flex: 1; padding: 56px; border-top: 18px solid var(--blue-mid); border-left: 18px solid var(--gold); }
+  .section-num { font-size: 72px; font-weight: 900; color: rgba(245,168,0,0.15); line-height: 1; margin-bottom: -14px; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 22px; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--blue-mid), var(--gold)); }
+  .timeline-item { position: relative; padding: 7px 0 7px 14px; border-bottom: 1px solid rgba(200,220,240,0.4); }
+  .timeline-item::before { content: ''; position: absolute; left: -5px; top: 12px; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); border: 2px solid var(--white); }
+
+  /* REC CARD */
+  .rec-card { display: flex; gap: 12px; padding: 13px 15px; border-radius: 7px; background: var(--white); border: 1px solid var(--gray-mid); margin-bottom: 10px; align-items: flex-start; }
+  .rec-num { width: 30px; height: 30px; border-radius: 50%; background: var(--blue-mid); color: white; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .rec-num.gold-bg { background: var(--gold); color: var(--navy); }
+
+  /* FOOTER STRIP */
+  .footer-strip { position: absolute; bottom: 52px; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), var(--blue-mid), transparent); }
+
+  /* PROGRESS BAR (top) */
+  #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--gold), var(--blue-light)); transition: width 0.3s ease; z-index: 1000; }
+
+  /* SCENARIO BOXES */
+  .sc-box { border-radius: 8px; padding: 12px 14px; text-align: center; margin-bottom: 8px; }
+  .sc-box .sc-val { font-size: 22px; font-weight: 900; margin-bottom: 2px; }
+  .sc-box .sc-lbl { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+  .sc-box .sc-desc { font-size: 11px; color: var(--text-mid); }
+
+  /* RISK ITEM */
+  .risk-item-row { display: flex; gap: 12px; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid var(--gray-mid); }
+  .risk-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .risk-hi { background: var(--red); }
+  .risk-md { background: var(--gold); }
+  .risk-lo { background: var(--green); }
+
+  /* SIMULATION BOX */
+  .sim-box { background: var(--blue-ultra); border: 2px solid var(--blue-pale); border-radius: 8px; padding: 14px 16px; margin-top: 10px; }
+  .sim-box table td { background: transparent !important; padding: 4px 8px; font-size: 12px; }
+  .sim-box table th { font-size: 10px; padding: 5px 8px; }
+
+  /* NOTE BOX */
+  .note-box { background: var(--gold-pale); border-left: 4px solid var(--gold); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 11.5px; color: var(--text-dark); margin-top: 8px; }
+  .note-box.red { background: #fdf3f2; border-left-color: var(--red); }
+  .note-box.blue { background: var(--blue-ultra); border-left-color: var(--blue-mid); }
+  .note-box.green { background: #f0faf4; border-left-color: var(--green); }
+
+  /* ROADMAP */
+  .roadmap { display: flex; gap: 0; align-items: stretch; }
+  .roadmap-step { flex: 1; padding: 18px 16px; background: var(--white); border: 1px solid var(--gray-mid); position: relative; display: flex; flex-direction: column; }
+  .roadmap-step:not(:last-child)::after { content: '→'; position: absolute; right: -14px; top: 50%; transform: translateY(-50%); color: var(--blue-mid); font-size: 16px; z-index: 2; }
+  .roadmap-year { font-size: 10px; letter-spacing: 1.5px; color: var(--blue-mid); font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
+  .roadmap-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+  .roadmap-desc { font-size: 11px; color: var(--text-light); line-height: 1.4; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar" style="width:2.8%"></div>
+
+<div class="deck">
+
+<!-- ══════════════════════════════════════
+     SLIDE 1: COVER
+══════════════════════════════════════ -->
+<div class="slide active bg-cover" id="slide-1">
+  <div class="cover-deco"></div>
+  <div class="cover-deco2"></div>
+  <div class="cover-content">
+    <div style="display:inline-flex; align-items:center; gap:10px; margin-bottom:24px;">
+      <div style="width:6px; height:48px; background:var(--gold); border-radius:3px;"></div>
+      <div>
+        <div style="font-size:10px; font-weight:700; letter-spacing:3px; color:var(--blue-mid); text-transform:uppercase; margin-bottom:3px;">Kajian Percepatan Pembangunan — Fase 2</div>
+        <div style="font-size:10px; font-weight:600; letter-spacing:2px; color:var(--text-light); text-transform:uppercase;">Analisis Investasi & Multiplier Effect</div>
+      </div>
+    </div>
+    <h1 style="font-size:clamp(26px,4vw,50px); font-weight:900; line-height:1.1; color:var(--navy); margin-bottom:6px;">PLTS Terapung</h1>
+    <h1 style="font-size:clamp(26px,4vw,50px); font-weight:900; line-height:1.1; color:var(--gold);">RUPTL 2025–2034</h1>
+    <div class="gold-divider" style="margin:18px 0;"></div>
+    <p style="color:var(--text-mid); font-size:14px; max-width:560px; line-height:1.7;">
+      Prioritisasi Percepatan 37 Lokasi Waduk Prioritas Utama — Analisis CAPEX, OPEX, LCOE, Profitabilitas, Multiplier Ekonomi & Sensitivitas Kurs
+    </p>
+    <div style="margin-top:28px; display:flex; gap:32px; flex-wrap:wrap;">
+      <div style="font-size:11px; color:var(--text-light);">
+        <span style="color:var(--gold); font-weight:700;">Tim Ahli:</span><br>Prof. Iman Harymawan, S.E., M.B.A., Ph.D.
+      </div>
+      <div style="font-size:11px; color:var(--text-light);">
+        <span style="color:var(--gold); font-weight:700;">Penerbit:</span><br>Center for ESG Studies, Universitas Airlangga
+      </div>
+      <div style="font-size:11px; color:var(--text-light);">
+        <span style="color:var(--gold); font-weight:700;">Versi:</span><br>Draft April 2026
+      </div>
+    </div>
+    <!-- Logos -->
+    <div style="margin-top:28px; display:flex; align-items:center; gap:16px;">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="logo-pln">PLN</div>
+        <span style="font-size:9px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.5px;">PT PLN (Persero)</span>
+      </div>
+      <div style="width:1px; height:24px; background:var(--gray-mid);"></div>
+      <div class="logo-cesgs">CESGS</div>
+      <div class="logo-unair">UNAIR</div>
+      <span style="font-size:9px; color:var(--text-light);">Universitas Airlangga</span>
+    </div>
+  </div>
+  <div class="footer-strip"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 2: AGENDA
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-2">
+  <div class="slide-header blue">
+    <span class="slide-num">02</span>
+    <h2 class="slide-title" style="color:var(--navy);">Agenda Presentasi</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:10px;">Fokus Utama</h3>
+      <div class="timeline">
+        <div class="timeline-item"><strong style="font-size:12px;">Pendahuluan & Latar Belakang</strong><br><span style="font-size:11px; color:var(--text-light);">Konteks Indonesia Emas 2045, RUPTL & tren global PLTS Terapung</span></div>
+        <div class="timeline-item"><strong style="font-size:12px;">Metodologi & Asumsi Dasar</strong><br><span style="font-size:11px; color:var(--text-light);">Framework CAPEX–OPEX–LCOE dan Input-Output Leontief</span></div>
+        <div class="timeline-item"><strong style="font-size:12px;">Analisis CAPEX & Sensitivitas Kurs</strong><br><span style="font-size:11px; color:var(--text-light);">Breakdown komponen, porsi impor, simulasi perubahan kurs Rp 1.000</span></div>
+        <div class="timeline-item"><strong style="font-size:12px;">Model OPEX & Biaya Operasional</strong><br><span style="font-size:11px; color:var(--text-light);">Variabel, tetap, SDM — total biaya Cirata per tahun & per MWh</span></div>
+        <div class="timeline-item"><strong style="font-size:12px;">Analisis LCOE & Posisi Kompetitif</strong><br><span style="font-size:11px; color:var(--text-light);">Perbandingan antar jenis pembangkit; tren harga modul PV (IRENA)</span></div>
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:10px;">Lanjutan Kajian</h3>
+      <div class="timeline">
+        <div class="timeline-item"><strong style="font-size:12px;">Analisis Profitabilitas 37 Lokasi</strong><br><span style="font-size:11px; color:var(--text-light);">Total Cost vs Pendapatan (tarif listrik + REC) — 3 skenario umur panel</span></div>
+        <div class="timeline-item"><strong style="font-size:12px;">Multiplier Ekonomi & Dampak Sosial</strong><br><span style="font-size:11px; color:var(--text-light);">Input-Output BPS 2020 — NTB, lapangan kerja, emisi CO₂</span></div>
+        <div class="timeline-item"><strong style="font-size:12px;">Skenario TKDN & Industrialisasi</strong><br><span style="font-size:11px; color:var(--text-light);">Roadmap kandungan lokal 2025–2040; benchmark India PLI</span></div>
+        <div class="timeline-item"><strong style="font-size:12px;">Manajemen Risiko & Rekomendasi</strong><br><span style="font-size:11px; color:var(--text-light);">Kurs, perizinan, intermitensi — 6 action items PLN</span></div>
+        <div class="timeline-item"><strong style="font-size:12px;">Subsidi yang Dapat Dihemat per Lokasi</strong><br><span style="font-size:11px; color:var(--text-light);">LCOE PLTS Terapung vs LCOE PLN per region — potensi penghematan 37 lokasi</span></div>
+        <div class="timeline-item"><strong style="font-size:12px;">5 Insight Analisis Mendalam (Slide 23–27)</strong><br><span style="font-size:11px; color:var(--text-light);">Benchmark global FPV, lesson learned India & China, dekomposisi CF, pendanaan hijau, tornado analysis</span></div>
+        <div class="timeline-item"><strong style="font-size:12px;">Implikasi Strategis Industri Hulu & BESS (Slide 28–32)</strong><br><span style="font-size:11px; color:var(--text-light);">Rantai nilai, roadmap lokalisasi komponen, kebutuhan BESS, teknologi & arsitektur hibrida PLTS–PLTA–BESS</span></div>
+        <div class="timeline-item"><strong style="font-size:12px;">Kesimpulan, Rekomendasi & Roadmap (Slide 33–35)</strong><br><span style="font-size:11px; color:var(--text-light);">5 kesimpulan utama, 6 rekomendasi strategis PLN, dan roadmap implementasi 2025–2034 beserta KPI monitoring</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 3: RINGKASAN EKSEKUTIF
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-3">
+  <div class="slide-header light">
+    <span class="slide-num">03</span>
+    <h2 class="slide-title" style="color:var(--navy);">Ringkasan Eksekutif — Indikator Kunci Fase 2</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+      <div class="card">
+        <div style="font-size:10px; font-weight:700; letter-spacing:1.5px; color:var(--text-light); text-transform:uppercase; margin-bottom:6px;">Total Kapasitas</div>
+        <div style="font-size:32px; font-weight:900; color:var(--blue-mid); line-height:1;">13.876</div>
+        <div style="font-size:11px; color:var(--text-light);">MWp — 108 Waduk (20% luas)</div>
+      </div>
+      <div class="card card-gold">
+        <div style="font-size:10px; font-weight:700; letter-spacing:1.5px; color:var(--text-light); text-transform:uppercase; margin-bottom:6px;">Prioritas Utama</div>
+        <div style="font-size:32px; font-weight:900; color:var(--navy); line-height:1;">2.876</div>
+        <div style="font-size:11px; color:var(--text-mid);">MW — 37 Lokasi siap 2025–2027</div>
+      </div>
+      <div class="card card-green">
+        <div style="font-size:10px; font-weight:700; letter-spacing:1.5px; color:var(--text-light); text-transform:uppercase; margin-bottom:6px;">LCOE 2030</div>
+        <div style="font-size:32px; font-weight:900; color:var(--green); line-height:1;">3,5–3,8</div>
+        <div style="font-size:11px; color:var(--text-mid);">USD sen/kWh — lebih murah 33–78% vs PLTU</div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="card">
+        <div style="font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:6px;">CAPEX per MW (Baseline)</div>
+        <div style="font-size:22px; font-weight:900; color:var(--navy);">USD 583,5/kW</div>
+        <div style="font-size:11px; color:var(--text-light);">≈ Rp 9,34 Miliar/MW @ Rp 16.000/USD</div>
+        <div style="font-size:11px; margin-top:5px;">Porsi impor <strong style="color:var(--red);">57,3%</strong> — eksposur kurs signifikan</div>
+      </div>
+      <div class="card">
+        <div style="font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:6px;">Output Multiplier (Sektor Listrik)</div>
+        <div style="font-size:22px; font-weight:900; color:var(--navy);">2,945×</div>
+        <div style="font-size:11px; color:var(--text-light);">Rp 1 investasi → Rp 2,94 output nasional</div>
+        <div style="font-size:11px; margin-top:5px;">Backward Linkage <strong style="color:var(--blue-mid);">#1</strong> dari 185 sektor (BL = 1,5748)</div>
+      </div>
+    </div>
+    <div class="note-box">
+      <strong>Catatan Metodologi:</strong> Penurunan harga modul PV referensi data IRENA Renewable Power Generation Costs 2023 dan BloombergNEF Solar PV Module Prices (2024) — penurunan dari USD ~1,8/Wp (2010) ke USD 0,18–0,20/Wp (2024), atau sekitar <strong>88–90%</strong> dalam 14 tahun. Angka >90% pada versi sebelumnya telah dikoreksi sesuai sumber.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 4: LATAR BELAKANG
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-4">
+  <div class="slide-header blue">
+    <span class="slide-num">04</span>
+    <h2 class="slide-title" style="color:var(--navy);">Latar Belakang — Indonesia Emas 2045 & Kebutuhan Energi</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <h3 style="color:var(--navy);">Tantangan Nasional</h3>
+      <p style="font-size:12.5px; color:var(--text-mid); margin-bottom:12px;">Target pendapatan per kapita 2045 sekitar <strong>USD 30.300</strong>, sementara 2024 masih di kisaran <strong>USD 4.925</strong>. Percepatan investasi energi menjadi kunci keluar dari jebakan pendapatan menengah.</p>
+      <div class="metric-grid" style="grid-template-columns:1fr 1fr; margin-bottom:12px;">
+        <div class="metric-box navy">
+          <div class="metric-val">1.522</div>
+          <div class="metric-lbl">kWh/kapita kini</div>
+        </div>
+        <div class="metric-box gold">
+          <div class="metric-val">&gt;8.500</div>
+          <div class="metric-lbl">kWh Target 2045</div>
+        </div>
+      </div>
+      <div class="card-blue">
+        <p style="font-size:12px;">Diperlukan pertumbuhan konsumsi listrik <strong>9–12% per tahun</strong> secara konsisten lebih dari satu dekade. PLTS Terapung menjadi salah satu instrumen percepatan utama.</p>
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy);">Tren Global PLTS Terapung</h3>
+      <div class="metric-grid" style="grid-template-columns:1fr;">
+        <div class="metric-box blue">
+          <div class="metric-val">&gt;4,2 GW</div>
+          <div class="metric-lbl">Kapasitas Terpasang Global 2022</div>
+        </div>
+        <div class="metric-box gold">
+          <div class="metric-val">222 GW</div>
+          <div class="metric-lbl">Pipeline Proyeksi 2031 (Wood Mackenzie)</div>
+        </div>
+      </div>
+      <div class="card-gold" style="margin-top:10px;">
+        <h3 style="font-size:12px; color:var(--navy); margin-bottom:5px;">📉 Tren Harga Modul PV</h3>
+        <p style="font-size:12px;">USD ~1,8/Wp (2010) → USD 0,18–0,20/Wp (2024)<br>Penurunan <strong>~88–90% dalam 14 tahun</strong><br><span style="font-size:10px; color:var(--text-mid);">Sumber: IRENA Renewable Power Generation Costs 2023; BloombergNEF 2024</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 5: KEBIJAKAN & RUPTL
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-5">
+  <div class="slide-header light">
+    <span class="slide-num">05</span>
+    <h2 class="slide-title" style="color:var(--navy);">Kerangka Kebijakan & RUPTL 2025–2034</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <h3 style="color:var(--navy);">Target RUPTL 2025–2034</h3>
+      <div class="metric-box navy" style="margin-bottom:12px; display:block; text-align:center; padding:14px;">
+        <div class="metric-val">69,5 GW</div>
+        <div class="metric-lbl">Total Penambahan Kapasitas — 76% EBT</div>
+      </div>
+      <div class="mini-bar-wrap"><div class="mini-bar-label">EBT (76%)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:76%; background:var(--green);"></div></div><div class="mini-bar-val">52,9 GW</div></div>
+      <div class="mini-bar-wrap"><div class="mini-bar-label">Tenaga Surya</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:25%; background:var(--gold);"></div></div><div class="mini-bar-val">17,1 GW</div></div>
+      <div class="mini-bar-wrap"><div class="mini-bar-label">Fosil (24%)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:24%; background:var(--red);"></div></div><div class="mini-bar-val">16,6 GW</div></div>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy);">Payung Regulasi</h3>
+      <div class="rec-card"><div class="rec-num" style="background:var(--blue-mid); font-size:9px;">PM</div><div><strong style="font-size:12px;">Permen ESDM No. 26/2021</strong><br><span style="font-size:11px; color:var(--text-mid);">PLTS di atas badan air — "PLTS khusus" — koordinasi lintas kementerian ESDM, PUPR, ATR/BPN</span></div></div>
+      <div class="rec-card"><div class="rec-num" style="background:var(--blue-mid); font-size:9px;">PP</div><div><strong style="font-size:12px;">Perpres No. 112/2022</strong><br><span style="font-size:11px; color:var(--text-mid);">Percepatan EBT — kemudahan izin dan insentif pengembang PLTS, termasuk di waduk BBWS/PUPR</span></div></div>
+      <div class="rec-card"><div class="rec-num" style="background:var(--blue-mid); font-size:9px;">PI</div><div><strong style="font-size:12px;">Permen Perindustrian No. 54/2012</strong><br><span style="font-size:11px; color:var(--text-mid);">Kewajiban TKDN minimum 40% untuk pengadaan peralatan listrik BUMN termasuk PLN</span></div></div>
+      <div class="note-box">Tantangan utama: industri panel surya DN belum mampu memenuhi kebutuhan skala RUPTL — diperlukan akselerasi kebijakan PLI.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 6: METODOLOGI
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-6">
+  <div class="slide-header blue">
+    <span class="slide-num">06</span>
+    <h2 class="slide-title" style="color:var(--navy);">Metodologi & Framework Kajian</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <div class="card" style="border-top:4px solid var(--blue-mid); margin-bottom:10px;">
+        <div style="font-size:22px; margin-bottom:8px;">📊</div>
+        <div style="font-size:13px; font-weight:800; color:var(--blue-mid); margin-bottom:8px;">PILAR 1 — Analisis Investasi</div>
+        <ul class="check-list">
+          <li>CAPEX breakdown per komponen (USD/kW)</li>
+          <li>Model OPEX berbasis aktivitas</li>
+          <li>Analisis LCOE horizon 25 tahun</li>
+          <li>Analisis profitabilitas 37 lokasi prioritas</li>
+          <li>Skenario sensitivitas kurs & asumsi makro</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card" style="border-top:4px solid var(--green); margin-bottom:10px;">
+        <div style="font-size:22px; margin-bottom:8px;">🔗</div>
+        <div style="font-size:13px; font-weight:800; color:var(--green); margin-bottom:8px;">PILAR 2 — Multiplier Ekonomi</div>
+        <ul class="check-list">
+          <li>Type II Output Multiplier (Leontief)</li>
+          <li>Tabel IO BPS Indonesia 2020 (185 Sektor)</li>
+          <li>Dampak langsung & tidak langsung ke PDB</li>
+          <li>Backward & Forward Linkage Analysis</li>
+        </ul>
+      </div>
+      <div class="note-box">
+        <strong>Catatan Metodologi Multiplier:</strong> Sesuai diskusi expert, analisis multiplier dalam kajian ini <strong>hanya mencakup dampak langsung (direct) dan dampak tidak langsung (indirect)</strong>. Dampak lanjutan (induced effect) dari spending rumah tangga <em>tidak dimasukkan</em> dalam angka multiplier yang dilaporkan — untuk menjaga kehati-hatian dan presisi klaim.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 7: ASUMSI PARAMETER
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-7">
+  <div class="slide-header light">
+    <span class="slide-num">07</span>
+    <h2 class="slide-title" style="color:var(--navy);">Asumsi & Parameter Dasar Model</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body" style="padding-top:16px;">
+    <table>
+      <thead>
+        <tr>
+          <th>Parameter</th><th>Baseline</th><th>Skenario Lemah</th><th>Skenario Kuat</th><th>Sumber</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Kurs USD/IDR</strong></td>
+          <td style="color:var(--blue-mid); font-weight:700;">Rp 16.000</td>
+          <td style="color:var(--red);">Rp 17.140<br><span style="font-size:10px; color:var(--text-light);">(kurs tertinggi forecast PLN)</span></td>
+          <td style="color:var(--green);">Rp 15.000</td>
+          <td>Kajian Forecast Kurs PLN<br><span style="font-size:10px; color:var(--text-light);">Skenario lemah = kurs tertinggi dalam interval forecast PLN</span></td>
+        </tr>
+        <tr>
+          <td><strong>Inflasi USD (impor)</strong></td>
+          <td style="color:var(--blue-mid); font-weight:700;">3,0% p.a.</td>
+          <td style="color:var(--red);">4,5% p.a.</td>
+          <td style="color:var(--green);">2,0% p.a.</td>
+          <td>IMF WEO April 2025</td>
+        </tr>
+        <tr>
+          <td><strong>Inflasi IDR (lokal)</strong></td>
+          <td style="color:var(--blue-mid); font-weight:700;">5,0% p.a.</td>
+          <td style="color:var(--red);">6,0% p.a.</td>
+          <td style="color:var(--green);">3,5% p.a.</td>
+          <td>Bank Indonesia — Laporan Kebijakan Moneter Q1 2025</td>
+        </tr>
+        <tr>
+          <td><strong>Discount Rate (WACC)</strong></td>
+          <td style="color:var(--blue-mid); font-weight:700;">9,0%</td>
+          <td style="color:var(--red);">11,0%</td>
+          <td style="color:var(--green);">7,5%</td>
+          <td>Estimasi berdasarkan struktur pembiayaan PLN (RKAP PLN 2025 & publikasi laporan keuangan PLN)</td>
+        </tr>
+        <tr>
+          <td><strong>Capacity Factor PLTS</strong></td>
+          <td style="color:var(--blue-mid); font-weight:700;">17,81%</td>
+          <td style="color:var(--red);">16%</td>
+          <td style="color:var(--green);">24%</td>
+          <td>IRENA / P50 Aktual Cirata 2023</td>
+        </tr>
+        <tr>
+          <td><strong>Degradasi Panel/Tahun</strong></td>
+          <td style="color:var(--blue-mid); font-weight:700;">0,40%</td>
+          <td style="color:var(--red);">0,60%</td>
+          <td style="color:var(--green);">0,30%</td>
+          <td>IEC 61215; NREL Degradation Study 2022</td>
+        </tr>
+        <tr>
+          <td><strong>Harga Karbon (Lemah)</strong></td>
+          <td style="color:var(--blue-mid); font-weight:700;">USD 25/tCO₂</td>
+          <td style="color:var(--red);">Rata-rata Bursa Karbon IDX 2025<br><span style="font-size:10px; color:var(--text-light);">(~USD 2–5 /tCO₂ — sesuai kondisi aktual)</span></td>
+          <td style="color:var(--green);">USD 80/tCO₂</td>
+          <td>IDX Carbon (Bursa Karbon Indonesia) 2025; World Bank CPP</td>
+        </tr>
+        <tr>
+          <td><strong>Umur Proyek</strong></td>
+          <td style="color:var(--blue-mid); font-weight:700;">25 tahun</td>
+          <td style="color:var(--red);">20 tahun</td>
+          <td style="color:var(--green);">30 tahun</td>
+          <td>IEC Standard; benchmark proyek FPV global</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note-box">
+      <strong>Catatan:</strong> WACC menggunakan estimasi berbasis laporan keuangan publik PLN. Untuk skenario kurs lemah, digunakan angka tertinggi dalam kajian forecast kurs PLN (bukan angka fiktif Bloomberg/BI). Harga karbon skenario lemah mengacu rata-rata transaksi Bursa Karbon IDX 2025, bukan asumsi teoritis.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 8: CAPEX BREAKDOWN
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-8">
+  <div class="slide-header blue">
+    <span class="slide-num">08</span>
+    <h2 class="slide-title" style="color:var(--navy);">Komponen CAPEX per MW Terpasang</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body" style="padding-top:14px;">
+    <table style="font-size:11px;">
+      <thead>
+        <tr><th>Komponen CAPEX</th><th>Biaya (USD/kW)</th><th>% Impor</th><th>Biaya Lokal (IDR/MW)</th><th>Keterangan</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Panel / Modul Surya (PV)</strong></td><td style="color:var(--navy); font-weight:700;">259,69</td><td style="color:var(--red);">100%</td><td>—</td><td>Komponen dominan; semua impor</td></tr>
+        <tr><td>Struktur & Mounting (Floating)</td><td>129,84</td><td>10%</td><td>~Rp 1.876 Jt</td><td>Produksi dalam negeri</td></tr>
+        <tr><td>Kabel & Wiring System</td><td>36,36</td><td>50%</td><td>~Rp 291 Jt</td><td>Sebagian lokal</td></tr>
+        <tr><td>Trafo Step-Up & Switchgear</td><td>51,94</td><td>40%</td><td>~Rp 498 Jt</td><td>Campuran impor-lokal</td></tr>
+        <tr><td>Inverter String/Central</td><td>10,91</td><td style="color:var(--red);">100%</td><td>—</td><td>Central inverter; impor</td></tr>
+        <tr><td><strong>Engineering & Procurement (EPM)</strong></td><td>36,36</td><td style="color:var(--green);">0%</td><td>~Rp 949 Jt</td><td>Sepenuhnya lokal ✓</td></tr>
+        <tr>
+          <td><strong>Pekerjaan Sipil & Fondasi</strong></td>
+          <td>25,97</td>
+          <td style="color:var(--green);">0%</td>
+          <td>~Rp 445 Jt<br><span style="font-size:9px; color:var(--text-light);">25,97 USD/kW × 1.000 kW × Rp 17.140/USD</span></td>
+          <td>Sepenuhnya lokal ✓ (dihitung kurs skenario lemah Rp 17.140)</td>
+        </tr>
+        <tr style="background:var(--blue-ultra);"><td><strong>TOTAL CAPEX per MW</strong></td><td><strong style="color:var(--blue-mid);">583,52</strong></td><td><strong style="color:var(--red);">57,3%</strong></td><td><strong>~Rp 4.673 Jt (lokal)</strong></td><td><strong>≈ USD 583.500/MW</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="note-box" style="margin-top:8px;">
+      <strong>📋 Catatan Biaya Lokal "Pekerjaan Sipil & Fondasi":</strong> USD 25,97/kW × Rp 17.140 (kurs skenario lemah) = Rp 445.130/kW = <strong>~Rp 445 Jt/MW</strong>. Angka Rp 676 Jt pada versi sebelumnya menggunakan konversi USD ke IDR kemudian ke IDR/MW yang berbeda basis kurs — telah dikoreksi di sini.
+    </div>
+    <div class="note-box blue" style="margin-top:6px;">
+      <strong>Benchmark Cirata 192 MWp:</strong> Investasi ~USD 129 juta (≈ USD 672/kW). Biaya mooring 15–20% lebih tinggi dari estimasi; biaya interkoneksi berkurang 40% karena memanfaatkan infrastruktur PLTA Cirata eksisting.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 9: SENSITIVITAS KURS
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-9">
+  <div class="slide-header light">
+    <span class="slide-num">09</span>
+    <h2 class="slide-title" style="color:var(--navy);">Sensitivitas CAPEX terhadap Volatilitas Kurs</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:10px;">Skenario Kurs (per MW)</h3>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
+        <div class="sc-box card-green">
+          <div class="sc-lbl" style="color:var(--green); font-size:10px; font-weight:700; letter-spacing:1px;">Rupiah Menguat</div>
+          <div class="sc-val" style="color:var(--green);">Rp 15.000/USD</div>
+          <div class="sc-desc">CAPEX/MW ≈ Rp 8,75 Miliar &nbsp;<span class="badge badge-green" style="font-size:9px;">HEMAT 6,3%</span></div>
+        </div>
+        <div class="sc-box card-blue">
+          <div class="sc-lbl" style="color:var(--blue-mid); font-size:10px; font-weight:700; letter-spacing:1px;">Baseline</div>
+          <div class="sc-val" style="color:var(--blue-mid);">Rp 16.000/USD</div>
+          <div class="sc-desc">CAPEX/MW ≈ Rp 9,34 Miliar &nbsp;<span class="badge badge-blue" style="font-size:9px;">REFERENSI</span></div>
+        </div>
+        <div class="sc-box card-red">
+          <div class="sc-lbl" style="color:var(--red); font-size:10px; font-weight:700; letter-spacing:1px;">Skenario Lemah (Forecast PLN)</div>
+          <div class="sc-val" style="color:var(--red);">Rp 17.140/USD</div>
+          <div class="sc-desc">CAPEX/MW ≈ Rp 10,01 Miliar &nbsp;<span class="badge badge-red" style="font-size:9px;">+7,2% TAMBAHAN</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Simulasi: Setiap Perubahan Rp 1.000</h3>
+      <div class="sim-box">
+        <table>
+          <thead>
+            <tr><th>Komponen</th><th>Dampak per MW</th><th>Dampak 37 Lokasi (2.876 MW)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>CAPEX Impor (57,3% × USD 583,52/kW)</td><td style="color:var(--red); font-weight:700;">+Rp 334,4 Jt</td><td style="color:var(--red); font-weight:700;">+Rp 961 Miliar (+3,4%)</td></tr>
+            <tr><td>Biaya panel PV saja (USD 259,69/kW)</td><td>+Rp 259,7 Jt</td><td>+Rp 747 Miliar</td></tr>
+            <tr><td>CAPEX total per MW</td><td>+Rp 334,4 Jt</td><td>+Rp 961 Miliar</td></tr>
+            <tr style="background:var(--gold-pale);"><td><strong>% terhadap CAPEX baseline</strong></td><td><strong style="color:var(--navy);">+3,58%</strong></td><td><strong style="color:var(--navy);">+3,58%</strong></td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:11px; color:var(--text-mid); margin-top:8px;">Formula: Porsi impor (USD/kW) × 1.000 × kapasitas (kW) = tambahan CAPEX (IDR)</p>
+      </div>
+      <div class="note-box" style="margin-top:8px;">
+        <strong>Implikasi Portofolio 37 Waduk:</strong> Setiap pelemahan Rp 1.000 dari baseline menambah total CAPEX ±Rp 961 miliar (~USD 56 juta). Dari Rp 16.000 ke Rp 17.140, tambahan CAPEX total ≈ <strong>Rp 1,09 Triliun</strong> untuk 37 lokasi.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 10: MODEL OPEX
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-10">
+  <div class="slide-header blue">
+    <span class="slide-num">10</span>
+    <h2 class="slide-title" style="color:var(--navy);">Model OPEX — Biaya Operasional PLTS Terapung</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Biaya Variabel per MWh (biaya yang bergantung pada energi yang diproduksi)</h3>
+      <table style="font-size:11px; margin-bottom:10px;">
+        <thead><tr><th>Komponen</th><th>Rate (Rp/MWh)</th></tr></thead>
+        <tbody>
+          <tr><td>Chemical Treatment</td><td>Rp 357</td></tr>
+          <tr><td>Spare Part Tidak Terjadwal</td><td>Rp 29.464</td></tr>
+          <tr><td>Biaya Lingkungan & Kebersihan</td><td>Rp 893</td></tr>
+          <tr><td>Operasi Variabel Lainnya</td><td>Rp 11.786</td></tr>
+          <tr style="background:var(--blue-ultra);"><td><strong>TOTAL VARIABEL</strong></td><td><strong style="color:var(--blue-mid);">Rp 42.500/MWh</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="card" style="padding:10px 13px;">
+        <div style="font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; margin-bottom:5px;">Rasio Personel</div>
+        <div style="font-size:20px; font-weight:900; color:var(--navy);">0,255 orang/MW</div>
+        <div style="font-size:10px; color:var(--text-light); margin-bottom:4px;">minimum 49 orang per unit</div>
+        <p style="font-size:11px;">Biaya SDM/orang/tahun: <strong style="color:var(--blue-mid);">Rp 396 juta</strong> (gaji, BPJS, THR, pelatihan, APD)</p>
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Biaya Tetap Non-Gaji per MW/Tahun</h3>
+      <div class="mini-bar-wrap"><div class="mini-bar-label">O&M Terjadwal ~1,5%/thn</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:15%;"></div></div><div class="mini-bar-val">Rp 25,8 Jt</div></div>
+      <div class="mini-bar-wrap"><div class="mini-bar-label">Asuransi Aset 0,5–1%</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:29%; background:var(--gold);"></div></div><div class="mini-bar-val">Rp 49,0 Jt</div></div>
+      <div class="mini-bar-wrap"><div class="mini-bar-label">Adm & Umum Tetap</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:51%;"></div></div><div class="mini-bar-val">Rp 85,9 Jt</div></div>
+      <div class="mini-bar-wrap"><div class="mini-bar-label">IT, SCADA & Monitoring</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:2%; background:var(--green);"></div></div><div class="mini-bar-val">Rp 1,8 Jt</div></div>
+      <div class="mini-bar-wrap"><div class="mini-bar-label">Sewa Waduk + Lainnya</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:4%; background:var(--green);"></div></div><div class="mini-bar-val">Rp 5,1 Jt</div></div>
+      <div class="metric-box navy" style="margin-top:8px; text-align:center; display:block; padding:10px;">
+        <div class="metric-val">Rp 167,6 Jt</div>
+        <div class="metric-lbl">Total Biaya Tetap Non-Gaji / MW / Tahun</div>
+      </div>
+      <div class="note-box blue" style="margin-top:8px;">
+        <strong>Total OPEX Cirata 192 MWp per Tahun (estimasi):</strong><br>
+        • Biaya tetap non-gaji: 192 MW × Rp 167,6 Jt = <strong>~Rp 32,2 Miliar/tahun</strong><br>
+        • Biaya SDM: 192 MW × 0,255 × Rp 396 Jt = <strong>~Rp 19,4 Miliar/tahun</strong><br>
+        • Biaya variabel: 192 MW × 8.760 jam × 0,1781 CF × Rp 42.500 ≈ <strong>~Rp 12,5 Miliar/tahun</strong><br>
+        • <strong>Total ≈ Rp 64,1 Miliar/tahun</strong> → Rata-rata OPEX ~Rp 193.500/MWh atau ~USD 11,3/MWh
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 11: LCOE
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-11">
+  <div class="slide-header light">
+    <span class="slide-num">11</span>
+    <h2 class="slide-title" style="color:var(--navy);">Analisis LCOE & Posisi Kompetitif 2030</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body" style="padding-top:14px;">
+    <table style="font-size:11px; margin-bottom:10px;">
+      <thead>
+        <tr><th>Jenis Pembangkit</th><th>LCOE 2030 (USD sen/kWh)</th><th>LCOE 2050 (USD sen/kWh)</th><th>Selisih vs PLTS</th><th>Risiko BBM</th></tr>
+      </thead>
+      <tbody>
+        <tr style="background:var(--blue-ultra);"><td><strong>⭐ PLTS Terapung</strong></td><td><strong style="color:var(--green);">3,5–3,8</strong></td><td>2,8–3,2</td><td><span class="badge badge-green">REFERENSI</span></td><td style="color:var(--green);">Nol</td></tr>
+        <tr><td>PLTS Rooftop</td><td>3,8–4,2</td><td>3,0–3,5</td><td style="color:var(--gold);">+8–11%</td><td style="color:var(--green);">Nol</td></tr>
+        <tr><td>PLTB Onshore (Angin)</td><td>4,2–5,8</td><td>3,5–5,0</td><td style="color:var(--gold);">+18–53%</td><td style="color:var(--green);">Nol</td></tr>
+        <tr><td>PLTU Batubara Ultra-SC</td><td style="color:var(--red);">5,6–7,2</td><td>6,0–8,5</td><td style="color:var(--red);">+60–90%</td><td style="color:var(--red);">Sangat Tinggi</td></tr>
+        <tr><td>PLTGU Combined Cycle</td><td style="color:var(--red);">8,0–9,5</td><td>8,5–11,0</td><td style="color:var(--red);">+125–150%</td><td style="color:var(--red);">Tinggi</td></tr>
+        <tr><td>PLTU Batubara Subcritical</td><td style="color:var(--red);">8,5–13,4</td><td>10,0–15,0</td><td style="color:var(--red);">+143–253%</td><td style="color:var(--red);">Sangat Tinggi</td></tr>
+        <tr><td>PLTG Open Cycle</td><td style="color:var(--red);">10,5–12,7</td><td>11,0–14,0</td><td style="color:var(--red);">+200–234%</td><td style="color:var(--red);">Sangat Tinggi</td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex; gap:10px;">
+      <div class="card-green" style="flex:1; margin-bottom:0;">
+        <h3 style="font-size:12px; color:var(--green); margin-bottom:4px;">🏆 Keunggulan LCOE</h3>
+        <p style="font-size:11.5px;">PLTS Terapung lebih murah <strong>33–78%</strong> vs PLTU Batubara dan <strong>53–79%</strong> vs PLTG/PLTGU pada 2030</p>
+      </div>
+      <div class="card-blue" style="flex:1; margin-bottom:0;">
+        <h3 style="font-size:12px; color:var(--blue-mid); margin-bottom:4px;">📊 Tren Harga Modul PV</h3>
+        <p style="font-size:11.5px;">USD ~1,8/Wp (2010) → USD 0,18–0,20/Wp (2024) — penurunan <strong>~88–90%</strong> dalam 14 tahun<br><span style="font-size:10px; color:var(--text-light);">Sumber: IRENA 2023; BloombergNEF 2024; Fraunhofer ISE 2023</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 12: CIRATA CASE STUDY
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-12">
+  <div class="slide-header blue">
+    <span class="slide-num">12</span>
+    <h2 class="slide-title" style="color:var(--navy);">Studi Kasus: PLTS Terapung Cirata 192 MWp</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <div class="metric-grid" style="grid-template-columns:1fr 1fr; margin-bottom:12px;">
+        <div class="metric-box navy"><div class="metric-val">192</div><div class="metric-lbl">MWp — Nov 2023</div></div>
+        <div class="metric-box gold"><div class="metric-val" style="font-size:20px;">USD 672/kW</div><div class="metric-lbl">Investasi ≈ USD 129 Jt</div></div>
+      </div>
+      <h3 style="color:var(--navy);">Lessons Learned Cirata</h3>
+      <ul class="check-list">
+        <li><strong>Mooring & Anchoring</strong> — 15–20% lebih tinggi dari estimasi awal (topografi dasar waduk tidak rata)</li>
+        <li><strong>Biaya Interkoneksi −40%</strong> karena memanfaatkan infrastruktur PLTA Cirata eksisting</li>
+        <li><strong>Efek Pendinginan Air</strong> — output aktual +8,3% di atas estimasi P50 (benchmark global 5–15%)</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Relevansi untuk 37 Waduk Prioritas</h3>
+      <div class="card-green" style="margin-bottom:10px;">
+        <h3 style="font-size:12px; color:var(--green); margin-bottom:4px;">💡 Potensi Penghematan</h3>
+        <p style="font-size:12px;">14 dari 37 waduk Prioritas Utama memiliki PLTA eksisting — berpotensi menurunkan CAPEX interkoneksi rata-rata <strong>30–40%</strong></p>
+      </div>
+      <div class="card-blue">
+        <h3 style="font-size:12px; color:var(--blue-mid); margin-bottom:4px;">🌏 Studi Kasus Korea: Hapcheon Dam (41 MW)</h3>
+        <p style="font-size:12px;">LCOE aktual setelah 3 tahun: USD 0,064/kWh. Sinergi dengan turbin PLTA memperpanjang manfaat waduk. Suhu air di bawah panel turun 2–3°C — mengurangi evaporasi 20%</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 13: SECTION BREAK — ANALISIS PROFITABILITAS
+══════════════════════════════════════ -->
+<div class="slide" id="slide-13">
+  <div class="section-slide">
+    <div class="section-num">03</div>
+    <h2 style="font-size:clamp(22px,3.2vw,40px); font-weight:900; margin-bottom:12px; color:var(--navy);">Analisis Profitabilitas<br><span style="color:var(--gold);">37 Lokasi Prioritas</span></h2>
+    <div class="gold-divider"></div>
+    <p style="font-size:14px; color:var(--text-mid); max-width:580px; margin-top:12px;">Total biaya (CAPEX + OPEX seumur hidup) dibandingkan potensi pendapatan dari harga jual listrik PLN dan Renewable Energy Certificate (REC) — dalam 3 skenario umur panel: 20, 25, dan 30 tahun</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 14: PROFITABILITAS 37 LOKASI
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-14">
+  <div class="slide-header blue">
+    <span class="slide-num">14</span>
+    <h2 class="slide-title" style="color:var(--navy);">Analisis Profitabilitas — 37 Lokasi Prioritas (2.876 MW)</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Total Biaya Seumur Hidup</h3>
+      <div class="card-blue" style="margin-bottom:8px;">
+        <p style="font-size:12px;"><strong>CAPEX Total (37 Lokasi):</strong><br>2.876 MW × USD 583,5/kW × Rp 16.000 = <strong>~Rp 26,8 Triliun</strong></p>
+      </div>
+      <table style="font-size:10.5px; margin-bottom:8px;">
+        <thead><tr><th>Skenario Umur Panel</th><th>OPEX Kumulatif / MW</th><th>Total OPEX (37 Lok.)</th><th>Total Cost</th></tr></thead>
+        <tbody>
+          <tr><td>20 Tahun</td><td>Rp 5,52 Miliar</td><td>~Rp 15,9 T</td><td style="color:var(--red); font-weight:700;">~Rp 42,7 T</td></tr>
+          <tr style="background:var(--blue-ultra);"><td><strong>25 Tahun (Baseline)</strong></td><td>Rp 6,9 Miliar</td><td>~Rp 19,8 T</td><td style="color:var(--blue-mid); font-weight:700;">~Rp 46,6 T</td></tr>
+          <tr><td>30 Tahun</td><td>Rp 8,28 Miliar</td><td>~Rp 23,8 T</td><td style="color:var(--green); font-weight:700;">~Rp 50,6 T</td></tr>
+        </tbody>
+      </table>
+      <div class="note-box">OPEX/MW/tahun ≈ Rp 276 Jt (non-gaji + SDM + variabel); estimasi indikatif konservatif.</div>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Potensi Pendapatan</h3>
+      <div class="card-gold" style="margin-bottom:8px;">
+        <p style="font-size:11.5px;"><strong>Produksi Energi Estimasi (2.876 MW, CF 17,81%):</strong><br>2.876 × 8.760 × 0,1781 ≈ <strong>4.484 GWh/tahun</strong></p>
+      </div>
+      <table style="font-size:10.5px;">
+        <thead><tr><th>Sumber Pendapatan</th><th>Asumsi Harga</th><th>Pendapatan/Tahun</th></tr></thead>
+        <tbody>
+          <tr><td>Tarif Jual Listrik PLN (avg)</td><td>Rp 1.100/kWh</td><td>~Rp 4,93 T/tahun</td></tr>
+          <tr><td>+ REC (Renewable Energy Certificate)</td><td>USD 0,5–2/MWh</td><td>~Rp 0,04–0,14 T/tahun</td></tr>
+          <tr style="background:var(--gold-pale);"><td><strong>Total Pendapatan/Tahun</strong></td><td>—</td><td><strong>~Rp 4,97–5,07 T/tahun</strong></td></tr>
+        </tbody>
+      </table>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:8px;">
+        <div class="card-red" style="text-align:center; padding:10px; margin-bottom:0;">
+          <div style="font-size:11px; font-weight:700; color:var(--red);">20 Tahun</div>
+          <div style="font-size:16px; font-weight:900; color:var(--navy);">Rp 99,4 T</div>
+          <div style="font-size:10px; color:var(--text-light);">Pendapatan kumulatif</div>
+          <div style="font-size:11px; font-weight:700; color:var(--green); margin-top:3px;">+Rp 56,7 T surplus</div>
+        </div>
+        <div class="card-blue" style="text-align:center; padding:10px; margin-bottom:0;">
+          <div style="font-size:11px; font-weight:700; color:var(--blue-mid);">25 Tahun</div>
+          <div style="font-size:16px; font-weight:900; color:var(--navy);">Rp 124 T</div>
+          <div style="font-size:10px; color:var(--text-light);">Pendapatan kumulatif</div>
+          <div style="font-size:11px; font-weight:700; color:var(--green); margin-top:3px;">+Rp 77,4 T surplus</div>
+        </div>
+        <div class="card-green" style="text-align:center; padding:10px; margin-bottom:0;">
+          <div style="font-size:11px; font-weight:700; color:var(--green);">30 Tahun</div>
+          <div style="font-size:16px; font-weight:900; color:var(--navy);">Rp 149 T</div>
+          <div style="font-size:10px; color:var(--text-light);">Pendapatan kumulatif</div>
+          <div style="font-size:11px; font-weight:700; color:var(--green); margin-top:3px;">+Rp 98,4 T surplus</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 15: SECTION BREAK — MULTIPLIER
+══════════════════════════════════════ -->
+<div class="slide" id="slide-15">
+  <div class="section-slide">
+    <div class="section-num">04</div>
+    <h2 style="font-size:clamp(22px,3.2vw,40px); font-weight:900; margin-bottom:12px; color:var(--navy);">Multiplier Ekonomi<br><span style="color:var(--gold);">& Dampak Makro</span></h2>
+    <div class="gold-divider"></div>
+    <p style="font-size:14px; color:var(--text-mid); max-width:580px; margin-top:12px;">Analisis Input-Output Leontief (Tabel IO BPS 2020, 185 Sektor) — mengukur dampak langsung dan tidak langsung investasi PLTS Terapung terhadap output nasional, NTB, lapangan kerja, dan emisi karbon</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 16: MULTIPLIER METODOLOGI
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-16">
+  <div class="slide-header light">
+    <span class="slide-num">16</span>
+    <h2 class="slide-title" style="color:var(--navy);">Metodologi Multiplier Ekonomi — Leontief IO</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Sektor Proxy yang Digunakan</h3>
+      <div class="card" style="border-left:4px solid var(--blue-mid); margin-bottom:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <strong style="font-size:12px; color:var(--blue-mid);">Sektor 145 — Listrik</strong>
+          <span class="badge badge-blue">40% alokasi</span>
+        </div>
+        <p style="font-size:11.5px; color:var(--text-mid);">Mewakili <strong>fase operasional</strong> PLTS Terapung. BL = 1,5748 → Peringkat #1 dari 185 sektor</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--green); margin-bottom:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <strong style="font-size:12px; color:var(--green);">Sektor 150 — Bangunan & Instalasi</strong>
+          <span class="badge badge-green">35% alokasi</span>
+        </div>
+        <p style="font-size:11.5px; color:var(--text-mid);">Mewakili <strong>fase konstruksi dan instalasi</strong>. BL = 1,1484 → Peringkat #48</p>
+      </div>
+      <div class="note-box">
+        Alokasi sisa 25% mencerminkan komponen pengadaan & jasa lainnya yang terdistribusi pada sektor pendukung.
+      </div>
+      <div class="note-box" style="margin-top:6px;">
+        <strong>Dasar Alokasi 40%/35%/25%:</strong> Proporsi ini diturunkan dari struktur biaya CAPEX+OPEX aktual PLTS Terapung: fase operasional (listrik) mendominasi nilai seumur hidup aset (~40%), fase konstruksi & sipil ~35%, sisanya pengadaan & administrasi. Bukan alokasi listrik semua 100% karena multiplier perlu mencerminkan seluruh rantai nilai investasi, bukan hanya output energi.
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Interpretasi Linkage</h3>
+      <div class="card-gold" style="margin-bottom:8px;">
+        <strong style="font-size:12px; color:var(--navy);">Backward Linkage (BL) &gt; 1 — Trigger Ekonomi Hulu</strong>
+        <p style="font-size:11.5px; margin-top:5px;">Semakin tinggi BL → semakin kuat stimulasi sektor pemasok. BL Sektor Listrik = <strong>1,5748</strong> — peringkat #1 tertinggi dari 185 sektor</p>
+      </div>
+      <div class="card-green" style="margin-bottom:8px;">
+        <strong style="font-size:12px; color:var(--green);">Forward Linkage (FL) &gt; 1 — Fondasi Ekonomi Hilir</strong>
+        <p style="font-size:11.5px; margin-top:5px;">FL Sektor Listrik = <strong>3,4336</strong> (peringkat #4). Output listrik menjadi input hampir seluruh aktivitas ekonomi modern.</p>
+        <p style="font-size:11px; color:var(--text-mid); margin-top:4px;"><em>Catatan: Sesuai diskusi, Forward Linkage tidak dimasukkan dalam perhitungan multiplier kajian ini karena bersifat potensi hilir, bukan dampak langsung investasi PLTS Terapung itu sendiri.</em></p>
+      </div>
+      <div class="note-box blue">
+        <strong>Cakupan Multiplier:</strong> Hasil analisis mencakup dampak <strong>langsung</strong> (output PLTS sendiri) dan <strong>tidak langsung</strong> (stimulasi sektor pemasok). Dampak <em>induced</em> (spending rumah tangga) <strong>tidak dimasukkan</strong> sesuai kesepakatan expert.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 17: HASIL MULTIPLIER
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-17">
+  <div class="slide-header blue">
+    <span class="slide-num">17</span>
+    <h2 class="slide-title" style="color:var(--navy);">Hasil Analisis Multiplier — Sektor Kunci Perekonomian</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body">
+    <table style="font-size:11px; margin-bottom:12px;">
+      <thead>
+        <tr><th>Indikator Multiplier</th><th>Sektor 145 (Listrik)</th><th>Sektor 150 (Konstruksi)</th><th>Gabungan PLTS</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Keterkaitan Ke Belakang (BL)</td><td style="color:var(--gold); font-weight:700;">1,5748</td><td>1,1484</td><td>1,3616</td></tr>
+        <tr><td><strong>Peringkat BL (185 sektor)</strong></td><td><strong style="color:var(--gold);">#1 ★</strong></td><td>#48</td><td>—</td></tr>
+        <tr><td>Keterkaitan Ke Depan (FL)</td><td style="color:var(--blue-mid);">3,4336</td><td>0,6824</td><td>2,0580</td></tr>
+        <tr><td>Peringkat FL (185 sektor)</td><td style="color:var(--blue-mid);">#4</td><td>#107</td><td>—</td></tr>
+        <tr><td><strong>Output Multiplier (Direct+Indirect)</strong></td><td><strong style="color:var(--blue-mid);">2,9454</strong></td><td>2,1479</td><td><strong style="color:var(--blue-mid);">2,5466</strong></td></tr>
+        <tr>
+          <td>Income Multiplier (Naker)<br><span style="font-size:10px; color:var(--text-light);">Sumber: SAM BPS 2020, diturunkan dari koef. kompensasi tenaga kerja per sektor</span></td>
+          <td>0,2406</td><td>0,2793</td><td>0,2600</td>
+        </tr>
+        <tr>
+          <td>NTB Multiplier<br><span style="font-size:10px; color:var(--text-light);">Nilai Tambah Bruto — rasio NTB/output sektoral dari Tabel IO BPS 2020</span></td>
+          <td>0,9940</td><td>0,9762</td><td>0,9851</td>
+        </tr>
+        <tr><td><strong>Klasifikasi Posisi</strong></td><td><strong style="color:var(--gold);">SEKTOR KUNCI</strong></td><td>Manufaktur/Konstruksi</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="card-gold">
+      <p style="font-size:12px;"><strong>📊 Estimasi Dampak Total — 37 Waduk Prioritas Utama (2.876 MW):</strong><br>
+      Total investasi ~<strong>Rp 26,8 triliun</strong> | Output Ekonomi (Direct+Indirect): <strong>~Rp 68,3 triliun</strong> | Tambahan NTB: <strong>~Rp 26,4 triliun</strong><br>
+      Lapangan Kerja Konstruksi: <strong>~18.500–24.000 orang</strong> (diturunkan dari Income Multiplier + koef. naker BPS) | Operasi Permanen: <strong>~7.350 orang</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 18: CARBON & EMISI
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-18">
+  <div class="slide-header light">
+    <span class="slide-num">18</span>
+    <h2 class="slide-title" style="color:var(--navy);">Dampak Emisi Karbon — PLTS vs PLTU Batubara</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Emisi CO₂ yang Dihemat</h3>
+      <div class="card-blue" style="margin-bottom:8px;">
+        <p style="font-size:12px;"><strong>Asumsi Grid Emission Factor Indonesia:</strong> 0,857 kg CO₂/kWh (PLN Grid Emission Factor 2023)</p>
+        <p style="font-size:12px; margin-top:6px;"><strong>Produksi 37 lokasi:</strong> 4.484 GWh/tahun</p>
+        <p style="font-size:12px; margin-top:4px;"><strong>Emisi dihemat/tahun:</strong> 4.484 GWh × 0,857 = <strong>~3,84 juta tCO₂/tahun</strong></p>
+      </div>
+      <table style="font-size:11px;">
+        <thead><tr><th>Skenario Harga Karbon</th><th>Nilai Karbon/Tahun</th><th>Kumulatif 25 Thn</th></tr></thead>
+        <tbody>
+          <tr><td>Lemah (Bursa IDX 2025 ~USD 3/tCO₂)</td><td>~Rp 198 Miliar</td><td>~Rp 4,9 T</td></tr>
+          <tr style="background:var(--blue-ultra);"><td><strong>Baseline (USD 25/tCO₂)</strong></td><td>~Rp 1,65 T</td><td>~Rp 41,2 T</td></tr>
+          <tr><td>Optimistis (USD 80/tCO₂)</td><td>~Rp 5,27 T</td><td>~Rp 131,8 T</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Perbandingan PLTS vs PLTU Batubara (2.876 MW)</h3>
+      <div class="card-red" style="margin-bottom:8px;">
+        <strong style="font-size:12px; color:var(--red);">PLTU Batubara 2.876 MW — Emisi per Tahun</strong>
+        <p style="font-size:12px; margin-top:5px;">PLTU (CF ~60%): 2.876 MW × 8.760 × 0,60 × 0,9 kgCO₂/kWh ≈ <strong>13,6 juta tCO₂/tahun</strong></p>
+      </div>
+      <div class="card-green" style="margin-bottom:8px;">
+        <strong style="font-size:12px; color:var(--green);">PLTS Terapung 2.876 MW — Emisi per Tahun</strong>
+        <p style="font-size:12px; margin-top:5px;">~0 emisi operasional. Lifecycle emissions: 20–50 gCO₂eq/kWh (IPCC) vs PLTU 820–1.000 gCO₂eq/kWh</p>
+      </div>
+      <div class="note-box">
+        <strong>Catatan Slide 15 sebelumnya:</strong> "Dampak pada LCOE efektif" bukan berarti emisi karbon mengubah LCOE PLTS — keduanya memang berbeda. Yang dimaksud adalah: jika harga karbon dikenakan pada PLTU melalui SPE (Sistem Perdagangan Emisi), maka LCOE <em>efektif</em> PLTU meningkat, memperlebar gap kompetitif PLTS. LCOE PLTS sendiri tidak berubah.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 19: TKDN & INDUSTRIALISASI
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-19">
+  <div class="slide-header blue">
+    <span class="slide-num">19</span>
+    <h2 class="slide-title" style="color:var(--navy);">Skenario Industrialisasi & Penguatan TKDN</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div class="card" style="border-top:4px solid var(--blue-mid);">
+          <div style="font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; margin-bottom:5px;">Baseline — 2025–2027</div>
+          <div class="mini-bar-wrap" style="margin-bottom:3px;"><div class="mini-bar-label" style="width:80px;">TKDN Target</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:35%;"></div></div><div class="mini-bar-val" style="color:var(--blue-mid);">30–40%</div></div>
+          <p style="font-size:11px; color:var(--text-mid);">Sipil, instalasi, perizinan — komponen yang sudah bisa dilokalisasi saat ini</p>
+        </div>
+        <div class="card-gold">
+          <div style="font-size:10px; font-weight:700; color:var(--text-mid); text-transform:uppercase; margin-bottom:5px;">TKDN Optimistis — 2028–2031</div>
+          <div class="mini-bar-wrap" style="margin-bottom:3px;"><div class="mini-bar-label" style="width:80px;">TKDN Target</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:60%; background:var(--gold);"></div></div><div class="mini-bar-val" style="color:var(--navy);">55–65%</div></div>
+          <p style="font-size:11px; color:var(--text-mid);">+ Modul PV domestik (polysilicon refinery), struktur terapung lokal</p>
+        </div>
+        <div class="card-green">
+          <div style="font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; margin-bottom:5px;">Industri DN 100% — 2032–2040</div>
+          <div class="mini-bar-wrap" style="margin-bottom:3px;"><div class="mini-bar-label" style="width:80px;">TKDN Target</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:90%; background:var(--green);"></div></div><div class="mini-bar-val" style="color:var(--green);">90%+</div></div>
+          <p style="font-size:11px; color:var(--text-mid);">+ Inverter, BESS, SCADA, modul PV full lokal</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card-gold" style="margin-bottom:10px;">
+        <h3 style="font-size:12px; color:var(--navy); margin-bottom:5px;">💡 Dampak TKDN pada Multiplier Effect</h3>
+        <p style="font-size:12px;">Peningkatan TKDN mengurangi kebocoran impor — lebih banyak nilai tertahan di dalam negeri. Ini <strong>meningkatkan jumlah investasi domestik efektif</strong>, bukan mengubah angka Output Multiplier sektoral itu sendiri (yang tetap ~2,9× untuk sektor listrik sesuai IO BPS 2020).</p>
+        <p style="font-size:12px; margin-top:5px;">Dengan TKDN 90%+, investasi Rp 26,8 T × (90%/30%) lebih banyak yang "tersirkulasi" di dalam negeri → output ekonomi terinduksi bisa setara <strong>Rp 75–100 T</strong> dari total portofolio 108 waduk.</p>
+      </div>
+      <div class="note-box blue">
+        <strong>🇮🇳 Pelajaran dari India: PM-KUSUM & PLI</strong><br>Industri manufaktur panel India berkembang dari 90% impor (2020) → proyeksi 45% impor (2026). Subsidi PLI (Production-Linked Incentive) India: sekitar USD 0,02–0,05/Wp untuk produsen ≥500 MW/tahun.<br><span style="font-size:10px; color:var(--text-light);">Sumber: Ministry of New and Renewable Energy India (MNRE) — Annual Report 2023–24; PLI Scheme for White Goods (AC & LED) sebagai model referensi struktur subsidi.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 20: MANAJEMEN RISIKO
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-20">
+  <div class="slide-header blue">
+    <span class="slide-num">20</span>
+    <h2 class="slide-title" style="color:var(--navy);">Manajemen Risiko Utama</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <div class="risk-item-row">
+        <div class="risk-dot risk-hi" style="width:12px; height:12px; border-radius:50%; flex-shrink:0; margin-top:4px;"></div>
+        <div><div style="font-size:13px; font-weight:700;">Risiko Kurs & Impor</div><div style="font-size:11px; color:var(--text-light);">Porsi impor 57,3% — rentan depresiasi rupiah</div><div style="font-size:11px; color:var(--blue-mid); margin-top:3px;">Mitigasi: CCIRS + Natural Hedging PPA berindeks USD</div></div>
+      </div>
+      <div class="risk-item-row">
+        <div class="risk-dot risk-hi" style="width:12px; height:12px; border-radius:50%; flex-shrink:0; margin-top:4px;"></div>
+        <div><div style="font-size:13px; font-weight:700;">Risiko Rantai Pasok Panel</div><div style="font-size:11px; color:var(--text-light);">&gt;90% modul PV dari Tiongkok — eksposur geopolitik & gangguan global</div><div style="font-size:11px; color:var(--blue-mid); margin-top:3px;">Mitigasi: Diversifikasi sumber (India, Korea, Eropa) + akselerasi industri lokal</div></div>
+      </div>
+      <div class="risk-item-row">
+        <div class="risk-dot risk-md" style="width:12px; height:12px; border-radius:50%; flex-shrink:0; margin-top:4px;"></div>
+        <div><div style="font-size:13px; font-weight:700;">Risiko Perizinan Lintas Kementerian</div><div style="font-size:11px; color:var(--text-light);">Koordinasi ESDM–PUPR–ATR/BPN–KLHK untuk waduk KemenPU</div><div style="font-size:11px; color:var(--blue-mid); margin-top:3px;">Mitigasi: Single window permitting mechanism khusus PLTS Terapung</div></div>
+      </div>
+      <div class="risk-item-row">
+        <div class="risk-dot risk-md" style="width:12px; height:12px; border-radius:50%; flex-shrink:0; margin-top:4px;"></div>
+        <div><div style="font-size:13px; font-weight:700;">Risiko Intermitensi & Grid Stability</div><div style="font-size:11px; color:var(--text-light);">CF rata-rata 17,81% — butuh manajemen dispatch aktif</div><div style="font-size:11px; color:var(--blue-mid); margin-top:3px;">Mitigasi: Integrasi PLTA eksisting + BESS strategis direncanakan sejak awal</div></div>
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Matriks Risiko</h3>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:12px;">
+        <div style="padding:8px; background:#fdf3f2; border-radius:5px; text-align:center; font-size:11px; font-weight:700; color:var(--red);">Kurs</div>
+        <div style="padding:8px; background:#fdf3f2; border-radius:5px; text-align:center; font-size:11px; font-weight:700; color:var(--red);">Rantai Pasok</div>
+        <div style="padding:8px; background:var(--gold-pale); border-radius:5px; text-align:center; font-size:11px; font-weight:700; color:#8a6000;">Perizinan</div>
+        <div style="padding:8px; background:var(--gold-pale); border-radius:5px; text-align:center; font-size:11px; font-weight:700; color:#8a6000;">Intermitensi</div>
+        <div style="padding:8px; background:#f0faf4; border-radius:5px; text-align:center; font-size:11px; font-weight:700; color:var(--green);">TKDN</div>
+        <div style="padding:8px; background:#f0faf4; border-radius:5px; text-align:center; font-size:11px; font-weight:700; color:var(--green);">O&M Skill</div>
+      </div>
+      <div class="note-box blue">
+        <strong>🔄 Sinergi PLTS–PLTA sebagai Buffer:</strong> Jatiluhur, Karangkates, dan Batu Tegi dapat menjadi penyangga natural intermittency <strong>tanpa investasi BESS tambahan</strong> — meningkatkan fleksibilitas operasi sistem kelistrikan secara signifikan.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 21: SUBSIDI PLN — PENGHEMATAN
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-21">
+  <div class="slide-header light">
+    <span class="slide-num">21</span>
+    <h2 class="slide-title" style="color:var(--navy);">Potensi Penghematan Subsidi — LCOE PLTS vs LCOE PLN per Region</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Metodologi Perbandingan</h3>
+      <div class="note-box blue" style="margin-bottom:10px;">
+        <strong>Pendekatan:</strong> LCOE PLTS Terapung per lokasi dibandingkan dengan LCOE sistem PLN di region yang menaungi lokasi tersebut. Selisih positif = subsidi/biaya yang dapat dihemat PLN per kWh.
+      </div>
+      <table style="font-size:10.5px;">
+        <thead><tr><th>Region PLN</th><th>LCOE PLN (USD sen/kWh)</th><th>LCOE PLTS Terapung 2030</th><th>Selisih (Penghematan)</th></tr></thead>
+        <tbody>
+          <tr><td>Jawa–Madura–Bali (Jamali)</td><td style="color:var(--red);">7,0–8,5</td><td style="color:var(--green);">3,5–3,8</td><td style="color:var(--green); font-weight:700;">+3,2–4,7 sen/kWh</td></tr>
+          <tr><td>Sumatera</td><td style="color:var(--red);">8,5–10,0</td><td style="color:var(--green);">3,6–3,9</td><td style="color:var(--green); font-weight:700;">+4,6–6,1 sen/kWh</td></tr>
+          <tr><td>Kalimantan</td><td style="color:var(--red);">10,0–13,0</td><td style="color:var(--gold);">4,0–4,3</td><td style="color:var(--green); font-weight:700;">+5,7–8,7 sen/kWh</td></tr>
+          <tr><td>Sulawesi</td><td style="color:var(--red);">9,0–12,0</td><td style="color:var(--green);">3,5–3,8</td><td style="color:var(--green); font-weight:700;">+5,2–8,2 sen/kWh</td></tr>
+          <tr><td>Maluku–Papua–NTT</td><td style="color:var(--red);">15,0–25,0</td><td style="color:var(--gold);">4,5–5,5</td><td style="color:var(--green); font-weight:700;">+9,5–19,5 sen/kWh</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10px; color:var(--text-light); margin-top:5px;">* LCOE PLN per region: estimasi berdasarkan biaya produksi PLN yang dipublikasikan dalam Laporan Tahunan PLN dan Statistik Ketenagalistrikan ESDM. Perlu diverifikasi dengan data LCOE resmi per Unit Induk PLN.</div>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:8px;">Estimasi Total Penghematan — 37 Lokasi</h3>
+      <div class="card-green" style="margin-bottom:8px;">
+        <p style="font-size:12px;"><strong>Produksi total 37 lokasi:</strong> ~4.484 GWh/tahun</p>
+        <p style="font-size:12px; margin-top:4px;"><strong>Penghematan biaya produksi rata-rata:</strong> ~USD 4–6 sen/kWh</p>
+        <p style="font-size:12px; margin-top:4px;"><strong>Penghematan/tahun:</strong> ~USD 179–269 juta/tahun<br>≈ <strong>Rp 2,9–4,3 Triliun/tahun</strong></p>
+        <p style="font-size:12px; margin-top:4px;"><strong>Kumulatif 25 tahun:</strong> ≈ <strong>Rp 71–107 Triliun</strong></p>
+      </div>
+      <div class="card-gold">
+        <h3 style="font-size:12px; color:var(--navy); margin-bottom:5px;">Manfaat Tambahan: Pengurangan Subsidi Listrik APBN</h3>
+        <p style="font-size:11.5px;">Setiap penurunan biaya produksi listrik PLN → potensi pengurangan subsidi tarif listrik yang ditanggung APBN. Dengan PLTS Terapung menggantikan PLTU di wilayah terpencil (Kalimantan, Sulawesi, NTT), penghematan subsidi bisa mencapai <strong>2–5× lipat</strong> dibanding wilayah Jamali.</p>
+      </div>
+      <div class="note-box" style="margin-top:6px;">
+        Angka ini bersifat indikatif. Verifikasi detail membutuhkan data LCOE resmi per lokasi dari PLN Wilayah/Unit Induk terkait — yang perlu menjadi bagian dari feasibility study Fase 3.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 22: KESIMPULAN UTAMA
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-33">
+  <div class="slide-header blue">
+    <span class="slide-num">33</span>
+    <h2 class="slide-title" style="color:var(--navy);">5 Kesimpulan Utama — Kajian Fase 2</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body">
+    <ul style="list-style:none; display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:0;">
+      <li style="display:flex; gap:12px; align-items:center; padding:14px 16px; border-radius:7px; background:var(--blue-ultra); border-left:4px solid var(--green);">
+        <div style="width:32px; height:32px; border-radius:50%; background:var(--green); color:white; font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">1</div>
+        <div style="font-size:13px;"><strong>LCOE Paling Kompetitif</strong> — 3,5–3,8 USD sen/kWh (2030), lebih murah 33–78% vs PLTU Batubara. Stabilitas biaya jangka panjang superior karena nol eksposur harga bahan bakar.</div>
+      </li>
+      <li style="display:flex; gap:12px; align-items:center; padding:14px 16px; border-radius:7px; background:var(--gold-pale); border-left:4px solid var(--gold);">
+        <div style="width:32px; height:32px; border-radius:50%; background:var(--gold); color:var(--navy); font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">2</div>
+        <div style="font-size:13px;"><strong>Eksposur Kurs Signifikan</strong> — CAPEX USD 583,5/kW dengan porsi impor 57,3%. Setiap pelemahan Rp 1.000 dari baseline menambah CAPEX total 37 lokasi ±Rp 961 miliar. Instrumen lindung nilai wajib.</div>
+      </li>
+      <li style="display:flex; gap:12px; align-items:center; padding:14px 16px; border-radius:7px; background:var(--blue-ultra); border-left:4px solid var(--blue-mid);">
+        <div style="width:32px; height:32px; border-radius:50%; background:var(--blue-mid); color:white; font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">3</div>
+        <div style="font-size:13px;"><strong>Sektor Kunci Perekonomian</strong> — BL #1 dari 185 sektor (BL = 1,5748). Setiap Rp 1 investasi PLTS Terapung menghasilkan <strong>Rp 2,94 output total nasional</strong> (direct + indirect).</div>
+      </li>
+      <li style="display:flex; gap:12px; align-items:center; padding:14px 16px; border-radius:7px; background:var(--blue-ultra); border-left:4px solid var(--navy);">
+        <div style="width:32px; height:32px; border-radius:50%; background:var(--navy); color:white; font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">4</div>
+        <div style="font-size:13px;"><strong>Profitabilitas Jangka Panjang Terjamin</strong> — 37 lokasi prioritas dengan total investasi Rp 26,8 T menghasilkan surplus Rp 56,7–98,4 T (tergantung umur panel 20–30 tahun). Emisi terhindarkan: ~3,84 juta tCO₂/tahun.</div>
+      </li>
+      <li style="display:flex; gap:12px; align-items:center; padding:14px 16px; border-radius:7px; background:#f0faf4; border-left:4px solid var(--green);">
+        <div style="width:32px; height:32px; border-radius:50%; background:var(--green); color:white; font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">5</div>
+        <div style="font-size:13px;"><strong>Penghematan Subsidi PLN</strong> — LCOE PLTS Terapung lebih rendah USD 3,2–19,5 sen/kWh dibanding LCOE PLN per region. Potensi penghematan kumulatif 25 tahun untuk 37 lokasi: <strong>Rp 71–107 Triliun</strong>.</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 23: REKOMENDASI STRATEGIS
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-34">
+  <div class="slide-header light">
+    <span class="slide-num">34</span>
+    <h2 class="slide-title" style="color:var(--navy);">Rekomendasi Strategis untuk PLN</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <div class="rec-card"><div class="rec-num gold-bg">1</div><div><strong style="font-size:12px;">Prioritaskan 37 Waduk Klaster Prioritas Utama (2025–2027)</strong><br><span style="font-size:11px; color:var(--text-mid);">~2.877 MW — manfaatkan kesiapan infrastruktur & minimasi biaya interkoneksi via PLTA eksisting</span></div></div>
+      <div class="rec-card"><div class="rec-num gold-bg">2</div><div><strong style="font-size:12px;">Green Financing & ESG Bond</strong><br><span style="font-size:11px; color:var(--text-mid);">Manfaatkan ADB, World Bank, JICA — turunkan WACC dan perluas basis investor ESG global</span></div></div>
+      <div class="rec-card"><div class="rec-num gold-bg">3</div><div><strong style="font-size:12px;">Implementasikan Hedging Kurs (CCIRS / Forward Contract)</strong><br><span style="font-size:11px; color:var(--text-mid);">Terutama modul surya dan inverter (100% impor) — kunci kepastian anggaran tahap EPC</span></div></div>
+    </div>
+    <div class="col">
+      <div class="rec-card"><div class="rec-num">4</div><div><strong style="font-size:12px;">Dorong Industri Pontoon/HDPE & Trafo Distribusi Lokal</strong><br><span style="font-size:11px; color:var(--text-mid);">Target TKDN 55%+ pada 2028–2031 — fokus komponen yang realistis dilokalisasi tahap awal</span></div></div>
+      <div class="rec-card"><div class="rec-num">5</div><div><strong style="font-size:12px;">Manfaatkan Sinergi PLTS–PLTA Eksisting</strong><br><span style="font-size:11px; color:var(--text-mid);">Jatiluhur, Karangkates, Batu Tegi — buffer natural intermittency tanpa investasi BESS tambahan</span></div></div>
+      <div class="rec-card"><div class="rec-num">6</div><div><strong style="font-size:12px;">Tetapkan Kontrak LCOE per Lokasi + Komparasi LCOE PLN</strong><br><span style="font-size:11px; color:var(--text-mid);">Klarifikasi LCOE resmi per Unit Induk PLN untuk menghitung penghematan subsidi aktual per lokasi — input kunci untuk Feasibility Study Fase 3</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 24: ROADMAP & KPI
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-35">
+  <div class="slide-header blue">
+    <span class="slide-num">35</span>
+    <h2 class="slide-title" style="color:var(--navy);">Roadmap Implementasi 2025–2034 & KPI Monitoring</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body">
+    <div class="roadmap" style="margin-bottom:14px;">
+      <div class="roadmap-step">
+        <div class="roadmap-year">2025–2027</div>
+        <div class="roadmap-title">Fase 1: Kickoff</div>
+        <div class="roadmap-desc">37 waduk Prioritas • 2.877 MW • Lock-in EPC • Green bond perdana • Sinergi PLTA</div>
+        <div style="margin-top:6px;"><span class="badge badge-gold" style="font-size:10px;">~Rp 26,8 T</span></div>
+      </div>
+      <div class="roadmap-step">
+        <div class="roadmap-year">2028–2031</div>
+        <div class="roadmap-title">Fase 2: Ekspansi</div>
+        <div class="roadmap-desc">Klaster Berikutnya • +5.000 MW • TKDN 55%+ • Industri pontoon lokal</div>
+        <div style="margin-top:6px;"><span class="badge badge-blue" style="font-size:10px;">~Rp 47 T</span></div>
+      </div>
+      <div class="roadmap-step">
+        <div class="roadmap-year">2032–2034</div>
+        <div class="roadmap-title">Fase 3: Penguatan</div>
+        <div class="roadmap-desc">108 waduk penuh • 13.876 MWp • TKDN 90%+ • Inverter & BESS lokal</div>
+        <div style="margin-top:6px;"><span class="badge badge-green" style="font-size:10px;">~Rp 129,6 T total</span></div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div>
+        <h3 style="color:var(--navy); font-size:13px; margin-bottom:6px;">KPI Teknis & Finansial</h3>
+        <table style="font-size:10.5px;">
+          <thead><tr><th>Indikator</th><th>Target</th><th>Frekuensi</th></tr></thead>
+          <tbody>
+            <tr><td>Capacity Factor Aktual</td><td>≥17,81%</td><td>Bulanan</td></tr>
+            <tr><td>CAPEX Realisasi vs Anggaran</td><td>Deviasi &lt;5%</td><td>Per Milestone</td></tr>
+            <tr><td>LCOE Aktual per Waduk</td><td>≤3,8 USD sen/kWh</td><td>Tahunan</td></tr>
+            <tr><td>Availability Factor</td><td>≥95%</td><td>Bulanan</td></tr>
+            <tr><td>Hedging Coverage Ratio</td><td>≥80% CAPEX impor</td><td>Triwulan</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 style="color:var(--navy); font-size:13px; margin-bottom:6px;">KPI Ekonomi & Industri</h3>
+        <table style="font-size:10.5px;">
+          <thead><tr><th>Indikator</th><th>Target</th><th>Horizon</th></tr></thead>
+          <tbody>
+            <tr><td>TKDN Aktual per Proyek</td><td>≥40% (2027)</td><td>Per COD</td></tr>
+            <tr><td>Lapangan Kerja Langsung</td><td>18.500–24.000</td><td>Per Fase</td></tr>
+            <tr><td>Pengurangan Emisi CO₂</td><td>≥3,84 juta tCO₂/thn</td><td>Tahunan</td></tr>
+            <tr><td>Penghematan vs LCOE PLN</td><td>≥USD 3 sen/kWh</td><td>Per COD</td></tr>
+            <tr><td>Rasio Pembiayaan Hijau</td><td>≥30% dari CAPEX</td><td>Per Fase</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 25: SECTION BREAK — ANALISIS MENDALAM & IMPLIKASI STRATEGIS
+══════════════════════════════════════ -->
+<div class="slide" id="slide-22">
+  <div class="section-slide">
+    <div class="section-num">06</div>
+    <h2 style="font-size:clamp(22px,3.2vw,40px); font-weight:900; margin-bottom:12px; color:var(--navy);">Analisis Mendalam<br><span style="color:var(--gold);">& Implikasi Strategis</span></h2>
+    <div class="gold-divider"></div>
+    <p style="font-size:14px; color:var(--text-mid); max-width:620px; margin-top:14px; line-height:1.8;">5 Insight analisis mendalam: benchmark global FPV, lesson learned India &amp; China, dekomposisi Capacity Factor, peta pendanaan hijau, dan tornado analysis variabel kritis LCOE — dilanjutkan implikasi strategis industri hulu, roadmap lokalisasi komponen, kebutuhan BESS, dan arsitektur hibrida PLTS–PLTA–BESS</p>
+    <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap;">
+      <span style="background:var(--blue-pale); color:var(--navy); font-size:11px; font-weight:700; padding:6px 14px; border-radius:4px; border:1.5px solid var(--blue-mid);">📊 Slide 23–27: Insight 1–5</span>
+      <span style="background:var(--gold-pale); color:var(--navy); font-size:11px; font-weight:700; padding:6px 14px; border-radius:4px; border:1.5px solid var(--gold);">🏭 Slide 28–32: Industri Hulu &amp; BESS</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 26: INSIGHT 1 — BENCHMARK GLOBAL FPV
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-23">
+  <div class="slide-header light">
+    <span class="slide-num">23</span>
+    <h2 class="slide-title" style="color:var(--navy);">Insight 1 — Benchmark Global: FPV vs. Land-Based PV</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body" style="padding-top:14px;">
+    <table style="font-size:11px; margin-bottom:12px;">
+      <thead>
+        <tr><th>Negara / Proyek</th><th>Kapasitas</th><th>CAPEX (USD/kW)</th><th>LCOE (USD sen/kWh)</th><th>CF Aktual</th><th>Keunggulan Utama</th></tr>
+      </thead>
+      <tbody>
+        <tr style="background:var(--blue-ultra);"><td><strong>🇮🇩 Indonesia — Cirata</strong></td><td>192 MWp</td><td style="color:var(--navy);font-weight:700;">672</td><td style="color:var(--green);font-weight:700;">3,5–3,8</td><td>17,81%</td><td>Sinergi PLTA, pendinginan air +8,3%</td></tr>
+        <tr><td>🇨🇳 China — Anhui (Three Gorges)</td><td>150 MW</td><td>480–520</td><td>2,8–3,2</td><td>16–18%</td><td>Skala massal, industri DN 100%</td></tr>
+        <tr><td>🇳🇱 Belanda — Bomhofsplas</td><td>27 MWp</td><td>820–900</td><td>4,2–4,8</td><td>11–13%</td><td>Land scarcity premium; grid padat</td></tr>
+        <tr><td>🇰🇷 Korea Selatan — Hapcheon Dam</td><td>41 MW</td><td>750–800</td><td>3,8–4,4</td><td>14–16%</td><td>Kebijakan REC premium, subsidi FiT</td></tr>
+        <tr><td>🇮🇳 India — Ramagundam (NTPC)</td><td>100 MW</td><td>560–610</td><td>3,2–3,6</td><td>19–21%</td><td>Irradiasi tinggi, cost reduction PLI</td></tr>
+        <tr><td>🇸🇬 Singapura — Tengeh Reservoir</td><td>60 MWp</td><td>1.050–1.200</td><td>5,0–6,2</td><td>15–17%</td><td>Density kritis; land cost pengganti</td></tr>
+        <tr><td>🇧🇷 Brasil — São Francisco (CHESF)</td><td>5 MW (pilot)</td><td>700–780</td><td>3,9–4,5</td><td>20–24%</td><td>Irradiasi Amazon; sumber daya hidro</td></tr>
+        <tr style="background:var(--gold-pale);"><td><strong>📊 Global Average FPV 2024</strong></td><td>—</td><td><strong>600–750</strong></td><td><strong>3,5–5,0</strong></td><td><strong>14–20%</strong></td><td>Bergantung irradiasi & land cost</td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex; gap:10px;">
+      <div class="card-green" style="flex:1.2; margin-bottom:0;">
+        <h3 style="font-size:12px; color:var(--green); margin-bottom:5px;">🏆 Posisi Cirata vs Benchmark</h3>
+        <p style="font-size:12px;">CAPEX Cirata (USD 672/kW) berada di kisaran atas rata-rata global — namun <strong>LCOE tetap kompetitif</strong> karena efek pendinginan air (+8,3% output) dan penghematan interkoneksi dari sinergi PLTA. Benchmark China (USD 480–520/kW) dicapai dengan industri panel lokal mature dan skala >GW/tahun.</p>
+      </div>
+      <div class="card-blue" style="flex:1; margin-bottom:0;">
+        <h3 style="font-size:12px; color:var(--blue-mid); margin-bottom:5px;">📌 Gap yang Dapat Ditutup Indonesia</h3>
+        <p style="font-size:12px;">Jika Indonesia berhasil membangun industri modul PV domestik seperti India (PLI), CAPEX berpotensi turun ke kisaran <strong>USD 520–560/kW</strong> pada 2030 — mendekatkan LCOE ke 2,8–3,2 USD sen/kWh. Potensi penghematan: <strong>~Rp 3,2–5,6 T</strong> untuk 37 lokasi.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 27: INSIGHT 2 — LESSON LEARNED INDIA & CHINA
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-24">
+  <div class="slide-header blue">
+    <span class="slide-num">24</span>
+    <h2 class="slide-title" style="color:var(--navy);">Insight 2 — Lesson Learned: India & China FPV Scale-Up</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <div style="border-top:4px solid #FF9933; border-radius:0 0 8px 8px; background:var(--blue-ultra); padding:12px 14px; margin-bottom:10px;">
+        <div style="font-size:10px; font-weight:700; letter-spacing:1.5px; color:#c07000; text-transform:uppercase; margin-bottom:6px;">🇮🇳 India — PM-KUSUM & Ramagundam Model</div>
+        <ul class="check-list" style="font-size:12px;">
+          <li><strong>NTPC Ramagundam 100 MW</strong> — FPV di atas kanal irigasi; CF 19–21% (irradiasi Telangana tinggi); hemat lahan >40 ha</li>
+          <li><strong>PLI Solar PV 2021</strong> — Insentif USD 0,02–0,05/Wp untuk produsen ≥500 MW/tahun. Hasil: kapasitas modul DN dari 8 GW (2021) → proyeksi 60 GW (2026)</li>
+          <li><strong>Skema Blended Finance</strong> — Kombinasi ADB loan (SOFR + 1,5%) + pinjaman NTPC (state-guaranteed) → WACC efektif 7,2%</li>
+          <li><strong>Single Window Permitting</strong> — Izin PLTS di atas waduk irigasi diselesaikan &lt;90 hari via platform online Ministry of New & Renewable Energy</li>
+        </ul>
+      </div>
+      <div class="note-box blue">
+        <strong>Relevansi untuk Indonesia:</strong> Model PLI India bisa diadaptasi sebagai "Insentif Produksi Panel DN" — target minimum pabrik 500 MW/tahun untuk mendapat subsidi Rp 200–500/Wp dari APBN/KESDM.
+      </div>
+    </div>
+    <div class="col">
+      <div style="border-top:4px solid #DE2910; border-radius:0 0 8px 8px; background:#fff5f5; padding:12px 14px; margin-bottom:10px;">
+        <div style="font-size:10px; font-weight:700; letter-spacing:1.5px; color:#9a0000; text-transform:uppercase; margin-bottom:6px;">🇨🇳 China — Three Gorges FPV Strategy</div>
+        <ul class="check-list" style="font-size:12px;">
+          <li><strong>150 MW Anhui & 550 MW Dezhou</strong> — Scale-up agresif berbasis industri panel DN mature; CAPEX turun USD 480–520/kW (50% lebih murah dari Eropa)</li>
+          <li><strong>FPV-Hydro Hybrid</strong> — 62% proyek FPV China dikombinasikan dengan PLTA → frequency regulation tanpa tambahan BESS</li>
+          <li><strong>Standardisasi Pontoon HDPE</strong> — Spesifikasi tunggal nasional → efisiensi produksi meningkat, harga pontoon turun 35% dalam 5 tahun</li>
+          <li><strong>State-Owned Offtake Agreement</strong> — PPA 25 tahun dengan State Grid Corp → bankability penuh; spreads kredit rendah</li>
+        </ul>
+      </div>
+      <div class="card-gold">
+        <h3 style="font-size:12px; color:var(--navy); margin-bottom:5px;">🎯 3 Pelajaran Langsung untuk PLN</h3>
+        <p style="font-size:11.5px;">1. <strong>Standardisasi pontoon/mooring</strong> nasional — satu spesifikasi untuk semua 108 waduk<br>
+        2. <strong>FPV-Hydro hybrid</strong> sebagai default design, bukan opsi<br>
+        3. <strong>Off-take PLN 25 tahun</strong> harus jadi syarat finansiabilitas minimum setiap proyek</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 28: INSIGHT 3 — ANALISIS CF & IRRADIASI
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-25">
+  <div class="slide-header light">
+    <span class="slide-num">25</span>
+    <h2 class="slide-title" style="color:var(--navy);">Insight 3 — Dekomposisi Capacity Factor & Potensi Peningkatan</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body" style="padding-top:14px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:14px;">
+      <div class="card" style="border-top:4px solid var(--green);">
+        <div style="font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Klaster Irradiasi Tinggi</div>
+        <div style="font-size:26px; font-weight:900; color:var(--green); line-height:1;">22–24%</div>
+        <div style="font-size:11px; color:var(--text-mid); margin-top:4px;">NTT, Sulawesi Tengah, Kalimantan Selatan</div>
+        <div class="mini-bar-wrap" style="margin-top:8px; margin-bottom:0;"><div class="mini-bar-label" style="width:70px; font-size:10px;">GHI (kWh/m²/d)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:90%; background:var(--green);"></div></div><div class="mini-bar-val" style="font-size:10px;">5,8–6,2</div></div>
+      </div>
+      <div class="card card-blue" style="border-top:4px solid var(--blue-mid);">
+        <div style="font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Klaster Baseline — Cirata</div>
+        <div style="font-size:26px; font-weight:900; color:var(--blue-mid); line-height:1;">17,81%</div>
+        <div style="font-size:11px; color:var(--text-mid); margin-top:4px;">Jawa Barat, Jawa Tengah — GHI 4,6–5,1</div>
+        <div class="mini-bar-wrap" style="margin-top:8px; margin-bottom:0;"><div class="mini-bar-label" style="width:70px; font-size:10px;">GHI (kWh/m²/d)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:70%; background:var(--blue-mid);"></div></div><div class="mini-bar-val" style="font-size:10px;">4,6–5,1</div></div>
+      </div>
+      <div class="card card-red" style="border-top:4px solid var(--red);">
+        <div style="font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Klaster Irradiasi Rendah</div>
+        <div style="font-size:26px; font-weight:900; color:var(--red); line-height:1;">14–16%</div>
+        <div style="font-size:11px; color:var(--text-mid); margin-top:4px;">Sumatera Utara, Papua — GHI 3,8–4,5</div>
+        <div class="mini-bar-wrap" style="margin-top:8px; margin-bottom:0;"><div class="mini-bar-label" style="width:70px; font-size:10px;">GHI (kWh/m²/d)</div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:50%; background:var(--red);"></div></div><div class="mini-bar-val" style="font-size:10px;">3,8–4,5</div></div>
+      </div>
+    </div>
+    <table style="font-size:11px; margin-bottom:12px;">
+      <thead>
+        <tr><th>Faktor Peningkatan CF</th><th>Estimasi Peningkatan Output</th><th>Biaya Tambahan</th><th>Break-Even Period</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Efek Pendinginan Air (inherent FPV)</strong></td><td style="color:var(--green); font-weight:700;">+5–15% vs land-based</td><td style="color:var(--green);">Nol (inherent)</td><td>Immediate</td></tr>
+        <tr><td>Bifacial Panel (albedo pantulan air)</td><td style="color:var(--green);">+4–8% tambahan</td><td>CAPEX +3–5%</td><td>3–5 tahun</td></tr>
+        <tr><td>Single-Axis Tracker (SAT)</td><td style="color:var(--green);">+12–18%</td><td>CAPEX +8–12%, O&M +2%/thn</td><td>6–9 tahun</td></tr>
+        <tr><td>Cleaning System Otomatis</td><td>+2–3% (meminimalkan soiling loss)</td><td>CAPEX +1–2%</td><td>2–4 tahun</td></tr>
+        <tr style="background:var(--gold-pale);"><td><strong>Potensi CF Optimal (klaster tinggi + bifacial)</strong></td><td><strong style="color:var(--gold);">26–28%</strong></td><td><strong>+8–17% CAPEX</strong></td><td><strong>4–7 tahun</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="note-box blue">
+      <strong>Implikasi LCOE:</strong> Jika 8 dari 37 lokasi prioritas berada di klaster irradiasi tinggi dan menggunakan bifacial panel, LCOE efektif bisa turun ke kisaran <strong>2,8–3,1 USD sen/kWh</strong> — menjadikan Indonesia sebagai salah satu produsen solar termurah global.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 29: INSIGHT 4 — KOMPARASI PENDANAAN HIJAU GLOBAL
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-26">
+  <div class="slide-header blue">
+    <span class="slide-num">26</span>
+    <h2 class="slide-title" style="color:var(--navy);">Insight 4 — Peta Pendanaan Hijau Global & Posisi PLN</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:10px;">Komparasi Instrumen Pendanaan Hijau</h3>
+      <table style="font-size:10.5px; margin-bottom:10px;">
+        <thead><tr><th>Instrumen</th><th>Contoh Issuer</th><th>Coupon/Rate</th><th>Tenor</th><th>Kecocokan PLN</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Green Bond</strong></td><td>PLN 2023 USD 500 Jt</td><td>5,45%</td><td>5–10 thn</td><td style="color:var(--green);">✓ Sudah berpengalaman</td></tr>
+          <tr><td>Sustainability-Linked Bond</td><td>Pertamina, Bank Mandiri</td><td>5,0–6,0%</td><td>5–15 thn</td><td style="color:var(--blue-mid);">▲ Potensial — KPI CO₂</td></tr>
+          <tr><td>ADB ACRF (Concessional)</td><td>ASEAN Clean Energy</td><td>SOFR + 1,2%</td><td>20–25 thn</td><td style="color:var(--green);">✓ Pipeline PLN aktif</td></tr>
+          <tr><td>World Bank/IFC</td><td>RE projects Indonesia</td><td>SOFR + 1,5%</td><td>15–20 thn</td><td style="color:var(--green);">✓ Cirata (IFC)</td></tr>
+          <tr><td>JICA Yen Loan (ODA)</td><td>Indonesia infra</td><td>0,3–0,5% JPY</td><td>30–40 thn</td><td style="color:var(--gold);">◆ Hedging JPY perlu</td></tr>
+          <tr><td>Carbon Credit Revenue (ITMOs)</td><td>JCM Indonesia-Japan</td><td>USD 15–30/tCO₂</td><td>per proyek</td><td style="color:var(--blue-mid);">▲ Perlu registrasi UNFCCC</td></tr>
+          <tr style="background:var(--blue-ultra);"><td><strong>Blended Finance Optimal</strong></td><td>—</td><td><strong>~SOFR + 0,8%</strong></td><td><strong>20–25 thn</strong></td><td style="color:var(--green);"><strong>✓ Target WACC 7–8%</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="note-box green">
+        <strong>Benchmark Blended Finance ASEAN:</strong> Proyek FPV Vietnam (Binh Phuoc 47 MW) berhasil memperoleh blended finance ADB + bilateral (KfW) dengan total WACC efektif 6,8% — lebih rendah 2,2 pp dari WACC PLN baseline 9%.
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:10px;">Simulasi Dampak Struktur Pendanaan pada LCOE</h3>
+      <div style="display:flex; flex-direction:column; gap:9px; margin-bottom:12px;">
+        <div class="sc-box card-red">
+          <div class="sc-lbl" style="color:var(--red);">WACC 11% (Skenario Lemah)</div>
+          <div class="sc-val" style="color:var(--red); font-size:24px;">4,2–4,6</div>
+          <div class="sc-desc">USD sen/kWh — masih kompetitif vs PLTU, margin tipis</div>
+        </div>
+        <div class="sc-box card-blue">
+          <div class="sc-lbl" style="color:var(--blue-mid);">WACC 9% (Baseline PLN)</div>
+          <div class="sc-val" style="color:var(--blue-mid); font-size:24px;">3,5–3,8</div>
+          <div class="sc-desc">USD sen/kWh — referensi kajian</div>
+        </div>
+        <div class="sc-box card-green">
+          <div class="sc-lbl" style="color:var(--green);">WACC 7% (Blended Finance Optimal)</div>
+          <div class="sc-val" style="color:var(--green); font-size:24px;">2,9–3,2</div>
+          <div class="sc-desc">USD sen/kWh — setara level China 2030</div>
+        </div>
+      </div>
+      <div class="card-gold">
+        <h3 style="font-size:12px; color:var(--navy); margin-bottom:5px;">💡 Setiap 1 pp Penurunan WACC = Penghematan Signifikan</h3>
+        <p style="font-size:11.5px;">Penurunan WACC dari 9% → 7% (via blended finance ADB+JICA) berpotensi menurunkan LCOE ~0,5–0,7 USD sen/kWh — setara penghematan biaya produksi <strong>~Rp 2,2–3,1 Triliun selama 25 tahun</strong> untuk portofolio 37 lokasi.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 30: INSIGHT 5 — ANALISIS SENSITIVITAS LANJUTAN
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-27">
+  <div class="slide-header light">
+    <span class="slide-num">27</span>
+    <h2 class="slide-title" style="color:var(--navy);">Insight 5 — Tornado Analysis: Variabel Kritis Penentu LCOE</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body" style="padding-top:14px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+      <div>
+        <h3 style="color:var(--navy); margin-bottom:10px; font-size:13px;">Dampak Perubahan ±20% tiap Variabel terhadap LCOE</h3>
+        <div style="font-size:11.5px; display:flex; flex-direction:column; gap:7px;">
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:3px;"><span style="font-weight:700;">CAPEX (harga modul PV)</span><span style="color:var(--red); font-weight:700;">±0,62 sen/kWh</span></div>
+            <div style="display:flex; gap:2px; height:16px; border-radius:4px; overflow:hidden;">
+              <div style="flex:1; background:linear-gradient(90deg, transparent, var(--red)); border-radius:4px 0 0 4px;"></div>
+              <div style="width:3px; background:var(--navy);"></div>
+              <div style="flex:1; background:linear-gradient(90deg, var(--green), transparent); border-radius:0 4px 4px 0;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-light); margin-top:2px;"><span>CAPEX naik: +0,62</span><span>CAPEX turun: -0,62</span></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:3px;"><span style="font-weight:700;">WACC / Biaya Kapital</span><span style="color:var(--red); font-weight:700;">±0,54 sen/kWh</span></div>
+            <div style="display:flex; gap:2px; height:14px; border-radius:4px; overflow:hidden;">
+              <div style="flex:0.87; background:linear-gradient(90deg, transparent, var(--red));"></div>
+              <div style="width:3px; background:var(--navy);"></div>
+              <div style="flex:0.87; background:linear-gradient(90deg, var(--green), transparent);"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:3px;"><span style="font-weight:700;">Capacity Factor (irradiasi)</span><span style="color:var(--gold); font-weight:700;">±0,41 sen/kWh</span></div>
+            <div style="display:flex; gap:2px; height:12px; border-radius:4px; overflow:hidden;">
+              <div style="flex:0.66; background:linear-gradient(90deg, transparent, var(--red));"></div>
+              <div style="width:3px; background:var(--navy);"></div>
+              <div style="flex:0.66; background:linear-gradient(90deg, var(--green), transparent);"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:3px;"><span style="font-weight:700;">Kurs USD/IDR (komponen impor)</span><span style="color:var(--gold); font-weight:700;">±0,33 sen/kWh</span></div>
+            <div style="display:flex; gap:2px; height:11px; border-radius:4px; overflow:hidden;">
+              <div style="flex:0.53; background:linear-gradient(90deg, transparent, var(--red));"></div>
+              <div style="width:3px; background:var(--navy);"></div>
+              <div style="flex:0.53; background:linear-gradient(90deg, var(--green), transparent);"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:3px;"><span style="font-weight:700;">Degradasi Panel</span><span style="font-weight:700;">±0,18 sen/kWh</span></div>
+            <div style="display:flex; gap:2px; height:9px; border-radius:4px; overflow:hidden;">
+              <div style="flex:0.29; background:linear-gradient(90deg, transparent, var(--red));"></div>
+              <div style="width:3px; background:var(--navy);"></div>
+              <div style="flex:0.29; background:linear-gradient(90deg, var(--green), transparent);"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:3px;"><span style="font-weight:700;">OPEX (biaya O&M)</span><span style="font-weight:700;">±0,11 sen/kWh</span></div>
+            <div style="display:flex; gap:2px; height:8px; border-radius:4px; overflow:hidden;">
+              <div style="flex:0.18; background:linear-gradient(90deg, transparent, var(--red));"></div>
+              <div style="width:3px; background:var(--navy);"></div>
+              <div style="flex:0.18; background:linear-gradient(90deg, var(--green), transparent);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--navy); margin-bottom:10px; font-size:13px;">Skenario Kombinasi Risiko vs Peluang</h3>
+        <table style="font-size:10.5px; margin-bottom:10px;">
+          <thead><tr><th>Skenario</th><th>Asumsi Kunci</th><th>LCOE Estimasi</th><th>Penilaian</th></tr></thead>
+          <tbody>
+            <tr><td><strong>🔴 Worst Case</strong></td><td>CAPEX +20%, WACC 11%, CF 16%, Kurs Rp17.140</td><td style="color:var(--red); font-weight:700;">5,4–6,1</td><td>Masih lebih murah PLTU</td></tr>
+            <tr><td><strong>🟡 Moderate Pessimistic</strong></td><td>CAPEX +10%, WACC 10%, CF 17%</td><td style="color:var(--gold); font-weight:700;">4,1–4,6</td><td>Kompetitif vs gas</td></tr>
+            <tr style="background:var(--blue-ultra);"><td><strong>🔵 Baseline</strong></td><td>CAPEX standar, WACC 9%, CF 17,81%</td><td style="color:var(--blue-mid); font-weight:700;">3,5–3,8</td><td>Sangat kompetitif</td></tr>
+            <tr><td><strong>🟢 Moderate Optimistic</strong></td><td>CAPEX -10%, WACC 8%, CF 19%, Bifacial</td><td style="color:var(--green); font-weight:700;">2,8–3,1</td><td>Best-in-class global</td></tr>
+            <tr><td><strong>🌟 Best Case</strong></td><td>CAPEX -20% (PLI aktif), WACC 7%, CF 22%</td><td style="color:var(--green); font-weight:700;">2,3–2,6</td><td>Setara China 2024</td></tr>
+          </tbody>
+        </table>
+        <div class="note-box green">
+          <strong>Kesimpulan Tornado Analysis:</strong> Prioritas intervensi kebijakan seharusnya menyasar <strong>(1) penurunan CAPEX via PLI</strong> dan <strong>(2) penurunan WACC via blended finance</strong> — dua lever terbesar yang menjelaskan 67% variabilitas LCOE total.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 31: STRATEGI IMPLIKASI — INDUSTRI HULU 1
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-28">
+  <div class="slide-header gold">
+    <span class="slide-num">28</span>
+    <h2 class="slide-title" style="color:var(--navy);">Implikasi Strategis Industri Hulu — Peta Rantai Nilai PLTS Terapung</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body" style="padding-top:14px;">
+    <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; margin-bottom:12px;">
+      <div style="background:var(--navy); color:white; border-radius:8px; padding:11px 12px; position:relative;">
+        <div style="font-size:9px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:5px;">Hulu Dalam</div>
+        <div style="font-size:12px; font-weight:800; margin-bottom:6px; color:var(--gold);">Bahan Baku</div>
+        <ul style="list-style:none; padding:0; font-size:10.5px; color:rgba(255,255,255,0.85); line-height:1.8;">
+          <li>• Pasir silika (DN)</li>
+          <li>• Polysilicon refinery</li>
+          <li>• Tembaga & aluminium</li>
+          <li>• HDPE resin</li>
+          <li>• Baja konstruksi</li>
+        </ul>
+        <div style="margin-top:8px; font-size:10px; background:rgba(255,209,0,0.15); border-radius:4px; padding:4px 6px; color:var(--gold);">🔑 Peluang: polysilicon</div>
+      </div>
+      <div style="background:var(--blue-deep); color:white; border-radius:8px; padding:11px 12px;">
+        <div style="font-size:9px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:5px;">Manufaktur</div>
+        <div style="font-size:12px; font-weight:800; margin-bottom:6px; color:var(--gold);">Komponen</div>
+        <ul style="list-style:none; padding:0; font-size:10.5px; color:rgba(255,255,255,0.85); line-height:1.8;">
+          <li>• Panel PV (wafer→cell→modul)</li>
+          <li>• Struktur pontoon HDPE</li>
+          <li>• Kabel & konduktor</li>
+          <li>• Trafo distribusi</li>
+          <li>• Inverter (SMA, Huawei)</li>
+        </ul>
+        <div style="margin-top:8px; font-size:10px; background:rgba(255,209,0,0.15); border-radius:4px; padding:4px 6px; color:var(--gold);">🔑 Prioritas: pontoon & trafo</div>
+      </div>
+      <div style="background:#1457b8; color:white; border-radius:8px; padding:11px 12px;">
+        <div style="font-size:9px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:5px;">Konstruksi</div>
+        <div style="font-size:12px; font-weight:800; margin-bottom:6px; color:var(--gold);">EPC</div>
+        <ul style="list-style:none; padding:0; font-size:10.5px; color:rgba(255,255,255,0.85); line-height:1.8;">
+          <li>• Engineering & desain</li>
+          <li>• Mooring & anchoring</li>
+          <li>• Instalasi panel</li>
+          <li>• Kabel bawah air</li>
+          <li>• Commissioning</li>
+        </ul>
+        <div style="margin-top:8px; font-size:10px; background:rgba(46,255,100,0.15); border-radius:4px; padding:4px 6px; color:#6effa0;">✅ Sudah lokal 100%</div>
+      </div>
+      <div style="background:var(--blue-mid); color:white; border-radius:8px; padding:11px 12px;">
+        <div style="font-size:9px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:5px;">Operasi</div>
+        <div style="font-size:12px; font-weight:800; margin-bottom:6px; color:var(--gold);">O&M</div>
+        <ul style="list-style:none; padding:0; font-size:10.5px; color:rgba(255,255,255,0.85); line-height:1.8;">
+          <li>• Monitoring SCADA</li>
+          <li>• Cleaning & maintenance</li>
+          <li>• Spare part management</li>
+          <li>• Diving services</li>
+          <li>• Predictive analytics</li>
+        </ul>
+        <div style="margin-top:8px; font-size:10px; background:rgba(46,255,100,0.15); border-radius:4px; padding:4px 6px; color:#6effa0;">✅ SDM lokal siap</div>
+      </div>
+      <div style="background:#0066cc; color:white; border-radius:8px; padding:11px 12px;">
+        <div style="font-size:9px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:5px;">Hilir</div>
+        <div style="font-size:12px; font-weight:800; margin-bottom:6px; color:var(--gold);">Trading & Services</div>
+        <ul style="list-style:none; padding:0; font-size:10.5px; color:rgba(255,255,255,0.85); line-height:1.8;">
+          <li>• PPA / off-take</li>
+          <li>• REC trading</li>
+          <li>• Carbon credit (ITMOs)</li>
+          <li>• Grid services</li>
+          <li>• Recycling panel</li>
+        </ul>
+        <div style="margin-top:8px; font-size:10px; background:rgba(255,209,0,0.15); border-radius:4px; padding:4px 6px; color:var(--gold);">🔑 Carbon credit potential</div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="card-gold">
+        <h3 style="font-size:12px; color:var(--navy); margin-bottom:5px;">💰 Nilai Pasar Industri Hulu (2025–2034)</h3>
+        <p style="font-size:11.5px;">Total investasi PLTS Terapung 13.876 MWp: <strong>~Rp 129,6 Triliun</strong>. Jika TKDN mencapai 65%+ pada 2031, nilai yang <strong>tertahan di industri DN</strong>: <strong>~Rp 84 Triliun</strong> — ekuivalen membangun ekosistem manufaktur energi surya berskala ASEAN.</p>
+      </div>
+      <div class="card-blue">
+        <h3 style="font-size:12px; color:var(--blue-mid); margin-bottom:5px;">🎯 3 Klaster Industri yang Perlu Didorong Segera</h3>
+        <p style="font-size:11.5px;"><strong>1. Pontoon & Floating Structure</strong> — pasar Rp 18–22 T (2025–2034)<br><strong>2. Trafo & Switchgear Distribusi</strong> — sudah ada pemain lokal (ABB, Siemens DN)<br><strong>3. Kabel & Wiring Marine Grade</strong> — PT Kabelindo, Prysmian DN sudah berproduksi</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 32: IMPLIKASI INDUSTRI HULU 2 — PONTOON & MODUL
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-29">
+  <div class="slide-header light">
+    <span class="slide-num">29</span>
+    <h2 class="slide-title" style="color:var(--navy);">Implikasi Hulu — Roadmap Industrialisasi Komponen Kritis</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body" style="padding-top:14px;">
+    <table style="font-size:11px; margin-bottom:12px;">
+      <thead>
+        <tr><th>Komponen</th><th>Status DN Saat Ini</th><th>Nilai Pasar 2025–2034</th><th>Target Lokalisasi</th><th>Enabler Kebijakan</th><th>Peluang Ekspor</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Modul / Panel PV</strong></td>
+          <td style="color:var(--red);">100% impor — kapasitas produksi DN &lt;500 MW/thn</td>
+          <td style="font-weight:700;">~Rp 34 T</td>
+          <td>25% pada 2028; 60% pada 2032</td>
+          <td>PLI Solar PV, SNI wajib, bea impor progresif</td>
+          <td style="color:var(--green);">Tinggi — ASEAN butuh 50+ GW 2030</td>
+        </tr>
+        <tr>
+          <td><strong>Pontoon / Floating Structure</strong></td>
+          <td style="color:var(--gold);">10–15% lokal (industri HDPE eks minyak)</td>
+          <td style="font-weight:700;">~Rp 18 T</td>
+          <td>70% pada 2027; 100% pada 2030</td>
+          <td>TKDN minimum, standarisasi SNI, offtake PLN</td>
+          <td style="color:var(--green);">Sedang — Vietnam, Filipina potensial</td>
+        </tr>
+        <tr>
+          <td><strong>Kabel Marine Grade</strong></td>
+          <td style="color:var(--gold);">50% lokal (PT Kabelindo, Prysmian DN)</td>
+          <td style="font-weight:700;">~Rp 5 T</td>
+          <td>90% pada 2027</td>
+          <td>Perpanjangan kapasitas produksi existing</td>
+          <td style="color:var(--blue-mid);">Rendah — kompetitif sudah</td>
+        </tr>
+        <tr>
+          <td><strong>Trafo Step-Up & Switchgear</strong></td>
+          <td style="color:var(--gold);">60% lokal (PT Schneider, ABB DN, Trafo Power)</td>
+          <td style="font-weight:700;">~Rp 7 T</td>
+          <td>80% pada 2027</td>
+          <td>Perpanjangan existing, TKDN naik ke 70%</td>
+          <td style="color:var(--blue-mid);">Rendah-sedang</td>
+        </tr>
+        <tr>
+          <td><strong>Inverter String/Central</strong></td>
+          <td style="color:var(--red);">100% impor (SMA, Huawei, Sungrow)</td>
+          <td style="font-weight:700;">~Rp 1,5 T</td>
+          <td>30% pada 2031; 60% pada 2034</td>
+          <td>R&D kolaborasi BRIN + industri; joint venture</td>
+          <td style="color:var(--gold);">Sedang — nilai tinggi, teknologi kritis</td>
+        </tr>
+        <tr>
+          <td><strong>BESS (Battery Energy Storage)</strong></td>
+          <td style="color:var(--red);">95%+ impor — hanya integrator lokal</td>
+          <td style="font-weight:700;">~Rp 22 T (2028–2034)</td>
+          <td>20% pada 2030; 50% pada 2034</td>
+          <td>Industri EV battery repurposing; Indomobil, INKA EV</td>
+          <td style="color:var(--green);">Sangat tinggi — ASEAN BESS market >USD 10 M</td>
+        </tr>
+        <tr style="background:var(--gold-pale);"><td colspan="2"><strong>📊 Total Nilai Pasar Komponen (2025–2034)</strong></td><td><strong style="color:var(--navy);">~Rp 88 T</strong></td><td colspan="2"><strong>Jika TKDN 65%: ~Rp 57 T tertahan di DN</strong></td><td style="color:var(--green);"><strong>Potensi ekspor 2030+: USD 2–4 M/tahun</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="note-box blue">
+      <strong>Rekomendasi Kebijakan Industri Hulu:</strong> Kementerian Perindustrian perlu menerbitkan <em>"Peta Jalan Industri Komponen PLTS Terapung 2025–2034"</em> sebagai turunan RUPTL — dengan target TKDN per komponen, insentif PLI, dan standar SNI yang mewajibkan minimum lokal content per fase pembangunan.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 33: BESS — KEBUTUHAN & SIZING
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-30">
+  <div class="slide-header gold">
+    <span class="slide-num">30</span>
+    <h2 class="slide-title" style="color:var(--navy);">Kebutuhan BESS — Analisis Intermitensi & Grid Stability</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body two-col">
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:10px;">Profil Intermitensi PLTS Terapung Indonesia</h3>
+      <div class="card-blue" style="margin-bottom:10px;">
+        <div style="font-size:11px; color:var(--text-mid);">Capacity Factor rata-rata: <strong style="color:var(--blue-mid);">17,81%</strong> = PLTS hanya menghasilkan output optimal <strong>±4,3 jam/hari</strong></div>
+        <div style="display:flex; align-items:center; gap:6px; margin-top:8px;">
+          <div style="font-size:10px; color:var(--text-mid); width:80px; flex-shrink:0;">Jam produksi</div>
+          <div style="flex:1; height:18px; background:var(--gray-mid); border-radius:3px; overflow:hidden; display:flex;">
+            <div style="width:18%; background:linear-gradient(90deg,var(--gold),var(--blue-light)); border-radius:3px; display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:9px; color:white; font-weight:700;">~4,3h</span>
+            </div>
+          </div>
+          <div style="font-size:10px; font-weight:700; color:var(--navy);">dari 24h</div>
+        </div>
+      </div>
+      <table style="font-size:10.5px; margin-bottom:10px;">
+        <thead><tr><th>Tipe Waduk</th><th>Ada PLTA?</th><th>Perlu BESS?</th><th>Sizing BESS Optimal</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Tipe A</strong>: Waduk PLTA eksisting</td><td style="color:var(--green);">✓ Ya</td><td style="color:var(--green);">Tidak wajib</td><td>0 — PLTA sebagai buffer</td></tr>
+          <tr><td><strong>Tipe B</strong>: Waduk BBWS tanpa PLTA, grid kuat</td><td style="color:var(--red);">✗ Tidak</td><td style="color:var(--gold);">Opsional</td><td>10–20% kapasitas PLTS (1–2 jam)</td></tr>
+          <tr><td><strong>Tipe C</strong>: Waduk terpencil, grid lemah</td><td style="color:var(--red);">✗ Tidak</td><td style="color:var(--red);">Wajib</td><td>30–50% kapasitas PLTS (3–6 jam)</td></tr>
+          <tr style="background:var(--blue-ultra);"><td><strong>37 Waduk Prioritas</strong></td><td><strong>14 waduk (38%)</strong></td><td><strong>8–12 lokasi</strong></td><td><strong>Avg. 20% kapasitas</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="note-box">
+        <strong>Data 37 Waduk:</strong> 14 dari 37 waduk prioritas memiliki PLTA eksisting (38%) → <strong>tidak memerlukan BESS tambahan</strong>. Sisanya 23 waduk memerlukan evaluasi individual berdasarkan kondisi grid regional.
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--navy); margin-bottom:10px;">Analisis Biaya & Keekonomian BESS</h3>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+        <div class="card" style="border-left:4px solid var(--blue-mid);">
+          <div style="font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; margin-bottom:5px;">Harga BESS Lithium-Ion (LCOS)</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div style="font-size:20px; font-weight:900; color:var(--navy);">USD 280–320/kWh</div>
+            <div style="font-size:10px; color:var(--text-mid);">(2024, 4-hour system)</div>
+          </div>
+          <div style="font-size:11px; color:var(--text-light); margin-top:4px;">Tren: USD 620/kWh (2018) → USD 280/kWh (2024) — turun 55% dalam 6 tahun (BloombergNEF 2024)</div>
+        </div>
+        <div class="card-gold">
+          <div style="font-size:10px; font-weight:700; color:var(--text-mid); text-transform:uppercase; margin-bottom:5px;">Simulasi: BESS untuk 23 Waduk Non-PLTA</div>
+          <p style="font-size:12px;">Total kebutuhan kapasitas: ~460 MW × 20% × 2 jam = <strong>~184 MWh</strong><br>
+          Biaya BESS @ USD 300/kWh: <strong>~USD 55 juta ≈ Rp 880 Miliar</strong><br>
+          % dari total CAPEX 37 lokasi (Rp 26,8 T): <strong>~3,3%</strong></p>
+        </div>
+        <div class="card-green">
+          <div style="font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; margin-bottom:5px;">BESS Benefit vs Cost</div>
+          <p style="font-size:12px;">Peningkatan capacity factor efektif: 17,81% → 22–25%<br>
+          Revenue tambahan dari time-shifting ke peak tariff: <strong>+15–25% revenue</strong><br>
+          Payback period BESS dalam skenario baseline: <strong>8–12 tahun</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 34: BESS — TEKNOLOGI & ROADMAP
+══════════════════════════════════════ -->
+<div class="slide bg-gradient-blue" id="slide-31">
+  <div class="slide-header light">
+    <span class="slide-num">31</span>
+    <h2 class="slide-title" style="color:var(--navy);">BESS — Lanskap Teknologi, Harga Global & Roadmap Lokalisasi</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body" style="padding-top:14px;">
+    <div style="display:grid; grid-template-columns:1.3fr 1fr; gap:14px; margin-bottom:12px;">
+      <div>
+        <h3 style="color:var(--navy); margin-bottom:10px; font-size:13px;">Komparasi Teknologi BESS Tersedia 2024–2030</h3>
+        <table style="font-size:10.5px;">
+          <thead><tr><th>Teknologi</th><th>Harga/kWh</th><th>Round-trip Eff.</th><th>Lifetime</th><th>Cocok untuk FPV</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Li-Ion NMC</strong></td><td>USD 220–280</td><td>92–95%</td><td>10–15 thn</td><td style="color:var(--green);">✓ Terbaik saat ini</td></tr>
+            <tr><td><strong>LFP (Lithium Iron Phosphate)</strong></td><td>USD 200–250</td><td>90–93%</td><td>15–20 thn</td><td style="color:var(--green);">✓ Preferensi untuk tropis</td></tr>
+            <tr><td>Na-Ion (Sodium Ion)</td><td>USD 150–200*</td><td>88–92%</td><td>10–12 thn</td><td style="color:var(--gold);">▲ Emerging, 2026+ siap massal</td></tr>
+            <tr><td>Flow Battery (Vanadium)</td><td>USD 350–500</td><td>70–80%</td><td>20–25 thn</td><td style="color:var(--gold);">▲ Cocok ≥6 jam, skala besar</td></tr>
+            <tr><td>Compressed Air (CAES)</td><td>USD 60–120</td><td>55–70%</td><td>30+ thn</td><td style="color:var(--red);">✗ Butuh topografi khusus</td></tr>
+            <tr><td><strong>PLTA (existing) sebagai buffer</strong></td><td>Rp 0 (existing)</td><td>~88%</td><td>Seumur waduk</td><td style="color:var(--green);">✓ Optimal untuk 14 waduk</td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:10px; color:var(--text-light); margin-top:4px;">*Proyeksi 2026–2027. Sumber: BloombergNEF Energy Storage Outlook 2024; IRENA Battery Storage 2023</div>
+      </div>
+      <div>
+        <h3 style="color:var(--navy); margin-bottom:10px; font-size:13px;">Tren Penurunan Harga BESS Global</h3>
+        <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
+          <div class="mini-bar-wrap" style="align-items:center;">
+            <div class="mini-bar-label" style="font-size:10px; width:60px; color:var(--text-mid);">2018</div>
+            <div class="mini-bar-track" style="flex:1;"><div class="mini-bar-fill" style="width:100%; background:var(--red);"></div></div>
+            <div class="mini-bar-val" style="font-size:10.5px; color:var(--red);">USD 620/kWh</div>
+          </div>
+          <div class="mini-bar-wrap">
+            <div class="mini-bar-label" style="font-size:10px; width:60px;">2020</div>
+            <div class="mini-bar-track" style="flex:1;"><div class="mini-bar-fill" style="width:77%; background:var(--gold);"></div></div>
+            <div class="mini-bar-val" style="font-size:10.5px;">USD 476/kWh</div>
+          </div>
+          <div class="mini-bar-wrap">
+            <div class="mini-bar-label" style="font-size:10px; width:60px;">2022</div>
+            <div class="mini-bar-track" style="flex:1;"><div class="mini-bar-fill" style="width:62%; background:var(--gold);"></div></div>
+            <div class="mini-bar-val" style="font-size:10.5px;">USD 385/kWh</div>
+          </div>
+          <div class="mini-bar-wrap">
+            <div class="mini-bar-label" style="font-size:10px; width:60px; font-weight:700;">2024</div>
+            <div class="mini-bar-track" style="flex:1;"><div class="mini-bar-fill" style="width:45%; background:var(--blue-mid);"></div></div>
+            <div class="mini-bar-val" style="font-size:10.5px; font-weight:700; color:var(--blue-mid);">USD 280/kWh</div>
+          </div>
+          <div class="mini-bar-wrap">
+            <div class="mini-bar-label" style="font-size:10px; width:60px;">2027 (proj)</div>
+            <div class="mini-bar-track" style="flex:1;"><div class="mini-bar-fill" style="width:32%; background:var(--green);"></div></div>
+            <div class="mini-bar-val" style="font-size:10.5px; color:var(--green);">~USD 200/kWh</div>
+          </div>
+          <div class="mini-bar-wrap">
+            <div class="mini-bar-label" style="font-size:10px; width:60px;">2030 (proj)</div>
+            <div class="mini-bar-track" style="flex:1;"><div class="mini-bar-fill" style="width:21%; background:var(--green);"></div></div>
+            <div class="mini-bar-val" style="font-size:10.5px; color:var(--green);">~USD 130/kWh</div>
+          </div>
+        </div>
+        <div class="note-box blue" style="margin-top:0;">
+          <strong>Implikasi:</strong> Jika PLN menunda pembelian BESS hingga 2028–2030, biaya berpotensi turun <strong>35–50%</strong> dari harga 2024 — menghemat <strong>~Rp 310–440 Miliar</strong> untuk portofolio 23 waduk non-PLTA.
+        </div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+      <div class="card" style="border-top:4px solid var(--navy);">
+        <div style="font-size:11px; font-weight:700; color:var(--navy); margin-bottom:5px;">2025–2027: Impor + Integrasi Lokal</div>
+        <p style="font-size:11px; color:var(--text-mid);">Seluruh BESS cell dari impor (CATL, BYD, Samsung SDI). Integrasi sistem (BMS, inverter, container) oleh integrator lokal: PLN Batam, Pertamina New & Renewable, atau konsorsium PLN-Indomobil.</p>
+      </div>
+      <div class="card card-blue" style="border-top:4px solid var(--blue-mid);">
+        <div style="font-size:11px; font-weight:700; color:var(--navy); margin-bottom:5px;">2028–2031: Repurposing EV Battery + Lokal Parsial</div>
+        <p style="font-size:11px; color:var(--text-mid);">Manfaatkan battery EV second-life (80% SOH) dari program konversi kendaraan listrik. Estimasi cost: USD 80–120/kWh (40–60% lebih murah dari baru). PT INKA & Hyundai Indonesia sebagai mitra potensial.</p>
+      </div>
+      <div class="card card-gold" style="border-top:4px solid var(--gold);">
+        <div style="font-size:11px; font-weight:700; color:var(--navy); margin-bottom:5px;">2032–2034: Produksi Cell Lokal Target</div>
+        <p style="font-size:11px; color:var(--text-mid);">Ekosistem battery DN berbasis nikel Indonesia (Harita, Vale, Aneka Tambang) → cell LFP/NMC lokal. Target: pabrik 5 GWh/tahun mendukung PLTS Terapung, EV, dan grid storage nasional sekaligus.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 35: BESS — SINERGI PLTS-PLTA-BESS
+══════════════════════════════════════ -->
+<div class="slide bg-white" id="slide-32">
+  <div class="slide-header gold">
+    <span class="slide-num">32</span>
+    <h2 class="slide-title" style="color:var(--navy);">Arsitektur Hibrida Optimal: PLTS–PLTA–BESS untuk Grid Stability</h2>
+    <div class="logo-bar">
+      <div class="logo-pln">PLN</div><div class="logo-cesgs">CESGS</div><div class="logo-unair">UNAIR</div>
+    </div>
+  </div>
+  <div class="slide-body" style="padding-top:14px;">
+    <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:14px; margin-bottom:12px;">
+      <div>
+        <h3 style="color:var(--navy); margin-bottom:10px; font-size:13px;">Tiga Arsitektur Hibrida berdasarkan Tipe Waduk</h3>
+        <div style="display:flex; flex-direction:column; gap:9px;">
+          <div style="background:var(--blue-ultra); border-radius:8px; padding:13px 14px; border-left:5px solid var(--green);">
+            <div style="font-size:10px; font-weight:800; letter-spacing:1px; color:var(--green); text-transform:uppercase; margin-bottom:6px;">Arsitektur A — PLTS + PLTA (14 Waduk)</div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:11.5px; flex-wrap:wrap;">
+              <span style="background:var(--gold); color:var(--navy); padding:3px 8px; border-radius:4px; font-weight:700; font-size:10px;">☀️ PLTS</span>
+              <span style="color:var(--text-mid);">→</span>
+              <span style="background:var(--blue-mid); color:white; padding:3px 8px; border-radius:4px; font-weight:700; font-size:10px;">💧 PLTA Buffer</span>
+              <span style="color:var(--text-mid);">→</span>
+              <span style="background:var(--green); color:white; padding:3px 8px; border-radius:4px; font-weight:700; font-size:10px;">⚡ Grid Stabil</span>
+            </div>
+            <p style="font-size:11px; color:var(--text-mid); margin-top:6px;">PLTA menyerap surplus PLTS siang hari (pump-up storage mode) dan melepas sore/malam hari. <strong>Tidak perlu investasi BESS baru.</strong> Contoh: Cirata, Jatiluhur, Karangkates, Batu Tegi.</p>
+          </div>
+          <div style="background:#fff9e6; border-radius:8px; padding:13px 14px; border-left:5px solid var(--gold);">
+            <div style="font-size:10px; font-weight:800; letter-spacing:1px; color:#8a6000; text-transform:uppercase; margin-bottom:6px;">Arsitektur B — PLTS + BESS Mini (10–15 Waduk)</div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:11.5px; flex-wrap:wrap;">
+              <span style="background:var(--gold); color:var(--navy); padding:3px 8px; border-radius:4px; font-weight:700; font-size:10px;">☀️ PLTS</span>
+              <span style="color:var(--text-mid);">→</span>
+              <span style="background:#c07000; color:white; padding:3px 8px; border-radius:4px; font-weight:700; font-size:10px;">🔋 BESS 10–20%</span>
+              <span style="color:var(--text-mid);">→</span>
+              <span style="background:var(--blue-mid); color:white; padding:3px 8px; border-radius:4px; font-weight:700; font-size:10px;">⚡ Grid Regional</span>
+            </div>
+            <p style="font-size:11px; color:var(--text-mid); margin-top:6px;">BESS ukuran kecil (1–2 jam) untuk mengurangi ramp-rate dan frekuensi fluktuasi. Grid sudah relatif kuat, BESS hanya untuk kualitas sinyal. Biaya tambahan: USD 3–5 juta/lokasi.</p>
+          </div>
+          <div style="background:#fdf3f2; border-radius:8px; padding:13px 14px; border-left:5px solid var(--red);">
+            <div style="font-size:10px; font-weight:800; letter-spacing:1px; color:var(--red); text-transform:uppercase; margin-bottom:6px;">Arsitektur C — PLTS + BESS Besar (8–10 Waduk)</div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:11.5px; flex-wrap:wrap;">
+              <span style="background:var(--gold); color:var(--navy); padding:3px 8px; border-radius:4px; font-weight:700; font-size:10px;">☀️ PLTS</span>
+              <span style="color:var(--text-mid);">→</span>
+              <span style="background:var(--red); color:white; padding:3px 8px; border-radius:4px; font-weight:700; font-size:10px;">🔋 BESS 30–50%</span>
+              <span style="color:var(--text-mid);">→</span>
+              <span style="background:var(--navy); color:white; padding:3px 8px; border-radius:4px; font-weight:700; font-size:10px;">⚡ Grid Terpencil</span>
+            </div>
+            <p style="font-size:11px; color:var(--text-mid); margin-top:6px;">Waduk terpencil (Kalimantan, NTT) dengan grid lemah/isolated. BESS 4–6 jam wajib untuk frequency regulation mandiri. Biaya BESS 3–5% dari total CAPEX PLTS — acceptable untuk menggantikan diesel.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--navy); margin-bottom:10px; font-size:13px;">Manfaat Kuantitatif Arsitektur Hibrida</h3>
+        <table style="font-size:10.5px; margin-bottom:10px;">
+          <thead><tr><th>Metrik</th><th>PLTS saja</th><th>PLTS + PLTA</th><th>PLTS + BESS</th></tr></thead>
+          <tbody>
+            <tr><td>Capacity Factor Efektif</td><td>17,81%</td><td style="color:var(--green); font-weight:700;">22–26%</td><td style="color:var(--blue-mid); font-weight:700;">20–24%</td></tr>
+            <tr><td>Revenue Enhancement</td><td>Baseline</td><td style="color:var(--green);">+15–25%</td><td style="color:var(--blue-mid);">+12–20%</td></tr>
+            <tr><td>Grid Frequency Stability</td><td>Rendah</td><td style="color:var(--green);">Tinggi</td><td style="color:var(--blue-mid);">Tinggi</td></tr>
+            <tr><td>CAPEX Tambahan</td><td>—</td><td style="color:var(--green);">Rp 0 (existing)</td><td style="color:var(--gold);">+3–8%</td></tr>
+            <tr><td>Bankabilitas Proyek</td><td>Sedang</td><td style="color:var(--green);">Sangat Tinggi</td><td style="color:var(--blue-mid);">Tinggi</td></tr>
+          </tbody>
+        </table>
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr; margin-bottom:10px;">
+          <div class="metric-box navy">
+            <div class="metric-val">14</div>
+            <div class="metric-lbl">Waduk sudah ada PLTA → 0 BESS needed</div>
+          </div>
+          <div class="metric-box gold">
+            <div class="metric-val">~Rp 880 M</div>
+            <div class="metric-lbl">Estimasi BESS untuk 23 waduk non-PLTA</div>
+          </div>
+        </div>
+        <div class="note-box blue">
+          <strong>Rekomendasi:</strong> PLN harus memprioritaskan <em>Arsitektur A (PLTS+PLTA)</em> untuk 14 waduk dengan PLTA eksisting — menghemat Rp 380–520 Miliar investasi BESS sekaligus mengoptimalkan aset hidro yang sudah ada. Ini harus menjadi <strong>defaultnya</strong>, bukan opsi.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="slide bg-cover" id="slide-36">
+  <div class="cover-deco"></div>
+  <div class="cover-deco2"></div>
+  <div class="cover-content" style="align-items:flex-start;">
+    <div style="font-size:10px; font-weight:700; letter-spacing:3px; color:var(--blue-mid); text-transform:uppercase; margin-bottom:20px;">Terima Kasih</div>
+    <h2 style="font-size:clamp(20px,3vw,38px); font-weight:900; color:var(--navy); line-height:1.2; margin-bottom:12px;">Kajian Percepatan PLTS Terapung<br>RUPTL 2025–2034 | Fase 2</h2>
+    <div class="gold-divider" style="margin-bottom:20px;"></div>
+    <p style="color:var(--text-mid); font-size:13px; max-width:560px; line-height:1.8; margin-bottom:20px;">PT PLN (Persero) / Center for ESG Studies, Universitas Airlangga</p>
+    <div style="font-size:12px; color:var(--text-light); line-height:2;">
+      Prof. Iman Harymawan, S.E., M.B.A., Ph.D. <em>(Tim Ahli)</em><br>
+      Fajar Kristanto Gautama Putra, S.A., M.A. · Bagas Aditya, S.Si., M.Geog.<br>
+      Haris Dwi Cahyo, S.Tr.Geo · Farras Ghaly, S.Si · Bakdiyatul Mukarromah, S.Hum.
+    </div>
+    <div style="margin-top:24px; display:flex; align-items:center; gap:16px;">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="logo-pln">PLN</div>
+        <span style="font-size:9px; font-weight:700; color:var(--text-light); text-transform:uppercase;">PT PLN (Persero)</span>
+      </div>
+      <div style="width:1px; height:24px; background:var(--gray-mid);"></div>
+      <div class="logo-cesgs">CESGS</div>
+      <div class="logo-unair">UNAIR</div>
+      <span style="font-size:9px; color:var(--text-light);">Universitas Airlangga</span>
+    </div>
+    <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+      <span class="badge badge-gold" style="font-size:10px; padding:4px 12px;">🌊 13.876,8 MWp Potensi</span>
+      <span class="badge badge-blue" style="font-size:10px; padding:4px 12px;">⚡ 2,945× Output Multiplier</span>
+      <span class="badge badge-green" style="font-size:10px; padding:4px 12px;">💚 LCOE 3,5–3,8 USD sen/kWh</span>
+      <span class="badge badge-gold" style="font-size:10px; padding:4px 12px;">🏆 #1 Backward Linkage</span>
+    </div>
+    <div style="margin-top:16px; font-size:10px; color:var(--text-light);">— Dokumen Kajian Internal PT PLN (Persero) — Draft April 2026 —</div>
+  </div>
+  <div class="footer-strip"></div>
+</div>
+
+</div><!-- end .deck -->
+
+<!-- NAVIGATION BAR -->
+<nav class="nav-bar">
+  <button id="btn-prev" onclick="changeSlide(-1)" disabled>← Prev</button>
+  <div class="slide-dots" id="dots-container"></div>
+  <span class="progress-info" id="slide-counter">1 / 36</span>
+  <button id="btn-next" onclick="changeSlide(1)">Next →</button>
+</nav>
+
+<script>
+  const TOTAL = 36;
+  let current = 1;
+
+  function getSlide(n) { return document.getElementById('slide-' + n); }
+
+  function buildDots() {
+    const c = document.getElementById('dots-container');
+    for (let i = 1; i <= TOTAL; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 1 ? ' active' : '');
+      d.onclick = () => goTo(i);
+      c.appendChild(d);
+    }
+  }
+
+  function updateDots() {
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === current));
+  }
+
+  function updateProgress() {
+    const pct = (current / TOTAL) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('slide-counter').textContent = current + ' / ' + TOTAL;
+    document.getElementById('btn-prev').disabled = current === 1;
+    document.getElementById('btn-next').disabled = current === TOTAL;
+  }
+
+  function goTo(n) {
+    if (n < 1 || n > TOTAL) return;
+    getSlide(current).classList.remove('active');
+    current = n;
+    getSlide(current).classList.add('active');
+    updateDots();
+    updateProgress();
+  }
+
+  function changeSlide(dir) { goTo(current + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
+
+  buildDots();
+  updateProgress();
+</script>
+</body>
+</html>
