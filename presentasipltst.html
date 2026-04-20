@@ -532,6 +532,67 @@
     object-fit: contain;
   }
 
+
+
+  .download-panel {
+    margin-top: 28px;
+    max-width: 720px;
+    padding: 18px 20px;
+    border: 1.5px solid var(--blue-pale);
+    background: rgba(255,255,255,0.96);
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(11,61,145,0.08);
+  }
+  .download-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .download-btn {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1.5px solid var(--blue-mid);
+    background: var(--blue-mid);
+    color: var(--white);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s, background 0.2s;
+  }
+  .download-btn.secondary {
+    background: var(--white);
+    color: var(--blue-mid);
+  }
+  .download-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(11,61,145,0.14);
+  }
+  .download-btn:disabled {
+    opacity: 0.55;
+    cursor: wait;
+    transform: none;
+    box-shadow: none;
+  }
+  .download-status {
+    min-height: 20px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+  .export-stage {
+    position: fixed;
+    left: -10000px;
+    top: 0;
+    width: 1600px;
+    height: 900px;
+    background: #ffffff;
+    overflow: hidden;
+    z-index: -1;
+  }
+
 </style>
 </head>
 <body>
@@ -2527,6 +2588,17 @@
         <p style="font-size:12px; color:var(--text-light);">Center for Environmental, Social, and Governance Studies · Universitas Airlangga</p>
         <p style="font-size:12px; color:var(--text-light);">Kajian untuk PT PLN (Persero) | Draft 14 April 2026</p>
       </div>
+      <div class="download-panel">
+        <div style="font-size:13px; font-weight:800; color:var(--navy);">Unduh presentasi</div>
+        <p style="font-size:12px; color:var(--text-mid); margin-top:6px; line-height:1.7;">
+          Gunakan tombol berikut untuk mengunduh deck ini sebagai <strong>PDF</strong> atau <strong>PPTX</strong> langsung dari browser.
+        </p>
+        <div class="download-actions">
+          <button class="download-btn" id="download-pdf-btn" onclick="downloadPDF()">Unduh PDF</button>
+          <button class="download-btn secondary" id="download-pptx-btn" onclick="downloadPPTX()">Unduh PPTX</button>
+        </div>
+        <div class="download-status" id="download-status" aria-live="polite"></div>
+      </div>
     </div>
     <div class="footer-strip"></div>
   </div>
@@ -2541,8 +2613,13 @@
   <button id="btn-next" onclick="changeSlide(1)">Next →</button>
 </nav>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+
 <script>
   const TOTAL = 38;
+  const EXPORT_BASENAME = 'kajian-plts-terapung-ruplt-2025-2034';
   let current = 1;
 
   function getSlide(n) {
@@ -2585,6 +2662,127 @@
 
   function changeSlide(dir) {
     goTo(current + dir);
+  }
+
+  function setDownloadState(kind, active, message) {
+    const pdfBtn = document.getElementById('download-pdf-btn');
+    const pptxBtn = document.getElementById('download-pptx-btn');
+    const status = document.getElementById('download-status');
+    if (pdfBtn) pdfBtn.disabled = active;
+    if (pptxBtn) pptxBtn.disabled = active;
+    if (pdfBtn && kind === 'pdf') pdfBtn.textContent = active ? 'Menyiapkan PDF...' : 'Unduh PDF';
+    if (pptxBtn && kind === 'pptx') pptxBtn.textContent = active ? 'Menyiapkan PPTX...' : 'Unduh PPTX';
+    if (status) status.textContent = message || '';
+  }
+
+  function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  function buildExportStage(slideNumber) {
+    const stage = document.createElement('div');
+    stage.className = 'export-stage';
+
+    const slideClone = getSlide(slideNumber).cloneNode(true);
+    slideClone.classList.add('active');
+    slideClone.style.display = 'flex';
+    slideClone.style.position = 'relative';
+    slideClone.style.inset = 'auto';
+    slideClone.style.width = '100%';
+    slideClone.style.height = '100%';
+    slideClone.style.transform = 'none';
+    stage.appendChild(slideClone);
+
+    const brand = document.querySelector('.brand-logos');
+    if (brand) {
+      const brandClone = brand.cloneNode(true);
+      brandClone.style.position = 'absolute';
+      brandClone.style.top = '18px';
+      brandClone.style.right = '24px';
+      brandClone.style.left = 'auto';
+      brandClone.style.zIndex = '1001';
+      stage.appendChild(brandClone);
+    }
+
+    document.body.appendChild(stage);
+    return stage;
+  }
+
+  async function renderSlideToCanvas(slideNumber) {
+    const stage = buildExportStage(slideNumber);
+    await wait(80);
+    try {
+      return await html2canvas(stage, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        width: 1600,
+        height: 900,
+        windowWidth: 1600,
+        windowHeight: 900,
+        logging: false
+      });
+    } finally {
+      stage.remove();
+    }
+  }
+
+  async function downloadPDF() {
+    if (!window.html2canvas || !window.jspdf || !window.jspdf.jsPDF) {
+      setDownloadState('pdf', false, 'Library PDF belum termuat. Pastikan koneksi internet aktif lalu muat ulang file ini.');
+      return;
+    }
+
+    setDownloadState('pdf', true, 'Menyiapkan PDF... 0 / ' + TOTAL);
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: [1600, 900] });
+
+    try {
+      for (let i = 1; i <= TOTAL; i++) {
+        setDownloadState('pdf', true, 'Menyiapkan PDF... ' + i + ' / ' + TOTAL);
+        const canvas = await renderSlideToCanvas(i);
+        const img = canvas.toDataURL('image/png', 1.0);
+        if (i > 1) pdf.addPage([1600, 900], 'landscape');
+        pdf.addImage(img, 'PNG', 0, 0, 1600, 900, undefined, 'FAST');
+      }
+      pdf.save(EXPORT_BASENAME + '.pdf');
+      setDownloadState('pdf', false, 'PDF berhasil diunduh.');
+    } catch (error) {
+      console.error(error);
+      setDownloadState('pdf', false, 'Ekspor PDF gagal. Coba muat ulang halaman lalu ulangi.');
+    }
+  }
+
+  async function downloadPPTX() {
+    if (!window.html2canvas || typeof window.PptxGenJS === 'undefined') {
+      setDownloadState('pptx', false, 'Library PPTX belum termuat. Pastikan koneksi internet aktif lalu muat ulang file ini.');
+      return;
+    }
+
+    setDownloadState('pptx', true, 'Menyiapkan PPTX... 0 / ' + TOTAL);
+    const pptx = new window.PptxGenJS();
+    pptx.layout = 'LAYOUT_WIDE';
+    pptx.author = 'OpenAI';
+    pptx.company = 'CPEBR Universitas Airlangga';
+    pptx.subject = 'Kajian PLTS Terapung RUPTL 2025-2034';
+    pptx.title = 'Kajian PLTS Terapung RUPTL 2025-2034';
+    pptx.lang = 'id-ID';
+
+    try {
+      for (let i = 1; i <= TOTAL; i++) {
+        setDownloadState('pptx', true, 'Menyiapkan PPTX... ' + i + ' / ' + TOTAL);
+        const canvas = await renderSlideToCanvas(i);
+        const img = canvas.toDataURL('image/png', 1.0);
+        const slide = pptx.addSlide();
+        slide.background = { color: 'FFFFFF' };
+        slide.addImage({ data: img, x: 0, y: 0, w: 13.333, h: 7.5 });
+      }
+      await pptx.writeFile({ fileName: EXPORT_BASENAME + '.pptx' });
+      setDownloadState('pptx', false, 'PPTX berhasil diunduh.');
+    } catch (error) {
+      console.error(error);
+      setDownloadState('pptx', false, 'Ekspor PPTX gagal. Coba muat ulang halaman lalu ulangi.');
+    }
   }
 
   document.addEventListener('keydown', e => {
