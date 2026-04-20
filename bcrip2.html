@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BCRIP Climate Scenario Mapper — Maroon Edition</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/proj4"></script>
+  <script src="https://unpkg.com/georaster"></script>
+  <script src="https://unpkg.com/georaster-layer-for-leaflet/dist/georaster-layer-for-leaflet.min.js"></script>
+  <script src="https://unpkg.com/geoblaze"></script>
+
+<style>
+:root {
+  --bg: #f8f2f3;
+  --bg-card: #ffffff;
+  --bg-soft: #f5e9eb;
+  --bg-hover: #f2dde1;
+  --bg-input: #fbf6f7;
+
+  --sidebar-bg: #4a0f1d;
+  --sidebar-bg2: #611528;
+  --sidebar-text: rgba(255,255,255,.68);
+  --sidebar-w: 236px;
+
+  --maroon: #5a1325;
+  --maroon-2: #7a1c34;
+  --maroon-3: #9f2846;
+  --accent: #a11d3f;
+  --accent-2: #7f1733;
+  --accent-soft: #f7dbe3;
+  --accent-soft-2: #fbe9ee;
+
+  --border: #e7cfd6;
+  --border-2: #d9b1bd;
+
+  --ink: #3d1420;
+  --ink-2: #6d3847;
+  --ink-3: #a17180;
+
+  --success: #16825d;
+  --warning: #b7791f;
+  --danger: #c53030;
+  --info: #a11d3f;
+
+  --risk-low: #16825d;
+  --risk-med: #b7791f;
+  --risk-high:#c53030;
+
+  --shadow: 0 6px 22px rgba(90,19,37,.08);
+  --shadow-2: 0 18px 50px rgba(90,19,37,.18);
+  --radius: 10px;
+  --font: 'Montserrat', Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; margin:0; padding:0; }
+body { font-family: var(--font); background: var(--bg); color: var(--ink); min-height: 100vh; font-size: 13px; }
+a { color: var(--accent); text-decoration: none; }
+button, input, select, textarea { font-family: var(--font); }
+.page { display:none; }
+.page.active { display:block; }
+
+#pageLanding {
+  min-height:100vh; display:none; align-items:center; justify-content:center; position:relative; overflow:hidden;
+  background: linear-gradient(135deg, #4a0f1d 0%, #7a1c34 45%, #b33458 100%);
+}
+#pageLanding.active { display:flex; }
+#pageAuth {
+  min-height:100vh; display:none; align-items:center; justify-content:center;
+  background: linear-gradient(135deg, #4a0f1d 0%, #611528 50%, #8a2744 100%);
+}
+#pageAuth.active { display:flex; }
+.landing-noise, .landing-grid { position:absolute; inset:0; pointer-events:none; }
+.landing-noise { background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"); }
+.landing-grid {
+  background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+.landing-content { position:relative; z-index:1; max-width: 760px; padding: 42px 24px; text-align:center; }
+.landing-pill {
+  display:inline-flex; align-items:center; gap:8px; padding:7px 16px; border-radius:999px; margin-bottom:28px;
+  background: rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.85);
+  font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+}
+.landing-pill .dot { width:7px; height:7px; border-radius:50%; background:#ffd0dc; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+.landing-title { font-size: clamp(52px, 9vw, 88px); line-height:1; font-weight:900; color:#fff; letter-spacing:-.03em; }
+.landing-title span { color:#ffd0dc; }
+.landing-subtitle { margin-top:10px; color:rgba(255,255,255,.62); font-size:13px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+.landing-desc { margin:28px auto 38px; max-width:640px; color:rgba(255,255,255,.78); font-size:15px; line-height:1.75; }
+.landing-chip-row { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-bottom:40px; }
+.l-chip {
+  background: rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.86); border-radius:9px;
+  padding:10px 15px; font-size:12px; font-weight:600;
+}
+.landing-cta {
+  background:#fff; color:var(--maroon); border:none; border-radius:10px; cursor:pointer; font-weight:900;
+  padding:14px 34px; font-size:13px; letter-spacing:.09em; text-transform:uppercase; box-shadow:0 10px 30px rgba(0,0,0,.18);
+}
+.landing-note { margin-top:18px; color:rgba(255,255,255,.45); font-size:11px; }
+.auth-card {
+  width:min(430px, calc(100% - 32px)); background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 24px 70px rgba(0,0,0,.22);
+}
+.auth-head { padding:30px 30px 24px; background:linear-gradient(135deg, #4a0f1d, #9f2846); color:#fff; }
+.auth-brand { display:flex; align-items:center; gap:14px; }
+.auth-mark {
+  width:50px; height:50px; display:grid; place-items:center; border-radius:12px; background:rgba(255,255,255,.12); font-weight:900; font-size:18px;
+  border:1px solid rgba(255,255,255,.18);
+}
+.auth-brand-text .name { font-size:22px; font-weight:900; }
+.auth-brand-text .sub { font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.62); margin-top:4px; }
+.auth-body { padding:26px 30px 30px; }
+.auth-label { margin-bottom:18px; font-size:13px; font-weight:800; color:var(--ink); }
+.auth-field { margin-bottom:16px; }
+.auth-field label { display:block; margin-bottom:7px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-3); }
+.auth-input, .field-input, .field-select, .field-textarea {
+  width:100%; border:1.5px solid var(--border); background:var(--bg-input); color:var(--ink);
+  border-radius:10px; padding:10px 12px; outline:none; transition:border-color .15s, box-shadow .15s;
+}
+.auth-input:focus, .field-input:focus, .field-select:focus, .field-textarea:focus { border-color: var(--accent); box-shadow:0 0 0 3px rgba(161,29,63,.08); }
+.auth-btn, .btn {
+  border:none; cursor:pointer; border-radius:9px; padding:10px 14px; font-weight:800; letter-spacing:.05em; transition:.15s;
+}
+.auth-btn { width:100%; background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; margin-top:4px; }
+.auth-btn:hover { opacity:.94; }
+.auth-back { margin-top:16px; text-align:center; font-size:12px; color:var(--ink-3); }
+.auth-back button { background:none; border:none; color:var(--accent); cursor:pointer; }
+.auth-err { display:none; margin-top:8px; font-size:12px; color:var(--danger); }
+
+#pageApp.active { display:flex; min-height:100vh; }
+.sidebar {
+  width:var(--sidebar-w); position:fixed; inset:0 auto 0 0; background:var(--sidebar-bg); color:#fff; display:flex; flex-direction:column; z-index:200;
+}
+.sidebar-logo { padding:20px 18px 16px; border-bottom:1px solid rgba(255,255,255,.08); }
+.sidebar-logo .mark { width:42px; height:42px; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg, #c83c62, #f19ab0); color:#fff; font-weight:900; margin-bottom:8px; }
+.sidebar-logo .brand { font-size:18px; font-weight:900; }
+.sidebar-logo .tag { font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--sidebar-text); margin-top:2px; }
+.sidebar-user { padding:12px 18px; border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:10px; }
+.sidebar-avatar { width:34px; height:34px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(135deg, #c83c62, #f19ab0); color:#fff; font-weight:900; }
+.sidebar-user-name { font-size:12px; font-weight:800; color:#fff; }
+.sidebar-user-role { font-size:10px; color:var(--sidebar-text); }
+.sidebar-role-badge { margin-left:auto; font-size:9px; font-weight:800; padding:3px 8px; border-radius:999px; letter-spacing:.08em; text-transform:uppercase; background:rgba(255,255,255,.09); color:#fff; }
+.sidebar-role-badge.superadmin { background:rgba(255,220,180,.12); color:#ffd7a1; }
+.sidebar-nav { flex:1; overflow:auto; padding:10px 0; }
+.nav-section { padding:10px 18px 4px; color:rgba(255,255,255,.28); font-size:9px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; }
+.nav-item {
+  width:100%; background:none; border:none; padding:11px 18px; text-align:left; display:flex; align-items:center; gap:12px; cursor:pointer;
+  color:var(--sidebar-text); font-size:12px; font-weight:700; border-left:3px solid transparent;
+}
+.nav-item:hover { background:rgba(255,255,255,.06); color:#fff; }
+.nav-item.active { background:rgba(255,255,255,.08); color:#fff; border-left-color:#f19ab0; }
+.sidebar-footer { padding:12px 14px; border-top:1px solid rgba(255,255,255,.08); }
+.btn-logout { width:100%; background:rgba(255,255,255,.06); color:rgba(255,255,255,.75); border:1px solid rgba(255,255,255,.08); }
+.btn-logout:hover { background:rgba(255,255,255,.12); }
+
+.main-content { margin-left:var(--sidebar-w); width:calc(100% - var(--sidebar-w)); min-height:100vh; display:flex; flex-direction:column; }
+.topbar {
+  height:58px; background:var(--bg-card); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:150;
+  display:flex; align-items:center; gap:14px; padding:0 24px; box-shadow:0 1px 4px rgba(90,19,37,.05);
+}
+.topbar-title { font-size:17px; font-weight:900; color:var(--ink); }
+.topbar-sub { font-size:11px; color:var(--ink-3); font-weight:600; margin-left:6px; }
+.topbar-right { margin-left:auto; display:flex; align-items:center; gap:12px; }
+.tkpi { text-align:right; }
+.tkpi strong { display:block; color:var(--accent); font-size:17px; line-height:1; }
+.tkpi span { font-size:9px; color:var(--ink-3); font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+.scenario-switch {
+  display:flex; align-items:center; gap:8px; background:var(--bg-soft); border:1px solid var(--border); padding:6px 10px; border-radius:999px;
+}
+.scenario-switch label { font-size:9px; font-weight:800; color:var(--ink-3); letter-spacing:.12em; text-transform:uppercase; }
+.scenario-switch select { background:transparent; border:none; outline:none; color:var(--ink); font-size:12px; font-weight:700; }
+.sync-badge { padding:6px 10px; border-radius:999px; border:1px solid var(--border); background:var(--bg-soft); font-size:10px; font-weight:700; color:var(--ink-3); }
+.sync-badge.loading { color:var(--warning); }
+.sync-badge.ok { color:var(--success); }
+.content-pad { padding:20px 24px; }
+.tab-view { display:none; }
+.tab-view.active { display:block; }
+
+.kpi-row, .dash-row, .analysis-grid, .admin-grid, .form-layout { display:grid; gap:16px; }
+.kpi-row { grid-template-columns:repeat(4,1fr); margin-bottom:20px; }
+.dash-row-2 { grid-template-columns:1.3fr 1fr; }
+.dash-row-3 { grid-template-columns:1.2fr .9fr .9fr; }
+.analysis-grid { grid-template-columns:1.2fr .8fr; }
+.admin-grid { grid-template-columns:1fr 1fr; }
+.form-layout { grid-template-columns:420px 1fr; }
+.panel {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
+}
+.panel-head { padding:12px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.panel-head h3 { font-size:13px; font-weight:900; color:var(--ink); }
+.panel-head small { display:block; margin-top:2px; color:var(--ink-3); font-size:10px; font-weight:600; }
+.panel-body { padding:14px 16px; }
+.kpi-card {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px 18px; position:relative; overflow:hidden;
+}
+.kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, #c83c62, #f19ab0); }
+.kpi-icon { width:38px; height:38px; border-radius:10px; background:var(--accent-soft-2); display:grid; place-items:center; font-size:18px; margin-bottom:10px; }
+.kpi-value { font-size:28px; font-weight:900; color:var(--ink); line-height:1; }
+.kpi-label { margin-top:6px; font-size:10px; font-weight:800; color:var(--ink-3); letter-spacing:.12em; text-transform:uppercase; }
+.kpi-sub { margin-top:6px; font-size:11px; color:var(--ink-3); }
+.fin-card {
+  background:linear-gradient(135deg, var(--maroon) 0%, var(--maroon-2) 100%); color:#fff; border-radius:var(--radius); padding:16px 18px; box-shadow:0 10px 28px rgba(90,19,37,.18);
+}
+.fin-label { font-size:9px; color:rgba(255,255,255,.55); letter-spacing:.16em; text-transform:uppercase; font-weight:800; margin-bottom:8px; }
+.fin-value { font-size:22px; font-weight:900; line-height:1; }
+.fin-sub { font-size:10px; color:rgba(255,255,255,.55); margin-top:5px; }
+.fin-bar { height:4px; background:rgba(255,255,255,.12); border-radius:999px; margin-top:10px; overflow:hidden; }
+.fin-bar-fill { height:100%; width:0; background:linear-gradient(90deg, #ffd0dc, #f19ab0); }
+.chart-wrap { height:250px; }
+.chart-wrap-sm { height:220px; }
+.summary-card {
+  background:linear-gradient(135deg, var(--maroon) 0%, var(--maroon-2) 100%); color:#fff; border-radius:var(--radius); padding:20px; box-shadow:0 12px 32px rgba(90,19,37,.17);
+}
+.summary-title { font-size:11px; font-weight:900; letter-spacing:.16em; text-transform:uppercase; color:#ffd0dc; margin-bottom:14px; }
+.summary-item { display:flex; gap:12px; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,.08); }
+.summary-item:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.summary-bullet {
+  width:20px; height:20px; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.14); font-size:10px; flex-shrink:0; margin-top:2px;
+}
+.summary-text { color:rgba(255,255,255,.85); line-height:1.6; font-size:12px; }
+.summary-text strong { color:#fff; }
+.rtable, .data-table { width:100%; border-collapse:collapse; }
+.rtable th, .data-table th {
+  background:var(--bg-soft); color:var(--ink-3); font-size:9px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; padding:8px 12px; text-align:left; border-bottom:1px solid var(--border);
+}
+.rtable td, .data-table td { padding:9px 12px; border-bottom:1px solid var(--border); color:var(--ink-2); vertical-align:top; }
+.rtable tr:hover td, .data-table tr:hover td { background:var(--bg-hover); }
+.risk-badge, .tag {
+  display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:999px; font-size:10px; font-weight:800;
+}
+.badge-low { background:#e8f7f1; color:var(--success); }
+.badge-med { background:#fff6e8; color:var(--warning); }
+.badge-high { background:#fdeaea; color:var(--danger); }
+.tag-maroon { background:var(--accent-soft); color:var(--accent); }
+.tag-soft { background:var(--bg-soft); color:var(--ink-2); }
+.field-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.field-full { grid-column:1 / -1; }
+.field-label { display:block; margin-bottom:6px; color:var(--ink-3); font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+.field-helper { margin-top:4px; color:var(--ink-3); font-size:10px; line-height:1.5; }
+.field-textarea { min-height:72px; resize:vertical; }
+.btn { font-size:11px; text-transform:uppercase; }
+.btn-primary { background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; }
+.btn-primary:hover { opacity:.95; }
+.btn-ghost { background:transparent; color:var(--ink-2); border:1.5px solid var(--border-2); }
+.btn-ghost:hover { color:var(--accent); border-color:var(--accent); }
+.btn-danger { background:transparent; color:var(--danger); border:1.5px solid rgba(197,48,48,.28); }
+.btn-danger:hover { background:#fdeaea; }
+.btn-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.metric-list { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.metric-box { background:var(--bg-soft); border:1px solid var(--border); border-radius:10px; padding:12px; }
+.metric-box .lbl { color:var(--ink-3); font-size:9px; letter-spacing:.12em; text-transform:uppercase; font-weight:800; }
+.metric-box .val { color:var(--ink); font-size:17px; font-weight:900; margin-top:5px; }
+.search-wrap { position:relative; }
+.suggestions {
+  display:none; position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:200; max-height:220px; overflow:auto;
+  background:#fff; border:1.5px solid var(--border-2); border-radius:10px; box-shadow:var(--shadow-2);
+}
+.suggestion-item { padding:10px 12px; border-bottom:1px solid var(--border); cursor:pointer; }
+.suggestion-item:last-child { border-bottom:none; }
+.suggestion-item:hover { background:var(--bg-hover); }
+.suggestion-item .name { font-size:12px; font-weight:700; color:var(--ink); }
+.suggestion-item .addr { margin-top:3px; font-size:10px; color:var(--ink-3); }
+#formMap { height:320px; border:1.5px solid var(--border); border-radius:10px; overflow:hidden; }
+#scenarioMap { height:320px; border:1.5px solid var(--border); border-radius:10px; overflow:hidden; }
+#tabPeta { height:calc(100vh - 56px); }
+#tabPeta.active { display:block; }
+#tabPeta > .panel { height:100%; }
+#tabPeta .map-shell { height:100%; min-height:calc(100vh - 56px); }
+#tabPeta .map-shell > div { display:flex; flex-direction:column; min-height:0; }
+#tabPeta #scenarioMap { flex:1; height:100%; min-height:calc(100vh - 120px); border-left:none; border-right:none; border-bottom:none; border-radius:0; }
+#tabPeta .map-legend { height:100%; overflow-y:auto; }
+.map-toolbar {
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 14px; background:var(--bg-card); border-bottom:1px solid var(--border);
+}
+.map-toolbar .map-title { font-size:12px; font-weight:900; color:var(--ink); }
+.map-shell { display:grid; grid-template-columns:1fr 230px; min-height:580px; }
+.map-legend { border-left:1px solid var(--border); background:var(--bg-card); padding:14px; }
+.legend-title { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--ink); margin-bottom:10px; }
+.legend-block { margin-bottom:16px; }
+.legend-sub { font-size:9px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-bottom:8px; }
+.legend-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:11px; color:var(--ink-2); }
+.legend-bar { width:54px; height:8px; border-radius:999px; background:linear-gradient(90deg, rgba(22,130,93,0) 0%, #16825d 6%, #62b36b 35%, #d7b23b 68%, #c53030 100%); }
+.rank-list { display:flex; flex-direction:column; gap:10px; }
+.rank-item { border:1px solid var(--border); border-radius:10px; padding:12px; background:var(--bg-card); }
+.rank-item .head { display:flex; gap:10px; align-items:flex-start; }
+.rank-num { width:28px; height:28px; border-radius:50%; display:grid; place-items:center; background:var(--accent-soft); color:var(--accent); font-size:12px; font-weight:900; flex-shrink:0; }
+.rank-title { font-size:13px; font-weight:800; color:var(--ink); }
+.rank-sub { font-size:11px; color:var(--ink-3); margin-top:2px; }
+.rank-detail { margin-top:8px; font-size:12px; color:var(--ink-2); line-height:1.6; }
+.upload-zone {
+  border:2px dashed var(--border-2); border-radius:10px; padding:28px 20px; text-align:center; cursor:pointer; background:var(--bg-soft); transition:.15s;
+}
+.upload-zone:hover, .upload-zone.dragover { border-color:var(--accent); background:var(--accent-soft-2); }
+.upload-zone .icon { font-size:32px; margin-bottom:8px; }
+.upload-zone .title { font-size:13px; font-weight:800; color:var(--ink); }
+.upload-zone .sub { margin-top:5px; font-size:11px; color:var(--ink-3); }
+.progress-wrap { display:none; margin-top:12px; }
+.progress-bar { height:5px; background:var(--border); border-radius:999px; overflow:hidden; }
+.progress-fill { height:100%; width:0%; background:linear-gradient(90deg, #c83c62, #f19ab0); }
+.notice {
+  padding:11px 12px; border-radius:10px; font-size:12px; line-height:1.6; border:1px solid var(--border); background:var(--bg-soft);
+}
+.notice strong { color:var(--ink); }
+.asset-score-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:14px; }
+.score-card { background:var(--bg-soft); border:1px solid var(--border); border-radius:10px; padding:12px; }
+.score-card .sname { font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); }
+.score-card .svalue { font-size:22px; font-weight:900; color:var(--ink); margin-top:6px; line-height:1; }
+.score-card .smeta { font-size:10px; color:var(--ink-3); margin-top:5px; }
+.filters { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px; }
+.search-inline { flex:1; min-width:220px; }
+.search-inline input { width:100%; }
+.empty-state { padding:26px; text-align:center; color:var(--ink-3); }
+#toast {
+  position:fixed; right:18px; bottom:18px; z-index:3000; display:none; max-width:320px; background:#fff; border:1px solid var(--border); border-left:4px solid var(--accent);
+  color:var(--ink); box-shadow:var(--shadow-2); border-radius:10px; padding:12px 14px; font-size:12px; font-weight:700;
+}
+.small { font-size:11px; }
+.muted { color:var(--ink-3); }
+
+@media (max-width: 1180px) {
+  .kpi-row, .dash-row-3 { grid-template-columns:repeat(2,1fr); }
+  .form-layout, .analysis-grid, .dash-row-2, .admin-grid { grid-template-columns:1fr; }
+}
+@media (max-width: 900px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { display:none; }
+  .main-content { margin-left:0; width:100%; }
+  .kpi-row { grid-template-columns:1fr 1fr; }
+  .map-shell { grid-template-columns:1fr; }
+  #tabPeta { height:auto; }
+  #tabPeta .map-shell { height:auto; min-height:auto; }
+  #tabPeta #scenarioMap { min-height:60vh; }
+  .map-legend { border-left:none; border-top:1px solid var(--border); }
+}
+@media (max-width: 640px) {
+  .kpi-row, .field-grid, .metric-list, .asset-score-grid { grid-template-columns:1fr; }
+  .topbar { height:auto; padding:10px 14px; align-items:flex-start; flex-wrap:wrap; }
+}
+</style>
+</head>
+<body>
+
+<div id="pageLanding" class="page active">
+  <div class="landing-noise"></div>
+  <div class="landing-grid"></div>
+  <div class="landing-content">
+    <div class="landing-pill"><span class="dot"></span> Climate Scenario Intelligence</div>
+    <h1 class="landing-title">BC<span>RIP</span></h1>
+    <div class="landing-subtitle">Meteorological Variable Scenario Dashboard</div>
+    <p class="landing-desc">
+      Clone dashboard ini diarahkan ulang untuk pemetaan <strong>variabel meteorologis berbasis skenario iklim</strong>.
+      Super admin dapat mengunggah profil COG per variabel dan per skenario, lalu aset akan diekstraksi otomatis berdasarkan koordinat
+      untuk analisis proyeksi seperti SSP1-2.6, SSP2-4.5, SSP3-7.0, hingga SSP5-8.5.
+    </p>
+    <div class="landing-chip-row">
+      <div class="l-chip">Pemetaan COG Variabel Meteorologis</div>
+      <div class="l-chip">Normalisasi Nilai 0–1</div>
+      <div class="l-chip">Ekstraksi Berbasis Koordinat Aset</div>
+      <div class="l-chip">Analisis Statistik per Skenario</div>
+      <div class="l-chip">Layer Peta Dinamis</div>
+      <div class="l-chip">Super Admin Upload Profil</div>
+    </div>
+    <button class="landing-cta" onclick="Router.go('auth')">Masuk ke Dashboard</button>
+    <div class="landing-note">Versi maroon-red dengan fokus proyeksi perubahan iklim</div>
+  </div>
+</div>
+
+<div id="pageAuth" class="page">
+  <div class="auth-card">
+    <div class="auth-head">
+      <div class="auth-brand">
+        <div class="auth-mark">BC</div>
+        <div class="auth-brand-text">
+          <div class="name">BCRIP</div>
+          <div class="sub">Scenario Mapper</div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-body">
+      <div class="auth-label">Masuk ke dashboard pemetaan skenario</div>
+      <div class="auth-field">
+        <label>Username / Email</label>
+        <input id="authUser" class="auth-input" type="text" value="admin" placeholder="Username atau email" />
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input id="authPass" class="auth-input" type="password" placeholder="Password" />
+      </div>
+      <div id="authError" class="auth-err">Username atau password tidak valid.</div>
+      <button class="auth-btn" onclick="Auth.login()">Masuk</button>
+      <div class="auth-back"><button onclick="Router.go('landing')">← Kembali</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="pageApp" class="page">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="mark">BC</div>
+      <div class="brand">BCRIP</div>
+      <div class="tag">Climate scenario mapper</div>
+    </div>
+    <div class="sidebar-user">
+      <div id="sidebarAvatar" class="sidebar-avatar">U</div>
+      <div>
+        <div id="sidebarUserName" class="sidebar-user-name">User</div>
+        <div id="sidebarUserRole" class="sidebar-user-role">Standard User</div>
+      </div>
+      <div id="sidebarRoleBadge" class="sidebar-role-badge">User</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Analitik</div>
+      <button class="nav-item active" data-tab="dashboard" onclick="Tabs.switch('dashboard', this)">📊 Dashboard</button>
+      <button class="nav-item" data-tab="peta" onclick="Tabs.switch('peta', this)">🗺️ Peta Skenario</button>
+      <button class="nav-item" data-tab="ekstrak" onclick="Tabs.switch('ekstrak', this)">📍 Ekstraksi Variabel</button>
+      <button class="nav-item" data-tab="analisis" onclick="Tabs.switch('analisis', this)">📋 Analisis Statistik</button>
+
+      <div class="nav-section">Data</div>
+      <button class="nav-item" data-tab="inputaset" onclick="Tabs.switch('inputaset', this)">➕ Input Aset</button>
+      <button class="nav-item" data-tab="tabel" onclick="Tabs.switch('tabel', this)">📑 Tabel Aset</button>
+
+      <div id="superAdminGroup" style="display:none;">
+        <div class="nav-section">Super Admin</div>
+        <button class="nav-item" data-tab="admin" onclick="Tabs.switch('admin', this)">🛡️ Profil Variabel</button>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn btn-logout" onclick="Auth.logout()">Keluar</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <div class="topbar">
+      <div>
+        <span id="topbarTitle" class="topbar-title">Dashboard</span>
+        <span id="topbarSub" class="topbar-sub">Ringkasan climate scenario aktif</span>
+      </div>
+      <div class="topbar-right">
+        <div class="tkpi"><strong id="hdrAssetCount">0</strong><span>Aset</span></div>
+        <div class="tkpi"><strong id="hdrProfileCount">0</strong><span>Profil</span></div>
+        <div class="scenario-switch">
+          <label>Skenario</label>
+          <select id="globalScenarioSelect" onchange="AppState.setScenario(this.value)"></select>
+        </div>
+        <div id="syncBadge" class="sync-badge">Idle</div>
+      </div>
+    </div>
+
+    <div id="tabDashboard" class="tab-view active">
+      <div class="content-pad">
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-icon">🏭</div><div id="kpiAssets" class="kpi-value">0</div><div class="kpi-label">Total Aset</div><div class="kpi-sub">Aset tersimpan di browser</div></div>
+          <div class="kpi-card"><div class="kpi-icon">🌦️</div><div id="kpiProfiles" class="kpi-value">0</div><div class="kpi-label">Profil Variabel</div><div class="kpi-sub">COG per variabel & skenario</div></div>
+          <div class="kpi-card"><div class="kpi-icon">⚠️</div><div id="kpiAtRisk" class="kpi-value">0</div><div class="kpi-label">Aset At Risk</div><div id="kpiAtRiskSub" class="kpi-sub">Aktif pada skenario terpilih</div></div>
+          <div class="kpi-card"><div class="kpi-icon">🧭</div><div id="kpiScenario" class="kpi-value">—</div><div class="kpi-label">Skenario Aktif</div><div class="kpi-sub">Digunakan di seluruh analisis</div></div>
+        </div>
+
+        <div class="dash-row dash-row-3" style="margin-bottom:20px;">
+          <div class="fin-card">
+            <div class="fin-label">Total Nilai Aset</div>
+            <div id="finTotalValue" class="fin-value">Rp0</div>
+            <div class="fin-sub">Portofolio seluruh aset</div>
+            <div class="fin-bar"><div id="finTotalBar" class="fin-bar-fill" style="width:100%"></div></div>
+          </div>
+          <div class="fin-card">
+            <div class="fin-label">Value At Risk</div>
+            <div id="finVar" class="fin-value">Rp0</div>
+            <div class="fin-sub">Nilai aset dengan overall index ≥ 0.34</div>
+            <div class="fin-bar"><div id="finVarBar" class="fin-bar-fill"></div></div>
+          </div>
+          <div class="fin-card">
+            <div class="fin-label">Est. Paparan Finansial</div>
+            <div id="finExposure" class="fin-value">Rp0</div>
+            <div class="fin-sub">Rendah 5% · Sedang 20% · Tinggi 50%</div>
+            <div class="fin-bar"><div id="finExposureBar" class="fin-bar-fill"></div></div>
+          </div>
+        </div>
+
+        <div class="dash-row dash-row-2" style="margin-bottom:20px;">
+          <div class="summary-card">
+            <div class="summary-title">Executive scenario summary</div>
+            <div id="dashboardSummary"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div><h3>Rerata Skor Variabel</h3><small>Normalisasi 0–1 per variabel pada skenario aktif</small></div></div>
+            <div class="panel-body"><div class="chart-wrap"><canvas id="avgVariableChart"></canvas></div></div>
+          </div>
+        </div>
+
+        <div class="dash-row dash-row-2">
+          <div class="panel">
+            <div class="panel-head"><div><h3>Distribusi Overall Climate Index</h3><small>Tinggi, sedang, rendah berdasarkan skor maksimum variabel</small></div></div>
+            <div class="panel-body"><div class="chart-wrap"><canvas id="riskDistributionChart"></canvas></div></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div><h3>Top Aset Risiko Tertinggi</h3><small>Diperingkatkan dari indeks keseluruhan skenario aktif</small></div></div>
+            <div class="panel-body" style="padding:0;">
+              <table class="rtable">
+                <thead><tr><th>#</th><th>Aset</th><th>Variabel Dominan</th><th>Overall</th><th>Nilai</th></tr></thead>
+                <tbody id="topAssetBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabPeta" class="tab-view">
+      <div class="panel" style="border-radius:0;border-left:none;border-right:none;border-top:none;box-shadow:none;">
+        <div class="map-shell">
+          <div>
+            <div class="map-toolbar">
+              <span class="map-title">Peta layer skenario iklim</span>
+              <div class="scenario-switch"><label>Variabel</label><select id="mapVariableSelect" onchange="AppState.preferredProfileId=this.value; MapController.renderLayer()"></select></div>
+              <div class="scenario-switch"><label>Opacity</label><input id="mapOpacityRange" type="range" min="15" max="100" value="68" oninput="MapController.renderLayer()" /></div>
+              <button class="btn btn-ghost" onclick="MapController.refresh()">Refresh Peta</button>
+            </div>
+            <div id="scenarioMap"></div>
+          </div>
+          <aside class="map-legend">
+            <div class="legend-title">Legenda</div>
+            <div class="legend-block">
+              <div class="legend-sub">Layer aktif</div>
+              <div class="legend-row"><span class="tag tag-maroon" id="legendVariableName">Belum ada layer</span></div>
+              <div class="legend-row"><span class="tag tag-soft" id="legendScenarioName">Scenario —</span></div>
+            </div>
+            <div class="legend-block">
+              <div class="legend-sub">Skala normalisasi</div>
+              <div class="legend-row"><span class="legend-bar"></span></div>
+              <div class="legend-row" style="justify-content:space-between;"><span>0.00 (transparan)</span><span>1.00 (merah tinggi)</span></div>
+            </div>
+            <div class="legend-block">
+              <div class="legend-sub">Keterangan</div>
+              <div class="notice">Layer dihasilkan dari <strong>profil variabel meteorologis</strong> yang diunggah super admin. Marker aset tetap ditampilkan di atas raster aktif.</div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabEkstrak" class="tab-view">
+      <div class="content-pad">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Ekstraksi Nilai Variabel</h3><small>Hasil pembacaan nilai raster pada koordinat aset</small></div>
+            <div class="btn-row">
+              <div class="scenario-switch"><label>Variabel</label><select id="extractVariableSelect" onchange="AppState.preferredProfileId=this.value; ExtractController.render()"></select></div>
+              <button class="btn btn-ghost" onclick="ExtractController.render()">Refresh</button>
+            </div>
+          </div>
+          <div class="panel-body" style="padding:0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Aset</th>
+                  <th>Lokasi</th>
+                  <th>Raw</th>
+                  <th>Normalisasi</th>
+                  <th>Level</th>
+                  <th>Skenario</th>
+                </tr>
+              </thead>
+              <tbody id="extractBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabAnalisis" class="tab-view">
+      <div class="content-pad">
+        <div class="analysis-grid">
+          <div>
+            <div class="panel" style="margin-bottom:16px;">
+              <div class="panel-head"><div><h3>Narasi Statistik</h3><small>Ringkasan risiko skenario aktif berbasis nilai normalisasi 0–1</small></div></div>
+              <div class="panel-body"><div id="analysisNarrative" class="rank-list"></div></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><div><h3>Prioritas Aset</h3><small>Urutan intervensi berdasarkan overall climate index</small></div></div>
+              <div class="panel-body"><div id="priorityAssets" class="rank-list"></div></div>
+            </div>
+          </div>
+          <div>
+            <div class="panel" style="margin-bottom:16px;">
+              <div class="panel-head"><div><h3>Kontribusi Variabel</h3><small>Rata-rata skor variabel untuk skenario aktif</small></div></div>
+              <div class="panel-body"><div class="chart-wrap-sm"><canvas id="variableContributionChart"></canvas></div></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><div><h3>Catatan Metodologi</h3><small>Asumsi perhitungan yang dipakai</small></div></div>
+              <div class="panel-body">
+                <div class="notice">
+                  <strong>Normalisasi:</strong> setiap profil variabel menggunakan min–max raster profile untuk mengubah raw value menjadi skala 0–1.<br>
+                  <strong>Overall climate index:</strong> skor maksimum dari seluruh variabel pada skenario aktif per aset.<br>
+                  <strong>At risk:</strong> overall index ≥ 0.34.<br>
+                  <strong>Paparan finansial:</strong> rendah 5%, sedang 20%, tinggi 50% dari nilai aset.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabInputaset" class="tab-view">
+      <div class="content-pad">
+        <div class="form-layout">
+          <div class="panel">
+            <div class="panel-head"><div><h3>Input Aset</h3><small>Tambah aset dan ekstrak skor iklim berdasarkan koordinat</small></div></div>
+            <div class="panel-body">
+              <div class="field-grid">
+                <div class="field-full">
+                  <label class="field-label">Cari lokasi</label>
+                  <div class="search-wrap">
+                    <input id="locationSearchInput" class="field-input" type="text" placeholder="Ketik nama aset, alamat, atau lokasi" autocomplete="off" />
+                    <div id="locationSuggestions" class="suggestions"></div>
+                  </div>
+                  <div class="field-helper">Pilih hasil pencarian atau klik langsung pada peta untuk mengisi koordinat.</div>
+                </div>
+                <div>
+                  <label class="field-label">Nama aset</label>
+                  <input id="assetNameInput" class="field-input" type="text" placeholder="Contoh: Stasiun Kompresor A" />
+                </div>
+                <div>
+                  <label class="field-label">Kelompok aset</label>
+                  <select id="assetGroupInput" class="field-select">
+                    <option>Bangunan Kantor</option>
+                    <option>Fasilitas Produksi</option>
+                    <option>Infrastruktur Pipa</option>
+                    <option>Substation / Gardu</option>
+                    <option>Terminal / Depot</option>
+                    <option>Aset Lainnya</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="field-label">Jenis aset</label>
+                  <input id="assetTypeInput" class="field-input" type="text" placeholder="Jenis aset spesifik" />
+                </div>
+                <div>
+                  <label class="field-label">Nilai aset (Rp)</label>
+                  <input id="assetValueInput" class="field-input" type="number" placeholder="1000000000" />
+                </div>
+                <div class="field-full">
+                  <label class="field-label">Deskripsi</label>
+                  <textarea id="assetDescriptionInput" class="field-textarea" placeholder="Catatan singkat aset"></textarea>
+                </div>
+              </div>
+              <div style="margin-top:12px;" id="formMap"></div>
+              <div class="btn-row" style="margin-top:10px;">
+                <button class="btn btn-ghost" onclick="FormController.useMyLocation()">Gunakan lokasi saya</button>
+                <button class="btn btn-ghost" onclick="FormController.clear()">Reset form</button>
+              </div>
+              <div class="field-grid" style="margin-top:12px;">
+                <div>
+                  <label class="field-label">Latitude</label>
+                  <input id="assetLatInput" class="field-input" type="text" readonly />
+                </div>
+                <div>
+                  <label class="field-label">Longitude</label>
+                  <input id="assetLonInput" class="field-input" type="text" readonly />
+                </div>
+              </div>
+              <div id="assetScorePreview" class="asset-score-grid"></div>
+              <div class="btn-row" style="margin-top:14px;">
+                <button class="btn btn-primary" onclick="FormController.save()">Simpan aset</button>
+                <button class="btn btn-ghost" onclick="FormController.extractCurrentPoint()">Ekstrak ulang nilai</button>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div><h3>Catatan Mekanisme</h3><small>Alur utama lama dipertahankan dengan fokus skenario</small></div></div>
+            <div class="panel-body">
+              <div class="notice" style="margin-bottom:12px;">
+                <strong>1.</strong> Lokasi aset dipilih lewat geocoding atau klik peta.<br>
+                <strong>2.</strong> Sistem membaca semua <strong>profil variabel meteorologis</strong> yang sudah diunggah super admin.<br>
+                <strong>3.</strong> Nilai setiap raster diidentifikasi pada titik koordinat aset lalu <strong>dinormalisasi ke 0–1</strong> menggunakan min–max profil masing-masing.<br>
+                <strong>4.</strong> Hasil tersimpan per skenario, jadi dashboard bisa langsung berpindah dari SSP1 ke skenario lain tanpa input ulang aset.
+              </div>
+              <div class="metric-list">
+                <div class="metric-box"><div class="lbl">Skenario aktif</div><div id="inputScenarioLabel" class="val">—</div></div>
+                <div class="metric-box"><div class="lbl">Profil tersedia</div><div id="inputProfileCount" class="val">0</div></div>
+                <div class="metric-box"><div class="lbl">Threshold at risk</div><div class="val">0.34</div></div>
+                <div class="metric-box"><div class="lbl">Normalisasi</div><div class="val">Min–Max</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabTabel" class="tab-view">
+      <div class="content-pad">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Tabel Aset</h3><small>Pencarian, penghapusan, dan inspeksi overall score pada skenario aktif</small></div>
+            <div class="btn-row">
+              <div class="search-inline"><input id="assetTableSearch" class="field-input" type="text" placeholder="Cari nama aset atau lokasi" oninput="AssetTable.render()" /></div>
+              <button class="btn btn-ghost" onclick="AssetTable.exportJson()">Export JSON</button>
+            </div>
+          </div>
+          <div class="panel-body" style="padding:0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Aset</th>
+                  <th>Kelompok</th>
+                  <th>Lokasi</th>
+                  <th>Nilai</th>
+                  <th>Overall Index</th>
+                  <th>Variabel Dominan</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="assetTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabAdmin" class="tab-view">
+      <div class="content-pad">
+        <div class="admin-grid" style="margin-bottom:16px;">
+          <div class="kpi-card"><div class="kpi-icon">🗂️</div><div id="adminProfileCount" class="kpi-value">0</div><div class="kpi-label">Total profil</div><div class="kpi-sub">Variabel × skenario</div></div>
+          <div class="kpi-card"><div class="kpi-icon">🔁</div><div id="adminScenarioCount" class="kpi-value">0</div><div class="kpi-label">Skenario tersedia</div><div class="kpi-sub">SSP dan skenario lain yang sudah diunggah</div></div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="panel">
+            <div class="panel-head"><div><h3>Upload Profil Variabel Meteorologis</h3><small>Super admin mengisi nama variabel, skenario SSP, file COG, dan rentang min-max normalisasi</small></div></div>
+            <div class="panel-body">
+              <div class="field-grid">
+                <div>
+                  <label class="field-label">Nama variabel</label>
+                  <input id="profileVariableInput" class="field-input" type="text" placeholder="Contoh: Curah Hujan Tahunan" />
+                </div>
+                <div>
+                  <label class="field-label">Skenario SSP</label>
+                  <select id="profileScenarioInput" class="field-select" onchange="Admin.toggleCustomScenario()">
+                    <option value="">Pilih skenario</option>
+                    <option value="SSP1-1.9">SSP1-1.9</option>
+                    <option value="SSP1-2.6">SSP1-2.6</option>
+                    <option value="SSP2-4.5">SSP2-4.5</option>
+                    <option value="SSP3-7.0">SSP3-7.0</option>
+                    <option value="SSP5-8.5">SSP5-8.5</option>
+                    <option value="CUSTOM">Lainnya / Custom</option>
+                  </select>
+                </div>
+                <div id="profileScenarioCustomWrap" style="display:none;">
+                  <label class="field-label">Nama skenario custom</label>
+                  <input id="profileScenarioCustomInput" class="field-input" type="text" placeholder="Contoh: Baseline Historis atau SSP4-6.0" />
+                </div>
+                <div>
+                  <label class="field-label">Nilai min normalisasi</label>
+                  <input id="profileMinInput" class="field-input" type="number" step="any" placeholder="Contoh: 0" />
+                  <div class="field-helper">Nilai ini menjadi batas bawah skala 0–1.</div>
+                </div>
+                <div>
+                  <label class="field-label">Nilai max normalisasi</label>
+                  <input id="profileMaxInput" class="field-input" type="number" step="any" placeholder="Contoh: 500" />
+                  <div class="field-helper">Nilai ini menjadi batas atas skala 0–1.</div>
+                </div>
+                <div class="field-full">
+                  <label class="field-label">Unggah file COG</label>
+                  <div id="profileUploadZone" class="upload-zone" onclick="document.getElementById('profileFileInput').click()">
+                    <div class="icon">🌍</div>
+                    <div class="title">Klik atau drag-and-drop file COG</div>
+                    <div class="sub">Setelah disimpan, layer langsung tersedia di peta dan dipakai untuk ekstraksi nilai pada koordinat aset</div>
+                  </div>
+                  <input id="profileFileInput" type="file" accept=".tif,.tiff,.cog" style="display:none" onchange="Admin.uploadSelectedFile(this.files[0]); this.value='';" />
+                  <div id="profileProgress" class="progress-wrap">
+                    <div class="small muted" id="profileProgressText">Memproses file…</div>
+                    <div class="progress-bar"><div id="profileProgressFill" class="progress-fill"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="btn-row" style="margin-top:14px;">
+                <button class="btn btn-primary" onclick="Admin.saveProfile()">Simpan profil</button>
+                <button class="btn btn-ghost" onclick="Admin.resetForm()">Reset</button>
+                <button class="btn btn-ghost" onclick="Admin.recomputeAssets()">Rehitung semua aset</button>
+              </div>
+              <div id="adminUploadInfo" class="notice" style="margin-top:14px;">
+                Belum ada file yang dipilih. Isi juga nilai min dan max agar normalisasi 0–1 mengikuti rentang yang Anda tentukan.
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><div><h3>Profil Tersimpan</h3><small>Daftar profil yang bisa dijadikan layer skenario</small></div></div>
+            <div class="panel-body" style="padding:0;">
+              <table class="data-table">
+                <thead><tr><th>Variabel</th><th>Skenario</th><th>File</th><th>Min</th><th>Max</th><th>Aksi</th></tr></thead>
+                <tbody id="profileTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+const Config = {
+  defaultCenter: [-2.8, 118.2],
+  defaultZoom: 5,
+  atRiskThreshold: 0.34,
+  exposureMultiplier: { rendah: 0.05, sedang: 0.20, tinggi: 0.50 },
+  credentials: [
+    { username: 'admin', password: 'admin123', role: 'user', name: 'Admin User', email: 'admin@bcrip.id' },
+    { username: 'info@cesgs.or.id', password: 'CESGS2026', role: 'superadmin', name: 'CESGS Admin', email: 'info@cesgs.or.id' }
+  ],
+  storageKeyAssets: 'bcrip_climate_assets_v1'
+};
+
+const Utils = {
+  rupiah(v = 0) {
+    return new Intl.NumberFormat('id-ID', { style:'currency', currency:'IDR', maximumFractionDigits:0 }).format(Number(v || 0));
+  },
+  fmtNum(v, digits = 2) {
+    if (v === null || v === undefined || Number.isNaN(Number(v))) return '—';
+    return Number(v).toFixed(digits);
+  },
+  escapeHtml(str = '') {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  },
+  slug(s = '') {
+    return String(s).trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  },
+  level(score) {
+    if (score >= 0.67) return 'Tinggi';
+    if (score >= 0.34) return 'Sedang';
+    return 'Rendah';
+  },
+  levelClass(score) {
+    if (score >= 0.67) return 'badge-high';
+    if (score >= 0.34) return 'badge-med';
+    return 'badge-low';
+  },
+  exposure(score, assetValue) {
+    const lvl = this.level(score).toLowerCase();
+    return Number(assetValue || 0) * (Config.exposureMultiplier[lvl] || 0);
+  },
+  normalise(raw, min, max) {
+    if (raw === null || raw === undefined || Number.isNaN(Number(raw))) return null;
+    const lo = Number(min);
+    const hi = Number(max);
+    if (!Number.isFinite(lo) || !Number.isFinite(hi) || hi <= lo) return Math.max(0, Math.min(1, Number(raw || 0)));
+    return Math.max(0, Math.min(1, (Number(raw) - lo) / (hi - lo)));
+  },
+  normalizedColor(normalized, alpha = 0.92) {
+    if (normalized === null || normalized === undefined || Number.isNaN(Number(normalized))) return null;
+    const n = Math.max(0, Math.min(1, Number(normalized)));
+    if (n <= 0) return null;
+    const hue = Math.round(120 * (1 - n));
+    return `hsla(${hue}, 72%, 45%, ${alpha})`;
+  },
+  projectionCode(value) {
+    if (value === null || value === undefined || value === '') return 'EPSG:4326';
+    const raw = String(value).trim();
+    if (/^EPSG:/i.test(raw)) return raw.toUpperCase();
+    if (/^\d+$/.test(raw)) return `EPSG:${raw}`;
+    if (/^CRS:84$/i.test(raw)) return 'EPSG:4326';
+    return raw;
+  },
+  lonLatToRasterCoords(georaster, lon, lat) {
+    const target = this.projectionCode(georaster?.projection || georaster?.srs || georaster?.epsg);
+    if (!target || /^EPSG:4326$/i.test(target)) return [Number(lon), Number(lat)];
+    try {
+      return proj4('EPSG:4326', target, [Number(lon), Number(lat)]);
+    } catch (err) {
+      console.warn('Proj transform gagal, fallback ke lon/lat asli:', err);
+      return [Number(lon), Number(lat)];
+    }
+  },
+  rasterBandValue(georaster, row, col, bandIndex = 0) {
+    const width = Number(georaster?.width || 0);
+    const band = georaster?.values?.[bandIndex] ?? georaster?.rasters?.[bandIndex] ?? null;
+    if (!band || width <= 0) return null;
+    const line = band?.[row];
+    let value;
+    if (Array.isArray(line) || ArrayBuffer.isView(line)) value = line[col];
+    else if (Array.isArray(band) || ArrayBuffer.isView(band)) value = band[row * width + col];
+    else return null;
+    const nodata = georaster?.noDataValue;
+    if (value === undefined || value === null || Number.isNaN(Number(value))) return null;
+    if (nodata !== undefined && nodata !== null && Number(value) === Number(nodata)) return null;
+    return Number(value);
+  },
+  sampleRasterValue(georaster, lon, lat) {
+    if (!georaster) return null;
+    const width = Number(georaster.width || 0);
+    const height = Number(georaster.height || 0);
+    const xmin = Number(georaster.xmin);
+    const xmax = Number(georaster.xmax);
+    const ymin = Number(georaster.ymin);
+    const ymax = Number(georaster.ymax);
+    if (![width, height, xmin, xmax, ymin, ymax].every(Number.isFinite) || width <= 0 || height <= 0) return null;
+
+    const [x, y] = this.lonLatToRasterCoords(georaster, lon, lat);
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+    if (x < xmin || x > xmax || y < ymin || y > ymax) return null;
+
+    const pxW = Number(georaster.pixelWidth || ((xmax - xmin) / width));
+    const pxHRaw = Number(georaster.pixelHeight || ((ymax - ymin) / height));
+    const pxH = Math.abs(pxHRaw) || ((ymax - ymin) / height);
+
+    let col = Math.floor((x - xmin) / (Math.abs(pxW) || ((xmax - xmin) / width)));
+    let row = pxHRaw < 0
+      ? Math.floor((ymax - y) / pxH)
+      : Math.floor((y - ymin) / pxH);
+
+    col = Math.max(0, Math.min(width - 1, col));
+    row = Math.max(0, Math.min(height - 1, row));
+
+    return this.rasterBandValue(georaster, row, col, 0);
+  },
+  summaryLine(icon, text) {
+    return `<div class="summary-item"><div class="summary-bullet">${icon}</div><div class="summary-text">${text}</div></div>`;
+  }
+};
+
+const Router = {
+  go(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page${page.charAt(0).toUpperCase() + page.slice(1)}`).classList.add('active');
+  }
+};
+
+const Toast = {
+  timer: null,
+  show(msg, type = 'info') {
+    const el = document.getElementById('toast');
+    const colors = { info:'var(--accent)', success:'var(--success)', error:'var(--danger)', warn:'var(--warning)' };
+    el.textContent = msg;
+    el.style.borderLeftColor = colors[type] || colors.info;
+    el.style.display = 'block';
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => { el.style.display = 'none'; }, 3200);
+  }
+};
+
+const SyncBadge = {
+  set(text, cls = '') {
+    const el = document.getElementById('syncBadge');
+    el.className = `sync-badge ${cls}`.trim();
+    el.textContent = text;
+  },
+  loading(text = 'Memuat data…') { this.set(text, 'loading'); },
+  ok(text = 'Siap') { this.set(text, 'ok'); },
+  idle(text = 'Idle') { this.set(text, ''); }
+};
+
+const Auth = {
+  currentUser: null,
+  login() {
+    const user = document.getElementById('authUser').value.trim().toLowerCase();
+    const pass = document.getElementById('authPass').value;
+    const found = Config.credentials.find(c => (c.username.toLowerCase() === user || c.email.toLowerCase() === user) && c.password === pass);
+    const err = document.getElementById('authError');
+    if (!found) {
+      err.style.display = 'block';
+      return;
+    }
+    err.style.display = 'none';
+    this.currentUser = found;
+    document.getElementById('sidebarUserName').textContent = found.name;
+    document.getElementById('sidebarUserRole').textContent = found.role === 'superadmin' ? 'Super Administrator' : 'Standard User';
+    document.getElementById('sidebarAvatar').textContent = found.name.charAt(0).toUpperCase();
+    const badge = document.getElementById('sidebarRoleBadge');
+    badge.textContent = found.role === 'superadmin' ? 'SuperAdmin' : 'User';
+    badge.classList.toggle('superadmin', found.role === 'superadmin');
+    document.getElementById('superAdminGroup').style.display = found.role === 'superadmin' ? 'block' : 'none';
+    Router.go('app');
+    App.bootstrap();
+  },
+  logout() {
+    this.currentUser = null;
+    Router.go('landing');
+  }
+};
+
+const Tabs = {
+  labels: {
+    dashboard: { title:'Dashboard', sub:'Ringkasan climate scenario aktif' },
+    peta: { title:'Peta Skenario', sub:'Layer meteorologis dari profil COG terunggah' },
+    ekstrak: { title:'Ekstraksi Variabel', sub:'Nilai raster per aset dan per skenario' },
+    analisis: { title:'Analisis Statistik', sub:'Prioritas aset dan kontribusi variabel' },
+    inputaset: { title:'Input Aset', sub:'Tambah aset baru dan ekstrak nilai berdasarkan koordinat' },
+    tabel: { title:'Tabel Aset', sub:'Inventori aset untuk skenario aktif' },
+    admin: { title:'Profil Variabel', sub:'Upload variabel meteorologis per skenario' }
+  },
+  switch(tab, btn) {
+    document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(v => v.classList.remove('active'));
+    const target = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
+    if (target) target.classList.add('active');
+    if (btn) btn.classList.add('active');
+    document.getElementById('topbarTitle').textContent = this.labels[tab]?.title || tab;
+    document.getElementById('topbarSub').textContent = this.labels[tab]?.sub || '';
+    if (tab === 'peta') setTimeout(() => MapController.invalidate(), 120);
+    if (tab === 'inputaset') setTimeout(() => FormController.invalidateMap(), 120);
+    if (tab === 'ekstrak') ExtractController.render();
+    if (tab === 'analisis') AnalysisController.render();
+    if (tab === 'tabel') AssetTable.render();
+    if (tab === 'admin') Admin.render();
+  }
+};
+
+const AssetStore = {
+  all() {
+    try { return JSON.parse(localStorage.getItem(Config.storageKeyAssets) || '[]'); }
+    catch { return []; }
+  },
+  saveAll(list) {
+    localStorage.setItem(Config.storageKeyAssets, JSON.stringify(list));
+  },
+  add(asset) {
+    const list = this.all();
+    list.push(asset);
+    this.saveAll(list);
+  },
+  remove(id) {
+    this.saveAll(this.all().filter(a => String(a.id) !== String(id)));
+  },
+  replace(asset) {
+    const list = this.all();
+    const idx = list.findIndex(a => String(a.id) === String(asset.id));
+    if (idx >= 0) list[idx] = asset;
+    else list.push(asset);
+    this.saveAll(list);
+  }
+};
+
+const ProfileDB = {
+  db: null,
+  async open() {
+    if (this.db) return this.db;
+    this.db = await new Promise((resolve, reject) => {
+      const req = indexedDB.open('bcrip_climate_profiles', 1);
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('profiles')) db.createObjectStore('profiles', { keyPath:'id' });
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    return this.db;
+  },
+  async getAll() {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const req = db.transaction('profiles', 'readonly').objectStore('profiles').getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = () => reject(req.error);
+    });
+  },
+  async put(record) {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const req = db.transaction('profiles', 'readwrite').objectStore('profiles').put(record);
+      req.onsuccess = () => resolve(true);
+      req.onerror = () => reject(req.error);
+    });
+  },
+  async delete(id) {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const req = db.transaction('profiles', 'readwrite').objectStore('profiles').delete(id);
+      req.onsuccess = () => resolve(true);
+      req.onerror = () => reject(req.error);
+    });
+  }
+};
+
+const RasterCache = {
+  items: new Map(),
+  async load(profile) {
+    if (!profile) return null;
+    if (this.items.has(profile.id)) return this.items.get(profile.id);
+    const arrayBuffer = await profile.blob.arrayBuffer();
+    const georaster = await parseGeoraster(arrayBuffer);
+    const data = {
+      georaster,
+      min: Number.isFinite(Number(profile.min)) ? Number(profile.min) : Number(georaster.mins?.[0] ?? 0),
+      max: Number.isFinite(Number(profile.max)) ? Number(profile.max) : Number(georaster.maxs?.[0] ?? 1),
+      layer: null
+    };
+    this.items.set(profile.id, data);
+    return data;
+  },
+  drop(id) {
+    this.items.delete(id);
+  }
+};
+
+const AppState = {
+  profiles: [],
+  assets: [],
+  activeScenario: '',
+  preferredProfileId: '',
+  charts: {},
+  async initData() {
+    SyncBadge.loading();
+    this.assets = AssetStore.all();
+    this.profiles = await ProfileDB.getAll();
+    const scenarios = this.getScenarios();
+    if (!scenarios.length) scenarios.push('Belum ada skenario');
+    if (!scenarios.includes(this.activeScenario)) this.activeScenario = scenarios[0];
+    this.fillScenarioSelectors();
+    this.updateHeader();
+    SyncBadge.ok(`${this.assets.length} aset · ${this.profiles.length} profil`);
+  },
+  getScenarios() {
+    return [...new Set(this.profiles.map(p => p.scenario).filter(Boolean))].sort();
+  },
+  getProfilesByScenario(scenario = this.activeScenario) {
+    return this.profiles.filter(p => p.scenario === scenario);
+  },
+  fillScenarioSelectors() {
+    const scenarios = this.getScenarios();
+    const global = document.getElementById('globalScenarioSelect');
+    global.innerHTML = '';
+    if (!scenarios.length) {
+      global.innerHTML = '<option value="">Belum ada skenario</option>';
+      global.disabled = true;
+    } else {
+      global.disabled = false;
+      global.innerHTML = scenarios.map(s => `<option value="${Utils.escapeHtml(s)}">${Utils.escapeHtml(s)}</option>`).join('');
+      global.value = this.activeScenario;
+    }
+    document.getElementById('inputScenarioLabel').textContent = this.activeScenario || '—';
+    this.fillVariableSelectors();
+  },
+  fillVariableSelectors() {
+    const profiles = this.getProfilesByScenario();
+    const options = profiles.length ? profiles.map(p => `<option value="${p.id}">${Utils.escapeHtml(p.variableName)}</option>`).join('') : '<option value="">Belum ada variabel</option>';
+    const selectedId = profiles.some(p => p.id === this.preferredProfileId) ? this.preferredProfileId : (profiles[0]?.id || '');
+    if (!profiles.length) this.preferredProfileId = '';
+    else this.preferredProfileId = selectedId;
+    ['mapVariableSelect', 'extractVariableSelect'].forEach(id => {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      sel.innerHTML = options;
+      sel.disabled = !profiles.length;
+      if (profiles.length) sel.value = selectedId;
+    });
+    document.getElementById('inputProfileCount').textContent = profiles.length;
+  },
+  updateHeader() {
+    document.getElementById('hdrAssetCount').textContent = this.assets.length;
+    document.getElementById('hdrProfileCount').textContent = this.profiles.length;
+  },
+  setScenario(scenario) {
+    this.activeScenario = scenario;
+    this.fillScenarioSelectors();
+    Dashboard.render();
+    ExtractController.render();
+    AnalysisController.render();
+    MapController.renderLayer();
+    FormController.renderPreview();
+    AssetTable.render();
+  }
+};
+
+const ClimateComputation = {
+  async sampleProfile(profile, lat, lon) {
+    try {
+      const cached = await RasterCache.load(profile);
+
+      let raw = Utils.sampleRasterValue(cached.georaster, Number(lon), Number(lat));
+
+      if (!Number.isFinite(raw)) {
+        try {
+          const point = { type:'Point', coordinates:[Number(lon), Number(lat)] };
+          const fallback = await geoblaze.identify(cached.georaster, point);
+          raw = Array.isArray(fallback) ? Number(fallback[0]) : Number(fallback);
+        } catch (fallbackErr) {
+          console.warn('Fallback geoblaze identify gagal:', fallbackErr);
+        }
+      }
+
+      if (!Number.isFinite(raw)) return null;
+      const normalized = Utils.normalise(raw, cached.min, cached.max);
+      return {
+        profileId: profile.id,
+        variableName: profile.variableName,
+        scenario: profile.scenario,
+        raw,
+        normalized,
+        min: cached.min,
+        max: cached.max,
+        fileName: profile.fileName
+      };
+    } catch (err) {
+      console.error('sampleProfile error', err);
+      return null;
+    }
+  },
+  async computeAllScenarios(lat, lon) {
+    const result = {};
+    for (const profile of AppState.profiles) {
+      const sample = await this.sampleProfile(profile, lat, lon);
+      if (!sample) continue;
+      if (!result[profile.scenario]) result[profile.scenario] = {};
+      result[profile.scenario][profile.id] = sample;
+    }
+    return result;
+  },
+  getScenarioScores(asset, scenario = AppState.activeScenario) {
+    return asset?.scenarioScores?.[scenario] || {};
+  },
+  overallIndex(asset, scenario = AppState.activeScenario) {
+    const scores = Object.values(this.getScenarioScores(asset, scenario)).map(s => Number(s.normalized || 0));
+    return scores.length ? Math.max(...scores) : 0;
+  },
+  dominantVariable(asset, scenario = AppState.activeScenario) {
+    const items = Object.values(this.getScenarioScores(asset, scenario));
+    if (!items.length) return null;
+    return items.sort((a,b) => (b.normalized || 0) - (a.normalized || 0))[0];
+  },
+  scenarioVariableStats(scenario = AppState.activeScenario) {
+    const profiles = AppState.getProfilesByScenario(scenario);
+    return profiles.map(profile => {
+      const vals = AppState.assets
+        .map(a => a?.scenarioScores?.[scenario]?.[profile.id])
+        .filter(Boolean);
+      const avg = vals.length ? vals.reduce((s,v) => s + Number(v.normalized || 0), 0) / vals.length : 0;
+      const rawAvg = vals.length ? vals.reduce((s,v) => s + Number(v.raw || 0), 0) / vals.length : 0;
+      const atRisk = vals.filter(v => Number(v.normalized || 0) >= Config.atRiskThreshold).length;
+      return { profile, avg, rawAvg, atRisk, samples: vals.length };
+    });
+  },
+  financialSummary(scenario = AppState.activeScenario) {
+    const totalValue = AppState.assets.reduce((s, a) => s + Number(a.nilaiAset || 0), 0);
+    const atRiskAssets = AppState.assets.filter(a => this.overallIndex(a, scenario) >= Config.atRiskThreshold);
+    const varValue = atRiskAssets.reduce((s, a) => s + Number(a.nilaiAset || 0), 0);
+    const exposure = AppState.assets.reduce((s, a) => s + Utils.exposure(this.overallIndex(a, scenario), a.nilaiAset), 0);
+    return {
+      totalValue,
+      atRiskAssets,
+      atRiskCount: atRiskAssets.length,
+      varValue,
+      exposure,
+      proportion: totalValue ? varValue / totalValue : 0
+    };
+  }
+};
+
+const Dashboard = {
+  render() {
+    AppState.updateHeader();
+    const scenario = AppState.activeScenario;
+    const fin = ClimateComputation.financialSummary(scenario);
+    const stats = ClimateComputation.scenarioVariableStats(scenario);
+    const high = AppState.assets.filter(a => ClimateComputation.overallIndex(a, scenario) >= 0.67).length;
+    const med = AppState.assets.filter(a => {
+      const s = ClimateComputation.overallIndex(a, scenario);
+      return s >= 0.34 && s < 0.67;
+    }).length;
+    const low = AppState.assets.filter(a => ClimateComputation.overallIndex(a, scenario) < 0.34).length;
+
+    document.getElementById('kpiAssets').textContent = AppState.assets.length;
+    document.getElementById('kpiProfiles').textContent = AppState.profiles.length;
+    document.getElementById('kpiAtRisk').textContent = fin.atRiskCount;
+    document.getElementById('kpiAtRiskSub').textContent = `${((fin.proportion || 0) * 100).toFixed(0)}% dari nilai portofolio`;
+    document.getElementById('kpiScenario').textContent = scenario || '—';
+
+    document.getElementById('finTotalValue').textContent = Utils.rupiah(fin.totalValue);
+    document.getElementById('finVar').textContent = Utils.rupiah(fin.varValue);
+    document.getElementById('finExposure').textContent = Utils.rupiah(fin.exposure);
+    document.getElementById('finVarBar').style.width = `${Math.min(100, (fin.proportion || 0) * 100)}%`;
+    document.getElementById('finExposureBar').style.width = `${Math.min(100, fin.totalValue ? (fin.exposure / fin.totalValue) * 100 : 0)}%`;
+
+    const dom = [...stats].sort((a,b) => b.avg - a.avg)[0];
+    let summaryHtml = '';
+    summaryHtml += Utils.summaryLine('①', `Skenario <strong>${Utils.escapeHtml(scenario || '—')}</strong> saat ini mencakup <strong>${stats.length} profil variabel</strong> dan <strong>${AppState.assets.length} aset</strong> yang siap dianalisis.`);
+    summaryHtml += Utils.summaryLine('②', `Aset <strong>at risk</strong> berjumlah <strong>${fin.atRiskCount}</strong> dengan <strong>Value at Risk ${Utils.rupiah(fin.varValue)}</strong>.`);
+    summaryHtml += Utils.summaryLine('③', `Distribusi overall index menunjukkan <strong>${high} tinggi</strong>, <strong>${med} sedang</strong>, dan <strong>${low} rendah</strong>.`);
+    if (dom) summaryHtml += Utils.summaryLine('④', `Variabel dominan pada skenario aktif adalah <strong>${Utils.escapeHtml(dom.profile.variableName)}</strong> dengan rerata skor normalisasi <strong>${Utils.fmtNum(dom.avg)}</strong>.`);
+    if (!AppState.profiles.length) summaryHtml += Utils.summaryLine('ℹ', `Belum ada profil variabel yang diunggah. Masuk sebagai <strong>super admin</strong> untuk menambahkan file COG.`);
+    if (!AppState.assets.length) summaryHtml += Utils.summaryLine('ℹ', `Belum ada aset tersimpan. Tambahkan aset terlebih dahulu agar ekstraksi dan statistik dapat dihitung.`);
+    document.getElementById('dashboardSummary').innerHTML = summaryHtml;
+
+    this.renderAvgChart(stats);
+    this.renderRiskChart([high, med, low]);
+    this.renderTopAssets();
+  },
+  renderAvgChart(stats) {
+    const ctx = document.getElementById('avgVariableChart');
+    if (AppState.charts.avgVariable) AppState.charts.avgVariable.destroy();
+    AppState.charts.avgVariable = new Chart(ctx, {
+      type:'bar',
+      data: {
+        labels: stats.map(s => s.profile.variableName),
+        datasets: [{ data: stats.map(s => Number(s.avg.toFixed(3))), borderRadius:8 }]
+      },
+      options: {
+        responsive:true,
+        maintainAspectRatio:false,
+        plugins:{ legend:{ display:false } },
+        scales:{ y:{ min:0, max:1, ticks:{ callback:v => Number(v).toFixed(1) } } }
+      }
+    });
+  },
+  renderRiskChart(values) {
+    const ctx = document.getElementById('riskDistributionChart');
+    if (AppState.charts.riskDist) AppState.charts.riskDist.destroy();
+    AppState.charts.riskDist = new Chart(ctx, {
+      type:'doughnut',
+      data:{ labels:['Tinggi','Sedang','Rendah'], datasets:[{ data: values, borderWidth:0 }] },
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right' } } }
+    });
+  },
+  renderTopAssets() {
+    const tbody = document.getElementById('topAssetBody');
+    const scenario = AppState.activeScenario;
+    const rows = [...AppState.assets]
+      .sort((a,b) => ClimateComputation.overallIndex(b, scenario) - ClimateComputation.overallIndex(a, scenario))
+      .slice(0,5);
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Belum ada aset untuk dianalisis.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = rows.map((asset, idx) => {
+      const dom = ClimateComputation.dominantVariable(asset, scenario);
+      const overall = ClimateComputation.overallIndex(asset, scenario);
+      return `<tr>
+        <td>${idx + 1}</td>
+        <td><strong>${Utils.escapeHtml(asset.nama)}</strong><br><span class="muted small">${Utils.escapeHtml(asset.lokasi || '')}</span></td>
+        <td>${dom ? Utils.escapeHtml(dom.variableName) : '—'}</td>
+        <td><span class="risk-badge ${Utils.levelClass(overall)}">${Utils.level(overall)} ${Utils.fmtNum(overall)}</span></td>
+        <td>${Utils.rupiah(asset.nilaiAset)}</td>
+      </tr>`;
+    }).join('');
+  }
+};
+
+const MapController = {
+  map: null,
+  assetLayer: null,
+  rasterLayer: null,
+  async init() {
+    if (this.map) return;
+    this.map = L.map('scenarioMap').setView(Config.defaultCenter, Config.defaultZoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap contributors' }).addTo(this.map);
+    this.assetLayer = L.layerGroup().addTo(this.map);
+  },
+  invalidate() { if (this.map) this.map.invalidateSize(); },
+  async renderLayer() {
+    await this.init();
+    this.renderMarkers();
+    if (this.rasterLayer && this.map.hasLayer(this.rasterLayer)) this.map.removeLayer(this.rasterLayer);
+    const select = document.getElementById('mapVariableSelect');
+    const profile = AppState.profiles.find(p => p.id === select.value);
+    document.getElementById('legendVariableName').textContent = profile ? profile.variableName : 'Belum ada layer';
+    document.getElementById('legendScenarioName').textContent = AppState.activeScenario ? `Scenario ${AppState.activeScenario}` : 'Scenario —';
+    if (!profile) return;
+    const cached = await RasterCache.load(profile);
+    const opacity = Number(document.getElementById('mapOpacityRange').value || 68) / 100;
+    this.rasterLayer = new GeoRasterLayer({
+      georaster: cached.georaster,
+      opacity,
+      pixelValuesToColorFn: values => {
+        const raw = Array.isArray(values) ? values[0] : values;
+        if (raw === null || raw === undefined || Number.isNaN(Number(raw))) return null;
+        const n = Utils.normalise(raw, cached.min, cached.max);
+        return Utils.normalizedColor(n, 0.95);
+      },
+      resolution: 256
+    });
+    this.rasterLayer.addTo(this.map);
+  },
+  renderMarkers() {
+    if (!this.assetLayer) return;
+    this.assetLayer.clearLayers();
+    AppState.assets.forEach(asset => {
+      if (!asset.latitude || !asset.longitude) return;
+      const overall = ClimateComputation.overallIndex(asset);
+      const color = overall >= 0.67 ? '#c53030' : overall >= 0.34 ? '#b7791f' : '#16825d';
+      const marker = L.circleMarker([asset.latitude, asset.longitude], {
+        radius: 7, color:'#fff', weight:2, fillColor: color, fillOpacity: .95
+      }).bindPopup(`
+        <div style="font-family:Montserrat, sans-serif; min-width:220px;">
+          <div style="font-size:13px;font-weight:800;color:#3d1420;">${Utils.escapeHtml(asset.nama)}</div>
+          <div style="font-size:11px;color:#6d3847;margin-top:4px;">${Utils.escapeHtml(asset.lokasi || '')}</div>
+          <div style="margin-top:8px;font-size:12px;"><strong>Overall index:</strong> ${Utils.fmtNum(overall)}</div>
+          <div style="font-size:12px;"><strong>Nilai aset:</strong> ${Utils.rupiah(asset.nilaiAset)}</div>
+        </div>`);
+      marker.addTo(this.assetLayer);
+    });
+  },
+  refresh() { this.renderLayer(); },
+  zoomToAssets() {
+    const pts = AppState.assets.filter(a => a.latitude && a.longitude).map(a => [a.latitude, a.longitude]);
+    if (pts.length && this.map) this.map.fitBounds(pts, { padding:[30,30] });
+  }
+};
+
+const ExtractController = {
+  render() {
+    const scenarioProfiles = AppState.getProfilesByScenario();
+    const tbody = document.getElementById('extractBody');
+    if (!scenarioProfiles.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Belum ada profil variabel pada skenario aktif.</td></tr>';
+      return;
+    }
+    const sel = document.getElementById('extractVariableSelect');
+    const profile = AppState.profiles.find(p => p.id === sel.value) || scenarioProfiles[0];
+    if (sel.value !== profile.id) sel.value = profile.id;
+    const rows = AppState.assets.map(asset => ({
+      asset,
+      sample: asset?.scenarioScores?.[AppState.activeScenario]?.[profile.id] || null
+    }));
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Belum ada aset yang bisa diekstrak.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = rows.map(({asset, sample}) => {
+      const score = Number(sample?.normalized || 0);
+      return `<tr>
+        <td><strong>${Utils.escapeHtml(asset.nama)}</strong></td>
+        <td>${Utils.escapeHtml(asset.lokasi || `${asset.latitude}, ${asset.longitude}`)}</td>
+        <td>${sample ? Utils.fmtNum(sample.raw, 3) : '—'}</td>
+        <td>${sample ? Utils.fmtNum(score, 3) : '—'}</td>
+        <td>${sample ? `<span class="risk-badge ${Utils.levelClass(score)}">${Utils.level(score)}</span>` : '—'}</td>
+        <td>${Utils.escapeHtml(AppState.activeScenario || '—')}</td>
+      </tr>`;
+    }).join('');
+  }
+};
+
+const AnalysisController = {
+  render() {
+    this.renderNarrative();
+    this.renderPriority();
+    this.renderContribution();
+  },
+  renderNarrative() {
+    const wrap = document.getElementById('analysisNarrative');
+    const scenario = AppState.activeScenario;
+    const fin = ClimateComputation.financialSummary(scenario);
+    const stats = ClimateComputation.scenarioVariableStats(scenario).sort((a,b) => b.avg - a.avg);
+    const topVar = stats[0];
+    const list = [];
+    list.push({ title:'Ringkasan portofolio', sub:`${AppState.assets.length} aset pada ${scenario || '—'}`, text:`Value at Risk tercatat ${Utils.rupiah(fin.varValue)} dari total nilai portofolio ${Utils.rupiah(fin.totalValue)}.` });
+    if (topVar) list.push({ title:'Variabel paling menonjol', sub:topVar.profile.variableName, text:`Rerata skor normalisasi ${Utils.fmtNum(topVar.avg)} dengan ${topVar.atRisk} aset melampaui threshold 0.34.` });
+    list.push({ title:'Paparan finansial', sub:'Asumsi level risiko', text:`Estimasi paparan finansial total berada di ${Utils.rupiah(fin.exposure)} dengan pendekatan multiplier rendah 5%, sedang 20%, tinggi 50%.` });
+    if (!AppState.profiles.length) list.push({ title:'Status data', sub:'Belum lengkap', text:'Super admin perlu mengunggah profil variabel meteorologis agar analisis skenario dapat dihitung.' });
+    if (!AppState.assets.length) list.push({ title:'Status aset', sub:'Belum ada inventori', text:'Tambahkan aset untuk menghasilkan prioritas dan statistik scenario.' });
+    wrap.innerHTML = list.map((item, idx) => `
+      <div class="rank-item">
+        <div class="head"><div class="rank-num">${idx + 1}</div><div><div class="rank-title">${Utils.escapeHtml(item.title)}</div><div class="rank-sub">${Utils.escapeHtml(item.sub)}</div></div></div>
+        <div class="rank-detail">${Utils.escapeHtml(item.text)}</div>
+      </div>`).join('');
+  },
+  renderPriority() {
+    const wrap = document.getElementById('priorityAssets');
+    const scenario = AppState.activeScenario;
+    const rows = [...AppState.assets]
+      .sort((a,b) => ClimateComputation.overallIndex(b, scenario) - ClimateComputation.overallIndex(a, scenario))
+      .slice(0,8);
+    if (!rows.length) {
+      wrap.innerHTML = '<div class="rank-item"><div class="rank-detail">Belum ada aset untuk diurutkan.</div></div>';
+      return;
+    }
+    wrap.innerHTML = rows.map((asset, idx) => {
+      const overall = ClimateComputation.overallIndex(asset, scenario);
+      const dom = ClimateComputation.dominantVariable(asset, scenario);
+      return `
+        <div class="rank-item">
+          <div class="head"><div class="rank-num">${idx + 1}</div><div><div class="rank-title">${Utils.escapeHtml(asset.nama)}</div><div class="rank-sub">${Utils.escapeHtml(asset.assetGroup || '')} · ${Utils.escapeHtml(asset.lokasi || '')}</div></div></div>
+          <div class="rank-detail">
+            Overall climate index <strong>${Utils.fmtNum(overall)}</strong> · Variabel dominan <strong>${Utils.escapeHtml(dom?.variableName || '—')}</strong> · Nilai aset <strong>${Utils.rupiah(asset.nilaiAset)}</strong>
+          </div>
+        </div>`;
+    }).join('');
+  },
+  renderContribution() {
+    const ctx = document.getElementById('variableContributionChart');
+    const stats = ClimateComputation.scenarioVariableStats(AppState.activeScenario);
+    if (AppState.charts.contribution) AppState.charts.contribution.destroy();
+    AppState.charts.contribution = new Chart(ctx, {
+      type:'bar',
+      data:{ labels: stats.map(s => s.profile.variableName), datasets:[{ data: stats.map(s => Number(s.avg.toFixed(3))), borderRadius:8 }] },
+      options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ x:{ min:0, max:1 } } }
+    });
+  }
+};
+
+const LocationService = {
+  timer: null,
+  async search(q) {
+    const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&addressdetails=1&q=${encodeURIComponent(q)}`;
+    const res = await fetch(url, { headers:{ 'Accept-Language':'id,en' } });
+    return await res.json();
+  },
+  async reverse(lat, lon) {
+    try {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+      const res = await fetch(url, { headers:{ 'Accept-Language':'id,en' } });
+      const data = await res.json();
+      return data.display_name || `${lat}, ${lon}`;
+    } catch {
+      return `${lat}, ${lon}`;
+    }
+  }
+};
+
+const FormController = {
+  map: null,
+  marker: null,
+  selectedLocationName: '',
+  latestScenarioScores: {},
+  async init() {
+    if (this.map) return;
+    this.map = L.map('formMap').setView(Config.defaultCenter, Config.defaultZoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap contributors' }).addTo(this.map);
+    this.map.on('click', async e => {
+      await this.setPoint(e.latlng.lat, e.latlng.lng);
+    });
+
+    const input = document.getElementById('locationSearchInput');
+    const box = document.getElementById('locationSuggestions');
+    input.addEventListener('input', () => {
+      clearTimeout(LocationService.timer);
+      const q = input.value.trim();
+      if (q.length < 3) { box.style.display = 'none'; return; }
+      LocationService.timer = setTimeout(async () => {
+        try {
+          const rows = await LocationService.search(q);
+          if (!rows.length) { box.style.display = 'none'; return; }
+          box.innerHTML = rows.map(row => `
+            <div class="suggestion-item" data-lat="${row.lat}" data-lon="${row.lon}" data-name="${Utils.escapeHtml(row.display_name)}">
+              <div class="name">${Utils.escapeHtml(row.name || row.display_name.split(',')[0] || 'Lokasi')}</div>
+              <div class="addr">${Utils.escapeHtml(row.display_name)}</div>
+            </div>`).join('');
+          box.style.display = 'block';
+          box.querySelectorAll('.suggestion-item').forEach(item => {
+            item.onclick = async () => {
+              box.style.display = 'none';
+              input.value = item.dataset.name;
+              await this.setPoint(Number(item.dataset.lat), Number(item.dataset.lon), item.dataset.name);
+            };
+          });
+        } catch {
+          box.style.display = 'none';
+        }
+      }, 300);
+    });
+  },
+  invalidateMap() { if (this.map) this.map.invalidateSize(); },
+  async setPoint(lat, lon, label = '') {
+    document.getElementById('assetLatInput').value = Number(lat).toFixed(6);
+    document.getElementById('assetLonInput').value = Number(lon).toFixed(6);
+    this.selectedLocationName = label || await LocationService.reverse(lat, lon);
+    document.getElementById('locationSearchInput').value = this.selectedLocationName;
+    if (this.marker) this.map.removeLayer(this.marker);
+    this.marker = L.marker([lat, lon]).addTo(this.map).bindPopup(Utils.escapeHtml(this.selectedLocationName)).openPopup();
+    this.map.setView([lat, lon], 12);
+    await this.extractCurrentPoint();
+  },
+  async extractCurrentPoint() {
+    const lat = Number(document.getElementById('assetLatInput').value);
+    const lon = Number(document.getElementById('assetLonInput').value);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      Toast.show('Pilih titik koordinat terlebih dahulu.', 'warn');
+      return;
+    }
+    if (!AppState.profiles.length) {
+      this.latestScenarioScores = {};
+      this.renderPreview();
+      return;
+    }
+    SyncBadge.loading('Mengekstrak nilai raster…');
+    this.latestScenarioScores = await ClimateComputation.computeAllScenarios(lat, lon);
+    SyncBadge.ok('Ekstraksi selesai');
+    this.renderPreview();
+  },
+  renderPreview() {
+    const wrap = document.getElementById('assetScorePreview');
+    const scenario = AppState.activeScenario;
+    const samples = Object.values(this.latestScenarioScores?.[scenario] || {});
+    if (!samples.length) {
+      wrap.innerHTML = '<div class="notice field-full">Belum ada hasil ekstraksi untuk skenario aktif. Pastikan super admin sudah mengunggah profil variabel.</div>';
+      return;
+    }
+    wrap.innerHTML = samples.map(s => `
+      <div class="score-card">
+        <div class="sname">${Utils.escapeHtml(s.variableName)}</div>
+        <div class="svalue">${Utils.fmtNum(s.normalized, 3)}</div>
+        <div class="smeta">Raw ${Utils.fmtNum(s.raw, 3)} · ${Utils.level(s.normalized)}</div>
+      </div>`).join('');
+  },
+  async save() {
+    const nama = document.getElementById('assetNameInput').value.trim();
+    const lat = Number(document.getElementById('assetLatInput').value);
+    const lon = Number(document.getElementById('assetLonInput').value);
+    if (!nama || !Number.isFinite(lat) || !Number.isFinite(lon)) {
+      Toast.show('Nama aset dan koordinat wajib diisi.', 'error');
+      return;
+    }
+    if (!Object.keys(this.latestScenarioScores || {}).length && AppState.profiles.length) {
+      await this.extractCurrentPoint();
+    }
+    const asset = {
+      id: `asset-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
+      nama,
+      assetGroup: document.getElementById('assetGroupInput').value,
+      jenisAset: document.getElementById('assetTypeInput').value.trim(),
+      nilaiAset: Number(document.getElementById('assetValueInput').value || 0),
+      deskripsi: document.getElementById('assetDescriptionInput').value.trim(),
+      latitude: lat,
+      longitude: lon,
+      lokasi: this.selectedLocationName,
+      scenarioScores: this.latestScenarioScores,
+      date: new Date().toISOString()
+    };
+    AssetStore.add(asset);
+    AppState.assets = AssetStore.all();
+    AppState.updateHeader();
+    Dashboard.render();
+    AssetTable.render();
+    ExtractController.render();
+    AnalysisController.render();
+    MapController.refresh();
+    Toast.show('Aset berhasil disimpan.', 'success');
+    this.clear();
+  },
+  clear() {
+    ['assetNameInput','assetTypeInput','assetValueInput','assetDescriptionInput','assetLatInput','assetLonInput','locationSearchInput'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('assetGroupInput').selectedIndex = 0;
+    this.latestScenarioScores = {};
+    this.selectedLocationName = '';
+    this.renderPreview();
+    if (this.marker) { this.map.removeLayer(this.marker); this.marker = null; }
+  },
+  useMyLocation() {
+    if (!navigator.geolocation) { Toast.show('Browser tidak mendukung geolocation.', 'error'); return; }
+    navigator.geolocation.getCurrentPosition(pos => {
+      this.setPoint(pos.coords.latitude, pos.coords.longitude, 'Lokasi saat ini');
+    }, () => Toast.show('Gagal mengambil lokasi saat ini.', 'error'));
+  }
+};
+
+const AssetTable = {
+  render() {
+    const tbody = document.getElementById('assetTableBody');
+    const q = document.getElementById('assetTableSearch').value.trim().toLowerCase();
+    const scenario = AppState.activeScenario;
+    const rows = AppState.assets.filter(a => {
+      const hay = `${a.nama} ${a.lokasi || ''} ${a.assetGroup || ''}`.toLowerCase();
+      return !q || hay.includes(q);
+    });
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Tidak ada aset yang cocok.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = rows.map(asset => {
+      const overall = ClimateComputation.overallIndex(asset, scenario);
+      const dom = ClimateComputation.dominantVariable(asset, scenario);
+      return `<tr>
+        <td><strong>${Utils.escapeHtml(asset.nama)}</strong><br><span class="muted small">${Utils.escapeHtml(asset.jenisAset || '')}</span></td>
+        <td>${Utils.escapeHtml(asset.assetGroup || '—')}</td>
+        <td>${Utils.escapeHtml(asset.lokasi || `${asset.latitude}, ${asset.longitude}`)}</td>
+        <td>${Utils.rupiah(asset.nilaiAset)}</td>
+        <td><span class="risk-badge ${Utils.levelClass(overall)}">${Utils.level(overall)} ${Utils.fmtNum(overall)}</span></td>
+        <td>${Utils.escapeHtml(dom?.variableName || '—')}</td>
+        <td><button class="btn btn-danger" onclick="AssetTable.remove('${asset.id}')">Hapus</button></td>
+      </tr>`;
+    }).join('');
+  },
+  remove(id) {
+    AssetStore.remove(id);
+    AppState.assets = AssetStore.all();
+    Dashboard.render();
+    this.render();
+    ExtractController.render();
+    AnalysisController.render();
+    MapController.refresh();
+    Toast.show('Aset dihapus.', 'success');
+  },
+  exportJson() {
+    const blob = new Blob([JSON.stringify(AppState.assets, null, 2)], { type:'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `bcrip_climate_assets_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+  }
+};
+
+const Admin = {
+  pendingFile: null,
+  pendingStats: null,
+  toggleCustomScenario() {
+    const val = document.getElementById('profileScenarioInput').value;
+    document.getElementById('profileScenarioCustomWrap').style.display = val === 'CUSTOM' ? 'block' : 'none';
+  },
+  getScenarioValue() {
+    const selected = document.getElementById('profileScenarioInput').value;
+    if (selected === 'CUSTOM') return document.getElementById('profileScenarioCustomInput').value.trim();
+    return selected.trim();
+  },
+  setupUploadZone() {
+    const zone = document.getElementById('profileUploadZone');
+    ['dragover','dragenter'].forEach(evt => zone.addEventListener(evt, e => { e.preventDefault(); zone.classList.add('dragover'); }));
+    ['dragleave','dragend'].forEach(evt => zone.addEventListener(evt, () => zone.classList.remove('dragover')));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      const file = e.dataTransfer.files?.[0];
+      if (file) this.uploadSelectedFile(file);
+    });
+  },
+  async uploadSelectedFile(file) {
+    if (!file) return;
+    if (!/\.(tif|tiff|cog)$/i.test(file.name)) {
+      Toast.show('File harus berupa .tif / .tiff / .cog', 'error');
+      return;
+    }
+    this.pendingFile = file;
+    const progressWrap = document.getElementById('profileProgress');
+    const progressFill = document.getElementById('profileProgressFill');
+    const progressText = document.getElementById('profileProgressText');
+    progressWrap.style.display = 'block';
+    progressFill.style.width = '18%';
+    progressText.textContent = 'Membaca dan memvalidasi raster…';
+    try {
+      const buffer = await file.arrayBuffer();
+      progressFill.style.width = '55%';
+      const georaster = await parseGeoraster(buffer);
+      progressFill.style.width = '85%';
+      this.pendingStats = {
+        detectedMin: Number(georaster.mins?.[0] ?? 0),
+        detectedMax: Number(georaster.maxs?.[0] ?? 1),
+        width: georaster.width,
+        height: georaster.height,
+        projection: georaster.projection,
+        bands: georaster.numberOfRasters || 1
+      };
+      if (!document.getElementById('profileMinInput').value) document.getElementById('profileMinInput').value = this.pendingStats.detectedMin;
+      if (!document.getElementById('profileMaxInput').value) document.getElementById('profileMaxInput').value = this.pendingStats.detectedMax;
+      document.getElementById('adminUploadInfo').innerHTML = `
+        <strong>File siap:</strong> ${Utils.escapeHtml(file.name)}<br>
+        Raster terdeteksi: min ${Utils.fmtNum(this.pendingStats.detectedMin, 4)} · max ${Utils.fmtNum(this.pendingStats.detectedMax, 4)} ·
+        ${this.pendingStats.width}×${this.pendingStats.height} px · EPSG ${Utils.escapeHtml(String(this.pendingStats.projection || 'unknown'))}<br>
+        <strong>Normalisasi yang dipakai:</strong> min ${Utils.escapeHtml(document.getElementById('profileMinInput').value || '—')} · max ${Utils.escapeHtml(document.getElementById('profileMaxInput').value || '—')}`;
+      progressFill.style.width = '100%';
+      progressText.textContent = 'File valid. Periksa atau ubah nilai min-max sebelum menyimpan.';
+    } catch (err) {
+      console.error(err);
+      this.pendingFile = null;
+      this.pendingStats = null;
+      document.getElementById('adminUploadInfo').textContent = 'Gagal membaca file COG.';
+      Toast.show('Gagal memproses file COG.', 'error');
+    }
+  },
+  async saveProfile() {
+    const variableName = document.getElementById('profileVariableInput').value.trim();
+    const scenario = this.getScenarioValue();
+    const min = Number(document.getElementById('profileMinInput').value);
+    const max = Number(document.getElementById('profileMaxInput').value);
+    if (!variableName || !scenario || !this.pendingFile || !this.pendingStats) {
+      Toast.show('Nama variabel, skenario SSP, dan file COG wajib diisi.', 'error');
+      return;
+    }
+    if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) {
+      Toast.show('Nilai min dan max wajib valid, serta max harus lebih besar dari min.', 'error');
+      return;
+    }
+    const id = `profile-${Utils.slug(variableName)}-${Utils.slug(scenario)}-${Date.now()}`;
+    await ProfileDB.put({
+      id,
+      variableName,
+      scenario,
+      fileName: this.pendingFile.name,
+      blob: this.pendingFile,
+      min,
+      max,
+      detectedMin: this.pendingStats.detectedMin,
+      detectedMax: this.pendingStats.detectedMax,
+      width: this.pendingStats.width,
+      height: this.pendingStats.height,
+      projection: this.pendingStats.projection,
+      createdAt: new Date().toISOString()
+    });
+    this.pendingFile = null;
+    this.pendingStats = null;
+    AppState.activeScenario = scenario;
+    AppState.preferredProfileId = id;
+    this.resetForm();
+    await App.refreshAll();
+    Toast.show('Profil variabel berhasil disimpan dan langsung diaktifkan pada peta.', 'success');
+  },
+  resetForm() {
+    this.pendingFile = null;
+    this.pendingStats = null;
+    document.getElementById('profileVariableInput').value = '';
+    document.getElementById('profileScenarioInput').value = '';
+    document.getElementById('profileScenarioCustomInput').value = '';
+    document.getElementById('profileScenarioCustomWrap').style.display = 'none';
+    document.getElementById('profileMinInput').value = '';
+    document.getElementById('profileMaxInput').value = '';
+    document.getElementById('profileProgress').style.display = 'none';
+    document.getElementById('profileProgressFill').style.width = '0%';
+    document.getElementById('profileProgressText').textContent = 'Memproses file…';
+    document.getElementById('adminUploadInfo').textContent = 'Belum ada file yang dipilih. Isi juga nilai min dan max agar normalisasi 0–1 mengikuti rentang yang Anda tentukan.';
+  },
+  async deleteProfile(id) {
+    await ProfileDB.delete(id);
+    RasterCache.drop(id);
+    await App.refreshAll();
+    Toast.show('Profil dihapus.', 'success');
+  },
+  async recomputeAssets() {
+    if (!AppState.assets.length) { Toast.show('Belum ada aset untuk dihitung ulang.', 'warn'); return; }
+    if (!AppState.profiles.length) { Toast.show('Belum ada profil variabel.', 'warn'); return; }
+    SyncBadge.loading('Menghitung ulang semua aset…');
+    const updated = [];
+    for (const asset of AppState.assets) {
+      const scores = await ClimateComputation.computeAllScenarios(asset.latitude, asset.longitude);
+      updated.push({ ...asset, scenarioScores: scores });
+    }
+    AssetStore.saveAll(updated);
+    AppState.assets = updated;
+    Dashboard.render();
+    AssetTable.render();
+    ExtractController.render();
+    AnalysisController.render();
+    MapController.refresh();
+    SyncBadge.ok('Rehitung selesai');
+    Toast.show('Semua aset berhasil dihitung ulang.', 'success');
+  },
+  render() {
+    document.getElementById('adminProfileCount').textContent = AppState.profiles.length;
+    document.getElementById('adminScenarioCount').textContent = AppState.getScenarios().length;
+    const tbody = document.getElementById('profileTableBody');
+    if (!AppState.profiles.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Belum ada profil variabel yang disimpan.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = AppState.profiles
+      .sort((a,b) => a.scenario.localeCompare(b.scenario) || a.variableName.localeCompare(b.variableName))
+      .map(profile => `
+        <tr>
+          <td><strong>${Utils.escapeHtml(profile.variableName)}</strong></td>
+          <td><span class="tag tag-maroon">${Utils.escapeHtml(profile.scenario)}</span></td>
+          <td>${Utils.escapeHtml(profile.fileName)}</td>
+          <td>${Utils.fmtNum(profile.min, 4)}<br><span class="muted small">input</span></td>
+          <td>${Utils.fmtNum(profile.max, 4)}<br><span class="muted small">input</span></td>
+          <td><button class="btn btn-danger" onclick="Admin.deleteProfile('${profile.id}')">Hapus</button></td>
+        </tr>`).join('');
+  }
+};
+
+const App = {
+  async bootstrap() {
+    await ProfileDB.open();
+    await FormController.init();
+    await MapController.init();
+    Admin.setupUploadZone();
+    await this.refreshAll();
+  },
+  async refreshAll() {
+    await AppState.initData();
+    Dashboard.render();
+    AssetTable.render();
+    ExtractController.render();
+    AnalysisController.render();
+    Admin.render();
+    MapController.renderLayer();
+    FormController.renderPreview();
+    document.getElementById('inputScenarioLabel').textContent = AppState.activeScenario || '—';
+  }
+};
+
+window.addEventListener('load', () => {
+  SyncBadge.idle();
+});
+</script>
+</body>
+</html>
