@@ -780,6 +780,15 @@ button { font-family: var(--font); }
 .field-textarea { min-height: 60px; resize: vertical; }
 .field-select option { background: #fff; }
 .field-helper { font-size: 10px; color: var(--ink-3); margin-top: 4px; line-height: 1.5; }
+/* Color accent swatches in add-hazard form */
+.accent-swatch {
+  display: inline-block; width: 20px; height: 20px;
+  border-radius: 4px; cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform .1s, border-color .1s;
+  flex-shrink: 0;
+}
+.accent-swatch:hover { transform: scale(1.2); border-color: rgba(0,0,0,.25); }
 
 /* Autocomplete suggestions */
 .search-wrap { position: relative; }
@@ -856,7 +865,7 @@ button { font-family: var(--font); }
 /* =====================================================================
    MAP PAGE
 ===================================================================== */
-.map-layout { display: grid; grid-template-columns: 1fr 200px; }
+.map-layout { display: grid; grid-template-columns: 1fr; }
 .map-stage { position: relative; display: flex; flex-direction: column; }
 .map-toolbar {
   background: var(--bg-card);
@@ -877,14 +886,6 @@ button { font-family: var(--font); }
 .opacity-val { font-size: 10px; color: var(--ink-2); font-weight: 700; min-width: 28px; }
 
 #mainMap, #mainMapFull { flex: 1; }
-.map-legend {
-  background: var(--bg-card); border-left: 1px solid var(--border);
-  padding: 14px; overflow-y: auto;
-}
-.legend-title {
-  font-size: 11px; font-weight: 800; letter-spacing:.1em; text-transform:uppercase;
-  color: var(--ink); margin-bottom: 12px;
-}
 .legend-section { margin-bottom: 14px; }
 .legend-section-title {
   font-size: 9px; font-weight: 700; letter-spacing:.14em; text-transform:uppercase;
@@ -895,11 +896,40 @@ button { font-family: var(--font); }
   font-size: 11px; color: var(--ink-2); margin-bottom: 7px;
 }
 .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-.leg-gradient {
-  width: 48px; height: 7px; flex-shrink: 0;
-  background: linear-gradient(90deg, var(--success) 0%, var(--warning) 50%, var(--danger) 100%);
-  border-radius: 2px;
+
+/* Risk Gradient Bar — floating overlay bottom-left of map */
+.risk-gradient-bar {
+  position: absolute;
+  bottom: 24px;
+  left: 10px;
+  z-index: 900;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(11,30,61,.12);
+  border-radius: 8px;
+  padding: 7px 10px 6px;
+  box-shadow: 0 2px 10px rgba(11,30,61,.14);
+  min-width: 160px;
+  max-width: 220px;
+  pointer-events: none;
 }
+.risk-gradient-bar-label {
+  font-size: 8px; font-weight: 800; letter-spacing:.12em; text-transform:uppercase;
+  color: var(--ink-2); margin-bottom: 5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.risk-gradient-bar-track {
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #0e9f6e 0%, #d97706 50%, #dc2626 100%);
+  margin-bottom: 3px;
+  transition: background 0.35s ease;
+}
+.risk-gradient-bar-ticks {
+  display: flex; justify-content: space-between;
+  font-size: 7.5px; font-weight: 700; color: var(--ink-3);
+}
+.risk-gradient-bar-ticks span { white-space: nowrap; }
 
 /* =====================================================================
    AG GRID
@@ -1855,27 +1885,12 @@ table.extract-table { width: 100%; border-collapse: collapse; font-size: 12px; }
                   </div>
                 </div>
                 <div id="mainMap"></div>
+                <div class="risk-gradient-bar">
+                  <div class="risk-gradient-bar-label">Level Risiko</div>
+                  <div class="risk-gradient-bar-track"></div>
+                  <div class="risk-gradient-bar-ticks"><span>Rendah</span><span>Sedang</span><span>Tinggi</span></div>
+                </div>
               </div>
-              <aside class="map-legend">
-                <div class="legend-title">Legenda</div>
-                <div class="legend-section">
-                  <div class="legend-section-title">Layer COG</div>
-                  <div class="legend-row"><span class="leg-dot" style="background:var(--banjir)"></span>Banjir</div>
-                  <div class="legend-row"><span class="leg-dot" style="background:var(--gempa)"></span>Gempa</div>
-                  <div class="legend-row"><span class="leg-dot" style="background:var(--longsor)"></span>Longsor</div>
-                  <div class="legend-row"><span class="leg-dot" style="background:var(--kekeringan)"></span>Kekeringan</div>
-                </div>
-                <div class="legend-section">
-                  <div class="legend-section-title">Skala Risiko</div>
-                  <div class="legend-row"><span class="leg-gradient"></span></div>
-                  <div class="legend-row" style="justify-content:space-between;font-size:9px;"><span>Rendah</span><span>Tinggi</span></div>
-                </div>
-                <div class="legend-section">
-                  <div class="legend-section-title">Industri</div>
-                  <div class="legend-row"><span class="leg-dot" style="background:#2c9f4b"></span>PGAS/PGN</div>
-                  <div class="legend-row"><span class="leg-dot" style="background:#8650d2"></span>PGEO/PGE</div>
-                </div>
-              </aside>
             </div>
           </div>
 
@@ -2085,31 +2100,12 @@ table.extract-table { width: 100%; border-collapse: collapse; font-size: 12px; }
               </div>
             </div>
             <div id="mainMapFull" style="flex:1;"></div>
+            <div class="risk-gradient-bar">
+              <div class="risk-gradient-bar-label">Level Risiko</div>
+              <div class="risk-gradient-bar-track"></div>
+              <div class="risk-gradient-bar-ticks"><span>Rendah</span><span>Sedang</span><span>Tinggi</span></div>
+            </div>
           </div>
-          <aside class="map-legend">
-            <div class="legend-title">Legenda</div>
-            <div class="legend-section">
-              <div class="legend-section-title">Layer Bahaya</div>
-              <div class="legend-row"><span class="leg-dot" style="background:var(--banjir)"></span>Banjir (COG/TiTiler)</div>
-              <div class="legend-row"><span class="leg-dot" style="background:var(--gempa)"></span>Gempa (COG/TiTiler)</div>
-              <div class="legend-row"><span class="leg-dot" style="background:var(--longsor)"></span>Longsor (COG/TiTiler)</div>
-              <div class="legend-row"><span class="leg-dot" style="background:var(--kekeringan)"></span>Kekeringan (COG/TiTiler)</div>
-            </div>
-            <div class="legend-section">
-              <div class="legend-section-title">Skala Risiko</div>
-              <div class="legend-row"><span class="leg-gradient"></span></div>
-              <div class="legend-row" style="justify-content:space-between;font-size:9px;"><span>Rendah</span><span>Tinggi</span></div>
-            </div>
-            <div class="legend-section">
-              <div class="legend-section-title">Marker Industri</div>
-              <div class="legend-row"><span class="leg-dot" style="background:#2c9f4b"></span>PGAS/PGN</div>
-              <div class="legend-row"><span class="leg-dot" style="background:#8650d2"></span>PGEO/PGE</div>
-            </div>
-            <div class="legend-section">
-              <div class="legend-section-title">Info</div>
-              <div style="font-size:10px;color:var(--ink-3);line-height:1.6;">Klik marker untuk detail aset dan indeks risiko per bahaya.</div>
-            </div>
-          </aside>
         </div>
       </div>
     </div><!-- end tabPeta -->
@@ -2546,20 +2542,57 @@ table.extract-table { width: 100%; border-collapse: collapse; font-size: 12px; }
                     <input id="pNamaPerusahaan" class="profile-input" type="text" placeholder="contoh: PT Perusahaan Gas Negara Tbk" oninput="ProfileController.autosave()"/>
                   </div>
                   <div class="profile-field">
-                    <label>Sub-sektor Industri</label>
+                    <label>Sektor Industri <span class="req">*</span> <span style="font-size:9px;font-weight:600;color:var(--ink-3);letter-spacing:.06em;">Klasifikasi GRI</span></label>
+                    <select id="pSektor" class="profile-select" onchange="ProfileController.onSektorChange(); ProfileController.autosave()">
+                      <option value="">— Pilih sektor (GRI) —</option>
+                      <optgroup label="⛽ Energi">
+                        <option value="Energi — Minyak &amp; Gas">Minyak &amp; Gas (GRI 11)</option>
+                        <option value="Energi — Batubara">Batubara (GRI 12)</option>
+                        <option value="Energi — Listrik &amp; Utilitas">Listrik &amp; Utilitas</option>
+                        <option value="Energi — Terbarukan">Energi Terbarukan</option>
+                      </optgroup>
+                      <optgroup label="⛏️ Sumber Daya Alam">
+                        <option value="Pertambangan &amp; Logam">Pertambangan &amp; Logam (GRI 14)</option>
+                        <option value="Pertanian, Perikanan &amp; Kehutanan">Pertanian, Perikanan &amp; Kehutanan (GRI 13)</option>
+                        <option value="Kimia &amp; Petrokimia">Kimia &amp; Petrokimia</option>
+                      </optgroup>
+                      <optgroup label="🏭 Industri &amp; Manufaktur">
+                        <option value="Manufaktur &amp; Industri">Manufaktur &amp; Industri</option>
+                        <option value="Material Bangunan &amp; Konstruksi">Material Bangunan &amp; Konstruksi</option>
+                        <option value="Pulp, Kertas &amp; Kemasan">Pulp, Kertas &amp; Kemasan</option>
+                        <option value="Tekstil &amp; Pakaian">Tekstil &amp; Pakaian</option>
+                      </optgroup>
+                      <optgroup label="🛒 Konsumsi">
+                        <option value="Makanan &amp; Minuman">Makanan &amp; Minuman</option>
+                        <option value="Perdagangan Ritel &amp; E-Commerce">Perdagangan Ritel &amp; E-Commerce</option>
+                        <option value="Pariwisata &amp; Perhotelan">Pariwisata &amp; Perhotelan</option>
+                      </optgroup>
+                      <optgroup label="🚚 Transportasi &amp; Infrastruktur">
+                        <option value="Transportasi &amp; Logistik">Transportasi &amp; Logistik</option>
+                        <option value="Infrastruktur &amp; Konstruksi">Infrastruktur &amp; Konstruksi EPC</option>
+                        <option value="Sektor Publik &amp; Infrastruktur">Sektor Publik &amp; Utilitas Publik</option>
+                      </optgroup>
+                      <optgroup label="💻 Teknologi &amp; Komunikasi">
+                        <option value="Teknologi Informasi">Teknologi Informasi</option>
+                        <option value="Telekomunikasi &amp; Media">Telekomunikasi &amp; Media</option>
+                      </optgroup>
+                      <optgroup label="🏦 Keuangan">
+                        <option value="Keuangan — Perbankan">Perbankan</option>
+                        <option value="Keuangan — Asuransi">Asuransi</option>
+                        <option value="Keuangan — Investasi &amp; Pasar Modal">Investasi &amp; Pasar Modal</option>
+                      </optgroup>
+                      <optgroup label="🏥 Layanan">
+                        <option value="Properti &amp; Real Estate">Properti &amp; Real Estate</option>
+                        <option value="Kesehatan">Kesehatan</option>
+                        <option value="Pendidikan &amp; Penelitian">Pendidikan &amp; Penelitian</option>
+                      </optgroup>
+                    </select>
+                    <div class="profile-helper">Mengacu pada GRI Sector Standards (GRI 11–14 &amp; program sektor lainnya)</div>
+                  </div>
+                  <div class="profile-field" style="grid-column:1/-1;">
+                    <label>Sub-sektor Industri <span style="font-size:9px;font-weight:600;color:var(--ink-3);letter-spacing:.06em;">GRI — Pilih sektor terlebih dahulu</span></label>
                     <select id="pSubsektor" class="profile-select" onchange="ProfileController.autosave()">
                       <option value="">— Pilih sub-sektor —</option>
-                      <option>Distribusi Gas Bumi</option>
-                      <option>Transmisi Gas Bumi</option>
-                      <option>Energi Panas Bumi (Geothermal)</option>
-                      <option>Pembangkit Listrik</option>
-                      <option>Minyak & Gas Hulu</option>
-                      <option>Infrastruktur Energi</option>
-                      <option>Industri Manufaktur</option>
-                      <option>Perbankan & Keuangan</option>
-                      <option>Telekomunikasi</option>
-                      <option>Properti & Real Estate</option>
-                      <option>Lainnya</option>
                     </select>
                   </div>
                   <div class="profile-field">
@@ -3050,8 +3083,8 @@ const AppConfig = {
   kekeringanCogUrl: 'https://cpebrunair-debug.github.io/data_cog/Kekeringan_Indonesia_COG.tif',
   defaultCenter: [-2.8, 118.2],
   defaultZoom: 5,
-  basemapUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  basemapAttribution: '&copy; OpenStreetMap contributors',
+  basemapUrl: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+  basemapAttribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
   /* Normalization max — raw pixel values are 1–5, normalize to 0–1 */
   hazardRawMax: 5,
   /* At-risk threshold on 0–1 scale */
@@ -4558,10 +4591,195 @@ const AdminController = {
 const ProfileController = {
   _storageKey: () => `bcrip_profile_${AuthController.currentUser?.username || 'default'}`,
 
+  /* ── GRI Sector → Subsector mapping ── */
+  _griSubsectors: {
+    'Energi — Minyak & Gas': [
+      'Eksplorasi & Produksi (E&P / Upstream)',
+      'Pengolahan & Pengilangan (Refining / Downstream)',
+      'Transmisi & Distribusi Gas Bumi (Midstream)',
+      'Liquefied Natural Gas (LNG) & Gas Alam Cair',
+      'Jasa Penunjang Minyak & Gas (Oilfield Services)',
+      'Pemasaran & Perdagangan Migas',
+    ],
+    'Energi — Batubara': [
+      'Penambangan Batubara Termal',
+      'Penambangan Batubara Kokas (Metallurgical)',
+      'Pengolahan & Logistik Batubara',
+      'Perdagangan Batubara',
+    ],
+    'Energi — Listrik & Utilitas': [
+      'Pembangkit Listrik Tenaga Uap (PLTU)',
+      'Pembangkit Listrik Tenaga Gas (PLTG/PLTGU)',
+      'Pembangkit Listrik Tenaga Air (PLTA)',
+      'Transmisi & Distribusi Listrik',
+      'Perusahaan Listrik Terintegrasi',
+      'Pengelolaan Air & Sanitasi',
+    ],
+    'Energi — Terbarukan': [
+      'Panas Bumi (Geothermal)',
+      'Tenaga Surya (Solar PV & CSP)',
+      'Tenaga Bayu (Wind Onshore & Offshore)',
+      'Bioenergi & Biomassa',
+      'Tenaga Air Skala Kecil (MHP)',
+      'Hidrogen & Energi Samudra',
+    ],
+    'Pertambangan & Logam': [
+      'Pertambangan Logam Dasar (Nikel, Tembaga, Bauksit)',
+      'Pertambangan Logam Mulia (Emas, Perak)',
+      'Pertambangan Mineral Industri',
+      'Peleburan & Pengolahan Logam',
+      'Baja & Aluminium Terintegrasi',
+    ],
+    'Pertanian, Perikanan & Kehutanan': [
+      'Tanaman Pangan & Hortikultura',
+      'Perkebunan (Sawit, Karet, Teh, Kopi)',
+      'Peternakan & Perunggasan',
+      'Perikanan & Akuakultur',
+      'Kehutanan & Industri Kayu',
+    ],
+    'Kimia & Petrokimia': [
+      'Kimia Dasar & Petrokimia',
+      'Pupuk & Agrokimia',
+      'Gas Industri',
+      'Specialty Chemicals',
+      'Polimer & Plastik',
+    ],
+    'Manufaktur & Industri': [
+      'Permesinan & Peralatan Industri',
+      'Manufaktur Kendaraan Bermotor & Komponen',
+      'Elektronik & Peralatan Listrik',
+      'Pertahanan & Kedirgantaraan',
+      'Kendaraan Listrik (EV) & Baterai',
+    ],
+    'Material Bangunan & Konstruksi': [
+      'Semen, Beton & Kapur',
+      'Keramik & Kaca',
+      'Kayu Olahan & Produk Konstruksi',
+      'Logam Konstruksi & Baja Struktural',
+    ],
+    'Pulp, Kertas & Kemasan': [
+      'Pulp & Kertas',
+      'Kemasan Karton & Kertas',
+      'Kemasan Plastik & Komposit',
+      'Daur Ulang Kertas & Karton',
+    ],
+    'Tekstil & Pakaian': [
+      'Pemintalan, Penenunan & Pencelupan',
+      'Pakaian Jadi & Aksesori Mode',
+      'Alas Kaki',
+      'Tekstil Teknis & Nonwoven',
+    ],
+    'Makanan & Minuman': [
+      'Pengolahan Makanan',
+      'Minuman Non-Alkohol',
+      'Minuman Beralkohol',
+      'Tembakau',
+      'Produk Susu & Peternakan Olahan',
+      'Produk Rumah Tangga & Perawatan Pribadi',
+    ],
+    'Perdagangan Ritel & E-Commerce': [
+      'Ritel Makanan & Kebutuhan Pokok',
+      'Ritel Non-Makanan (Fashion, Elektronik, dll)',
+      'Platform E-Commerce & Marketplace',
+      'Distribusi & Grosir',
+    ],
+    'Pariwisata & Perhotelan': [
+      'Hotel & Akomodasi',
+      'Restoran & Jasa Boga',
+      'Agen Perjalanan & Pariwisata',
+      'Taman Hiburan & Rekreasi',
+      'Maskapai Penerbangan (Pariwisata)',
+    ],
+    'Transportasi & Logistik': [
+      'Penerbangan (Maskapai & Bandara)',
+      'Pelayaran & Logistik Laut',
+      'Transportasi Darat & Rel',
+      'Logistik, Kargo & Pergudangan',
+      'Pelabuhan & Terminal',
+      'Ride-Hailing & Transportasi Digital',
+    ],
+    'Infrastruktur & Konstruksi': [
+      'Konstruksi Bangunan Gedung',
+      'Konstruksi Infrastruktur (Jalan, Jembatan, Bendungan)',
+      'Konstruksi Ketenagalistrikan & Utilitas',
+      'Kontraktor EPC (Engineering, Procurement, Construction)',
+      'Manajemen Properti & Fasilitas',
+    ],
+    'Sektor Publik & Infrastruktur': [
+      'Pemerintahan & Administrasi Publik',
+      'Infrastruktur Jalan & Transportasi Publik',
+      'Pengelolaan Air Bersih & Sanitasi (PDAM)',
+      'Pengelolaan Sampah & Daur Ulang',
+      'Pertahanan & Keamanan Nasional',
+    ],
+    'Teknologi Informasi': [
+      'Perangkat Lunak & SaaS',
+      'Perangkat Keras & Semikonduktor',
+      'Jasa TI & Konsultasi Teknologi',
+      'Pusat Data & Cloud Computing',
+      'Keamanan Siber (Cybersecurity)',
+    ],
+    'Telekomunikasi & Media': [
+      'Operator Telekomunikasi & Jaringan',
+      'Platform Digital & Internet',
+      'Penyiaran (Broadcasting) & Media',
+      'Produksi Konten & Hiburan Digital',
+    ],
+    'Keuangan — Perbankan': [
+      'Bank Umum Komersial',
+      'Bank Syariah',
+      'Bank Pembangunan Daerah (BPD)',
+      'Lembaga Pembiayaan & Multifinance',
+      'Bank Investasi & Korporasi',
+    ],
+    'Keuangan — Asuransi': [
+      'Asuransi Jiwa',
+      'Asuransi Umum & Kerugian',
+      'Reasuransi',
+      'Asuransi Syariah',
+    ],
+    'Keuangan — Investasi & Pasar Modal': [
+      'Manajer Aset & Reksa Dana',
+      'Dana Pensiun',
+      'Modal Ventura & Private Equity',
+      'Lembaga Efek & Bursa',
+      'Infrastruktur Keuangan & Fintech',
+    ],
+    'Properti & Real Estate': [
+      'Pengembang Properti Komersial',
+      'Pengembang Properti Residensial',
+      'Real Estate Investment Trust (REIT)',
+      'Kawasan Industri & Logistik',
+      'Pengelolaan Fasilitas (Facility Management)',
+    ],
+    'Kesehatan': [
+      'Farmasi & Bioteknologi',
+      'Peralatan & Teknologi Kesehatan (Medtech)',
+      'Rumah Sakit & Klinik',
+      'Distribusi Farmasi & Alat Kesehatan',
+    ],
+    'Pendidikan & Penelitian': [
+      'Pendidikan Tinggi (Universitas & Institut)',
+      'Pendidikan Dasar & Menengah',
+      'Pelatihan & Sertifikasi Profesional',
+      'Lembaga Penelitian & Pengembangan (R&D)',
+    ],
+  },
+
+  /* ── Cascade subsector dropdown based on selected sector ── */
+  onSektorChange() {
+    const sektor = document.getElementById('pSektor')?.value || '';
+    const sub    = document.getElementById('pSubsektor');
+    if (!sub) return;
+    const subsectors = this._griSubsectors[sektor] || [];
+    sub.innerHTML = '<option value="">— Pilih sub-sektor —</option>' +
+      subsectors.map(s => `<option value="${s}">${s}</option>`).join('');
+  },
+
   /* ── Field map: id → section (1-7) ── */
   _fieldSections: {
     pNamaLengkap:1, pJabatan:1, pDivisi:1, pEmail:1,
-    pNamaPerusahaan:2, pSubsektor:2, pWilayah:2, pDeskripsiBisnis:2,
+    pNamaPerusahaan:2, pSektor:2, pSubsektor:2, pWilayah:2, pDeskripsiBisnis:2,
     chipSkalaOp:2,
     pUsiaAset:3, pKondisiAset:3, chipTipeAset:3, chipOperasi247:3, chipPengalamanBencana:3,
     chipToleransiRisiko:4, pRTO:4, pDampakHarian:4, pAsetKritis:4,
@@ -4605,6 +4823,7 @@ const ProfileController = {
       divisi:             g('pDivisi'),
       email:              g('pEmail'),
       namaPerusahaan:     g('pNamaPerusahaan'),
+      sektor:             g('pSektor'),
       subsektor:          g('pSubsektor'),
       skalaOperasi:       this.getChipValues('chipSkalaOp').join(', '),
       wilayah:            g('pWilayah'),
@@ -4661,7 +4880,12 @@ const ProfileController = {
       const set = (id, val) => { const el=document.getElementById(id); if(el&&val) el.value=val; };
       set('pNamaLengkap',d.namaLengkap); set('pJabatan',d.jabatan);
       set('pDivisi',d.divisi);           set('pEmail',d.email);
-      set('pNamaPerusahaan',d.namaPerusahaan); set('pSubsektor',d.subsektor);
+      set('pNamaPerusahaan',d.namaPerusahaan);
+      if (d.sektor) {
+        const sEl = document.getElementById('pSektor');
+        if (sEl) { sEl.value = d.sektor; this.onSektorChange(); }
+      }
+      set('pSubsektor',d.subsektor);
       set('pWilayah',d.wilayah);         set('pDeskripsiBisnis',d.deskripsiBisnis);
       set('pUsiaAset',d.usiaAset);       set('pKondisiAset',d.kondisiAset);
       set('pRTO',d.rto);                 set('pDampakHarian',d.dampakHarian);
@@ -4697,7 +4921,7 @@ const ProfileController = {
     const d = this.getData();
     const checks = [
       [d.namaLengkap, d.jabatan],                                    // §1
-      [d.namaPerusahaan, d.subsektor||d.deskripsiBisnis],            // §2
+      [d.namaPerusahaan, d.sektor||d.subsektor||d.deskripsiBisnis],            // §2
       [d.usiaAset||d.kondisiAset, d.tipeAset],                       // §3
       [d.toleransiRisiko, d.rto],                                    // §4
       [d.framework, d.stakeholder],                                  // §5
@@ -4747,7 +4971,7 @@ Format output: 3–5 paragraf narasi, kemudian 3–5 poin rekomendasi spesifik d
 ## PROFIL PENGGUNA
 - Nama: ${profile.namaLengkap||'—'}
 - Jabatan: ${profile.jabatan||'—'} | Divisi: ${profile.divisi||'—'}
-- Perusahaan: ${profile.namaPerusahaan||'—'} (${profile.subsektor||'—'})
+- Perusahaan: ${profile.namaPerusahaan||'—'} · Sektor GRI: ${profile.sektor||'—'} · Sub-sektor: ${profile.subsektor||'—'}
 - Skala Operasi: ${profile.skalaOperasi||'—'} | Wilayah: ${profile.wilayah||'—'}
 - Deskripsi Bisnis: ${profile.deskripsiBisnis||'—'}
 
@@ -5332,7 +5556,7 @@ const ReportController = {
 
     const prompt = `Kamu adalah analis risiko iklim senior. Tulis narasi eksekutif profesional dalam Bahasa Indonesia untuk laporan penilaian risiko fisik aset industri.
 
-PROFIL PERUSAHAAN: ${profile.namaPerusahaan||'—'} (${profile.subsektor||'—'}), ${profile.wilayah||'—'}.
+PROFIL PERUSAHAAN: ${profile.namaPerusahaan||'—'} · Sektor GRI: ${profile.sektor||'—'} (${profile.subsektor||'—'}), wilayah: ${profile.wilayah||'—'}.
 PENANGGUNGJAWAB: ${profile.namaLengkap||'—'}, ${profile.jabatan||'—'}.
 DESKRIPSI BISNIS: ${profile.deskripsiBisnis||'—'}
 
@@ -6009,11 +6233,54 @@ const DynamicHazardUI = {
             </div>
             <div>
               <label class="field-label">Warna Aksen</label>
-              <input id="newHazardAccent" class="field-input" type="text" placeholder="#f97316" value="#14b8a6"/>
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                <input id="newHazardAccent" class="field-input" type="color" value="#14b8a6"
+                  style="width:42px;height:34px;padding:2px 4px;cursor:pointer;border-radius:6px;"/>
+                <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                  <span class="accent-swatch" onclick="document.getElementById('newHazardAccent').value='#1e7fe0'" style="background:#1e7fe0" title="Biru"></span>
+                  <span class="accent-swatch" onclick="document.getElementById('newHazardAccent').value='#d94d3f'" style="background:#d94d3f" title="Merah"></span>
+                  <span class="accent-swatch" onclick="document.getElementById('newHazardAccent').value='#92570a'" style="background:#92570a" title="Coklat"></span>
+                  <span class="accent-swatch" onclick="document.getElementById('newHazardAccent').value='#b5820a'" style="background:#b5820a" title="Kuning Tua"></span>
+                  <span class="accent-swatch" onclick="document.getElementById('newHazardAccent').value='#14b8a6'" style="background:#14b8a6" title="Teal"></span>
+                  <span class="accent-swatch" onclick="document.getElementById('newHazardAccent').value='#7c3aed'" style="background:#7c3aed" title="Ungu"></span>
+                  <span class="accent-swatch" onclick="document.getElementById('newHazardAccent').value='#f97316'" style="background:#f97316" title="Oranye"></span>
+                  <span class="accent-swatch" onclick="document.getElementById('newHazardAccent').value='#ef4444'" style="background:#ef4444" title="Merah Cerah"></span>
+                  <span class="accent-swatch" onclick="document.getElementById('newHazardAccent').value='#06b6d4'" style="background:#06b6d4" title="Cyan"></span>
+                  <span class="accent-swatch" onclick="document.getElementById('newHazardAccent').value='#84cc16'" style="background:#84cc16" title="Hijau Lime"></span>
+                </div>
+              </div>
             </div>
             <div>
               <label class="field-label">Colormap TiTiler</label>
-              <input id="newHazardColormap" class="field-input" type="text" placeholder="viridis" value="viridis"/>
+              <select id="newHazardColormap" class="field-input field-select">
+                <optgroup label="— Sekuensial">
+                  <option value="viridis">viridis (ungu → teal → kuning)</option>
+                  <option value="plasma">plasma (biru tua → pink → kuning)</option>
+                  <option value="inferno">inferno (hitam → merah → kuning)</option>
+                  <option value="magma">magma (hitam → ungu → oranye)</option>
+                  <option value="hot_r">hot_r (putih → oranye → hitam)</option>
+                  <option value="hot">hot (hitam → oranye → putih)</option>
+                  <option value="ylorbr">ylorbr (kuning → oranye → coklat)</option>
+                  <option value="ylorrd">ylorrd (kuning → oranye → merah)</option>
+                  <option value="blues">blues (putih → biru)</option>
+                  <option value="reds">reds (putih → merah)</option>
+                  <option value="greens">greens (putih → hijau)</option>
+                  <option value="oranges">oranges (putih → oranye)</option>
+                  <option value="greys">greys (putih → hitam)</option>
+                  <option value="turbo">turbo (pelangi sains)</option>
+                </optgroup>
+                <optgroup label="— Diverging">
+                  <option value="rdbu_r">rdbu_r (biru → putih → merah)</option>
+                  <option value="rdbu">rdbu (merah → putih → biru)</option>
+                  <option value="bwr">bwr (biru → putih → merah)</option>
+                  <option value="coolwarm">coolwarm (biru dingin → merah hangat)</option>
+                  <option value="spectral">spectral (merah → kuning → ungu)</option>
+                  <option value="spectral_r">spectral_r (dibalik)</option>
+                </optgroup>
+                <optgroup label="— Kualitatif / Lainnya">
+                  <option value="rainbow">rainbow (pelangi)</option>
+                </optgroup>
+              </select>
             </div>
             <div>
               <label class="field-label">URL COG Remote (opsional)</label>
@@ -7138,6 +7405,77 @@ setTimeout(() => {
 
     renderLegend('dashboardCustomHazardLegend');
     renderLegend('fullMapCustomHazardLegend');
+
+    // ── Risk Gradient Bar: update berdasarkan colormap layer yang aktif ──
+    const COLORMAP_GRADIENTS = {
+      'rdbu_r':    'linear-gradient(90deg,#4393c3 0%,#f7f7f7 50%,#d73027 100%)',
+      'rdbu':      'linear-gradient(90deg,#d73027 0%,#f7f7f7 50%,#4393c3 100%)',
+      'hot_r':     'linear-gradient(90deg,#ffffff 0%,#ffaa00 45%,#cc2200 75%,#111111 100%)',
+      'hot':       'linear-gradient(90deg,#111111 0%,#cc2200 35%,#ffaa00 70%,#ffffff 100%)',
+      'ylorbr':    'linear-gradient(90deg,#ffffd4 0%,#fe9929 50%,#662506 100%)',
+      'ylorrd':    'linear-gradient(90deg,#ffffb2 0%,#fd8d3c 50%,#bd0026 100%)',
+      'viridis':   'linear-gradient(90deg,#440154 0%,#21908c 50%,#fde725 100%)',
+      'plasma':    'linear-gradient(90deg,#0d0887 0%,#cc4778 50%,#f0f921 100%)',
+      'inferno':   'linear-gradient(90deg,#000004 0%,#bc3754 50%,#fcffa4 100%)',
+      'magma':     'linear-gradient(90deg,#000004 0%,#7b2d8b 40%,#fc8961 70%,#fcfdbf 100%)',
+      'blues':     'linear-gradient(90deg,#f7fbff 0%,#6baed6 50%,#084594 100%)',
+      'reds':      'linear-gradient(90deg,#fff5f0 0%,#fb6a4a 50%,#67000d 100%)',
+      'greens':    'linear-gradient(90deg,#f7fcf5 0%,#74c476 50%,#00441b 100%)',
+      'oranges':   'linear-gradient(90deg,#fff5eb 0%,#fd8d3c 50%,#7f2704 100%)',
+      'greys':     'linear-gradient(90deg,#ffffff 0%,#969696 50%,#252525 100%)',
+      'bwr':       'linear-gradient(90deg,#0000ff 0%,#ffffff 50%,#ff0000 100%)',
+      'coolwarm':  'linear-gradient(90deg,#3b4cc0 0%,#dddddd 50%,#b40426 100%)',
+      'spectral':  'linear-gradient(90deg,#9e0142 0%,#fdae61 40%,#e6f598 70%,#5e4fa2 100%)',
+      'spectral_r':'linear-gradient(90deg,#5e4fa2 0%,#e6f598 35%,#fdae61 70%,#9e0142 100%)',
+      'turbo':     'linear-gradient(90deg,#30123b 0%,#28bbec 33%,#a3fd3c 66%,#7a0403 100%)',
+      'rainbow':   'linear-gradient(90deg,#6e40aa 0%,#1ac7c2 35%,#b0da36 68%,#e23b16 100%)',
+    };
+    const DEFAULT_RISK_GRADIENT = 'linear-gradient(90deg,#0e9f6e 0%,#d97706 50%,#dc2626 100%)';
+
+    const state2 = HazardMapController._mapFilterState || { hazard: 'all' };
+    const visHazards = HazardMapController.getVisibleHazardKeys ? HazardMapController.getVisibleHazardKeys() : [];
+    let targetKey2 = null;
+    if (state2.hazard !== 'all') {
+      targetKey2 = state2.hazard;
+    } else if (visHazards.length >= 1) {
+      targetKey2 = visHazards[0];
+    }
+
+    let barGradient = DEFAULT_RISK_GRADIENT;
+    let barLabel = 'Level Risiko';
+    let barTicks = ['Rendah', 'Sedang', 'Tinggi'];
+
+    if (targetKey2) {
+      try {
+        const meta2 = typeof getHazardMeta === 'function' ? getHazardMeta(targetKey2) : null;
+        const cm = ((meta2 && meta2.colormap) || (typeof cfgForHazard === 'function' && cfgForHazard(targetKey2)?.colormap) || 'viridis').toLowerCase().trim();
+        barGradient = COLORMAP_GRADIENTS[cm] || DEFAULT_RISK_GRADIENT;
+        const icon2 = typeof getHazardIcon === 'function' ? getHazardIcon(targetKey2) : '';
+        const lbl2  = typeof getHazardLabel === 'function' ? getHazardLabel(targetKey2) : targetKey2;
+        barLabel = `${icon2} ${lbl2}`.trim();
+        // For diverging colormaps label accordingly
+        if (cm === 'rdbu_r') barTicks = ['Rendah (Biru)', 'Sedang', 'Tinggi (Merah)'];
+        else if (cm === 'rdbu')  barTicks = ['Tinggi (Merah)', 'Sedang', 'Rendah (Biru)'];
+        else if (cm === 'hot_r') barTicks = ['Rendah', 'Sedang', 'Tinggi'];
+        else                     barTicks = ['Rendah', 'Sedang', 'Tinggi'];
+      } catch(e) { /* fallback ke default */ }
+    }
+    if (visHazards.length > 1 && state2.hazard === 'all') {
+      barLabel = `Level Risiko (${visHazards.length} layer)`;
+    }
+
+    document.querySelectorAll('.risk-gradient-bar').forEach(bar => {
+      const track = bar.querySelector('.risk-gradient-bar-track');
+      const lbl   = bar.querySelector('.risk-gradient-bar-label');
+      const ticks = bar.querySelectorAll('.risk-gradient-bar-ticks span');
+      if (track) track.style.background = barGradient;
+      if (lbl)   lbl.textContent = barLabel;
+      if (ticks.length === 3) {
+        ticks[0].textContent = barTicks[0];
+        ticks[1].textContent = barTicks[1];
+        ticks[2].textContent = barTicks[2];
+      }
+    });
   };
 
   const originalReloadHazard = HazardMapController.reloadHazard.bind(HazardMapController);
