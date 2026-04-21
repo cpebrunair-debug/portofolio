@@ -564,8 +564,30 @@ button { font-family: var(--font); }
    TAB VIEWS
 ===================================================================== */
 .tab-view { display: none; }
-.tab-view.active { display: block; }
+.tab-view.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .content-pad { padding: 20px 24px; }
+
+/* Dashboard tab fills remaining height */
+#tabDashboard { flex: 1; min-height: 0; }
+#tabDashboard > .content-pad {
+  flex: 1; display: flex; flex-direction: column; min-height: 0;
+  padding-bottom: 0;
+}
+/* Last dash-row (map row) fills remaining space */
+#tabDashboard > .content-pad > .dash-row:last-of-type {
+  flex: 1; min-height: 0; margin-bottom: 0;
+}
+/* Map panel inside last row grows */
+#tabDashboard > .content-pad > .dash-row:last-of-type > .panel:first-child {
+  display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+}
+#tabDashboard > .content-pad > .dash-row:last-of-type > .panel:first-child > .map-layout {
+  flex: 1; min-height: 0;
+}
+/* Right column (paparan + prioritas) scrolls if needed */
+#tabDashboard > .content-pad > .dash-row:last-of-type > div:last-child {
+  overflow-y: auto; min-height: 0;
+}
 
 /* =====================================================================
    KPI CARDS
@@ -897,7 +919,188 @@ button { font-family: var(--font); }
 }
 .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 
-/* Risk Gradient Bar — floating overlay bottom-left of map */
+/* =====================================================================
+   MAP INSIGHT SIDEBAR — full map page, bound to COG filter
+===================================================================== */
+.map-layout-with-sidebar {
+  display: grid;
+  grid-template-columns: 1fr 270px;
+  height: 100%;
+  transition: grid-template-columns .25s ease;
+}
+.map-layout-with-sidebar.sidebar-collapsed {
+  grid-template-columns: 1fr 36px;
+}
+.map-insight-sidebar {
+  background: var(--navy);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-left: 1px solid rgba(255,255,255,.08);
+  transition: width .25s ease;
+  position: relative;
+}
+/* Toggle button — always visible */
+.mis-toggle-btn {
+  position: absolute;
+  top: 50%;
+  left: -14px;
+  transform: translateY(-50%);
+  width: 28px; height: 28px;
+  background: var(--navy);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 10;
+  color: rgba(255,255,255,.7);
+  font-size: 11px;
+  box-shadow: -2px 0 8px rgba(0,0,0,.2);
+  transition: background .15s, color .15s;
+}
+.mis-toggle-btn:hover { background: var(--navy-2); color: #fff; }
+/* Collapsed state — hide body & head content, show only toggle */
+.map-insight-sidebar.collapsed .map-insight-sidebar-head,
+.map-insight-sidebar.collapsed .map-insight-sidebar-body {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s;
+}
+.map-insight-sidebar:not(.collapsed) .map-insight-sidebar-head,
+.map-insight-sidebar:not(.collapsed) .map-insight-sidebar-body {
+  opacity: 1;
+  transition: opacity .2s .1s;
+}
+.map-insight-sidebar.collapsed {
+  width: 36px;
+}
+.map-insight-sidebar-head {
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+.map-insight-sidebar-title {
+  font-size: 9px; font-weight: 800;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: #93c5fd; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.map-insight-filter-badge {
+  display: flex; flex-wrap: wrap; gap: 4px;
+}
+.map-insight-filter-pill {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 7px; border-radius: 10px;
+  font-size: 9px; font-weight: 700;
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.75);
+  border: 1px solid rgba(255,255,255,.14);
+  white-space: nowrap;
+}
+.map-insight-filter-pill.active-hz {
+  background: rgba(96,165,250,.25);
+  border-color: rgba(96,165,250,.4);
+  color: #bfdbfe;
+}
+.map-insight-sidebar-body {
+  flex: 1; overflow-y: auto; padding: 12px 14px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.15) transparent;
+}
+.map-insight-sidebar-body::-webkit-scrollbar { width: 4px; }
+.map-insight-sidebar-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
+.mis-section-title {
+  font-size: 9px; font-weight: 800;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+  margin: 14px 0 8px;
+}
+.mis-section-title:first-child { margin-top: 0; }
+/* Mini KPI grid */
+.mis-kpi-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 6px; margin-bottom: 2px;
+}
+.mis-kpi {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 6px; padding: 8px 10px;
+}
+.mis-kpi-val {
+  font-size: 18px; font-weight: 900;
+  color: #fff; line-height: 1;
+  margin-bottom: 3px;
+}
+.mis-kpi-lbl {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  line-height: 1.3;
+}
+.mis-kpi-sub {
+  font-size: 10px; color: rgba(255,255,255,.35);
+  margin-top: 2px;
+}
+/* Dist bars */
+.mis-dist-row {
+  margin-bottom: 8px;
+}
+.mis-dist-label {
+  display: flex; justify-content: space-between;
+  font-size: 10px; font-weight: 700; margin-bottom: 3px;
+  color: rgba(255,255,255,.75);
+}
+.mis-dist-bar {
+  height: 5px; background: rgba(255,255,255,.1);
+  border-radius: 3px; overflow: hidden;
+}
+.mis-dist-fill {
+  height: 100%; border-radius: 3px;
+  transition: width .4s ease;
+}
+/* Top asset list */
+.mis-asset-item {
+  padding: 7px 8px; border-radius: 6px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.07);
+  margin-bottom: 5px; cursor: pointer;
+  transition: background .15s;
+}
+.mis-asset-item:hover { background: rgba(255,255,255,.09); }
+.mis-asset-name {
+  font-size: 11px; font-weight: 700;
+  color: #fff; margin-bottom: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mis-asset-meta {
+  font-size: 9px; color: rgba(255,255,255,.45);
+  display: flex; gap: 6px; align-items: center;
+}
+.mis-asset-badge {
+  display: inline-flex; padding: 1px 6px; border-radius: 8px;
+  font-size: 9px; font-weight: 800;
+}
+.mis-asset-badge.high { background: rgba(220,38,38,.3); color: #fca5a5; }
+.mis-asset-badge.med  { background: rgba(217,119,6,.3);  color: #fcd34d; }
+.mis-asset-badge.low  { background: rgba(14,159,110,.3); color: #6ee7b7; }
+/* Legend in sidebar */
+.mis-legend-row {
+  display: flex; align-items: center; gap: 7px;
+  margin-bottom: 7px; font-size: 10px;
+  color: rgba(255,255,255,.65);
+}
+.mis-leg-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.mis-empty {
+  font-size: 11px; color: rgba(255,255,255,.35);
+  line-height: 1.6; text-align: center;
+  padding: 16px 0;
+}
+@media (max-width: 900px) {
+  .map-layout-with-sidebar { grid-template-columns: 1fr; }
+  .map-insight-sidebar { display: none; }
+}
+
 .risk-gradient-bar {
   position: absolute;
   bottom: 24px;
@@ -1175,6 +1378,58 @@ table.extract-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 @keyframes slideIn { from { transform: translateX(30px); opacity:0; } to { transform: translateX(0); opacity:1; } }
 
 /* COG status */
+/* =====================================================================
+   HAZARD FILTER CHIPS — dashboard statistics bar
+===================================================================== */
+.dash-stat-filter-bar {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; margin-bottom: 14px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.dash-stat-filter-label {
+  font-size: 10px; font-weight: 800;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-3); white-space: nowrap;
+  margin-right: 4px;
+}
+.fchip-hz {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  color: var(--ink-2); padding: 5px 13px;
+  border-radius: 20px; font-size: 11px; font-weight: 700;
+  cursor: pointer; font-family: var(--font);
+  transition: all .15s; white-space: nowrap;
+}
+.fchip-hz:hover { border-color: var(--border-2); background: var(--bg-hover); }
+.fchip-hz.active { color: #fff; }
+.fchip-hz[data-hz="all"].active    { background: var(--navy);      border-color: var(--navy); }
+.fchip-hz[data-hz="banjir"].active { background: var(--banjir);    border-color: var(--banjir); }
+.fchip-hz[data-hz="gempa"].active  { background: var(--gempa);     border-color: var(--gempa); }
+.fchip-hz[data-hz="longsor"].active{ background: var(--longsor);   border-color: var(--longsor); }
+.fchip-hz[data-hz="kekeringan"].active { background: var(--kekeringan); border-color: var(--kekeringan); }
+.fchip-hz-sync {
+  margin-left: auto; font-size: 10px;
+  color: var(--ink-3); display: flex;
+  align-items: center; gap: 5px; white-space: nowrap;
+}
+.fchip-hz-sync .sync-dot-sm {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--success); flex-shrink: 0;
+}
+/* Active hazard title badge in panel headers */
+.hz-filter-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 10px;
+  font-size: 9px; font-weight: 800;
+  letter-spacing: .08em; text-transform: uppercase;
+  background: var(--accent-lt); color: var(--accent);
+  margin-left: 8px;
+}
+
 .cog-status {
   display: inline-flex; align-items: center; gap: 5px;
   font-size: 10px; font-weight: 700; letter-spacing:.08em; text-transform:uppercase;
@@ -1736,6 +1991,20 @@ table.extract-table { width: 100%; border-collapse: collapse; font-size: 12px; }
     <div id="tabDashboard" class="tab-view active">
       <div class="content-pad">
 
+        <!-- ── Hazard Filter Bar ── -->
+        <div class="dash-stat-filter-bar" id="dashStatFilterBar">
+          <span class="dash-stat-filter-label">📊 Filter Statistik</span>
+          <button class="fchip-hz active" data-hz="all"         onclick="DashboardOrchestrator.filterHazard('all',this)">🌐 Semua</button>
+          <button class="fchip-hz"        data-hz="banjir"      onclick="DashboardOrchestrator.filterHazard('banjir',this)">🌊 Banjir</button>
+          <button class="fchip-hz"        data-hz="gempa"       onclick="DashboardOrchestrator.filterHazard('gempa',this)">🌋 Gempa</button>
+          <button class="fchip-hz"        data-hz="longsor"     onclick="DashboardOrchestrator.filterHazard('longsor',this)">⛰️ Longsor</button>
+          <button class="fchip-hz"        data-hz="kekeringan"  onclick="DashboardOrchestrator.filterHazard('kekeringan',this)">☀️ Kekeringan</button>
+          <div id="dashHazardDynamicChips" style="display:contents;"></div>
+          <span class="fchip-hz-sync" id="dashStatSyncBadge">
+            <span class="sync-dot-sm"></span>Sinkron dengan filter peta
+          </span>
+        </div>
+
         <!-- KPI Row 1: Asset stats -->
         <div class="kpi-row">
           <div class="kpi-card">
@@ -1851,7 +2120,7 @@ table.extract-table { width: 100%; border-collapse: collapse; font-size: 12px; }
                 <button class="btn btn-ghost btn-sm" onclick="TabController.switchTab('peta',document.querySelector('[onclick*=peta]'))">Buka Penuh →</button>
               </div>
             </div>
-            <div class="map-layout" style="height:340px;">
+            <div class="map-layout">
               <div class="map-stage">
                 <div class="map-toolbar">
                   <span class="map-toolbar-title">Aset</span>
@@ -2066,7 +2335,9 @@ table.extract-table { width: 100%; border-collapse: collapse; font-size: 12px; }
     ================================================================ -->
     <div id="tabPeta" class="tab-view">
       <div class="panel" style="margin:0;border-radius:0;border-left:none;border-right:none;border-top:none;">
-        <div class="map-layout" style="height:calc(100vh - 56px);">
+        <div class="map-layout-with-sidebar" style="height:calc(100vh - 56px);">
+
+          <!-- MAP STAGE -->
           <div class="map-stage">
             <div class="map-toolbar">
               <span class="map-toolbar-title">Peta Risiko Aset Indonesia</span>
@@ -2106,6 +2377,34 @@ table.extract-table { width: 100%; border-collapse: collapse; font-size: 12px; }
               <div class="risk-gradient-bar-ticks"><span>Rendah</span><span>Sedang</span><span>Tinggi</span></div>
             </div>
           </div>
+
+          <!-- INSIGHT SIDEBAR — bound to COG filter -->
+          <div class="map-insight-sidebar" id="mapInsightSidebar">
+            <!-- Toggle button -->
+            <button class="mis-toggle-btn" id="misSidebarToggle" title="Sembunyikan/tampilkan panel"
+              onclick="(function(){
+                const sb = document.getElementById('mapInsightSidebar');
+                const ml = document.querySelector('.map-layout-with-sidebar');
+                const btn = document.getElementById('misSidebarToggle');
+                const collapsed = sb.classList.toggle('collapsed');
+                ml.classList.toggle('sidebar-collapsed', collapsed);
+                btn.innerHTML = collapsed ? '&#x276F;' : '&#x276E;';
+                setTimeout(()=>{ try{ HazardMapController.fullMap?.invalidateSize(); }catch(e){} }, 280);
+              })()">&#x276E;</button>
+            <div class="map-insight-sidebar-head">
+              <div class="map-insight-sidebar-title">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                Ringkasan Risiko
+              </div>
+              <div class="map-insight-filter-badge" id="misFilterBadge">
+                <span class="map-insight-filter-pill">Semua Bencana</span>
+              </div>
+            </div>
+            <div class="map-insight-sidebar-body" id="mapInsightBody">
+              <div class="mis-empty">Memuat data…</div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div><!-- end tabPeta -->
@@ -3301,6 +3600,35 @@ const LocalCogService = {
     return this._sample(raster, x, y);
   },
   _getRange(raster) {
+    // 🔒 LOCKED — compute range for local COG color stretch
+    // Try to derive a good stretch range from actual pixel values (p2-p98)
+    // to avoid solid-color rendering when min≈max or outliers dominate
+    try {
+      const band = Array.isArray(raster?.values) ? raster.values[0] : null;
+      const noData = Number.isFinite(Number(raster?.noDataValue)) ? Number(raster.noDataValue) : null;
+      if (band) {
+        const vals = [];
+        const stride = Math.max(1, Math.floor(band.length / 200)); // sample up to 200 rows
+        for (let r = 0; r < band.length; r += stride) {
+          const row = band[r];
+          if (!Array.isArray(row)) continue;
+          const cs = Math.max(1, Math.floor(row.length / 200));
+          for (let c = 0; c < row.length; c += cs) {
+            const v = Number(row[c]);
+            if (Number.isFinite(v) && v !== noData) vals.push(v);
+          }
+        }
+        if (vals.length > 10) {
+          vals.sort((a, b) => a - b);
+          const p2  = vals[Math.floor(vals.length * 0.02)];
+          const p98 = vals[Math.floor(vals.length * 0.98)];
+          if (Number.isFinite(p2) && Number.isFinite(p98) && p98 > p2) {
+            return { min: p2, max: p98 };
+          }
+        }
+      }
+    } catch {}
+    // Fallback to metadata min/max
     const mn = Array.isArray(raster?.mins) ? Number(raster.mins[0]) : Number(raster?.min);
     const mx = Array.isArray(raster?.maxs) ? Number(raster.maxs[0]) : Number(raster?.max);
     const min = Number.isFinite(mn) ? mn : 0;
@@ -3317,18 +3645,41 @@ const LocalCogService = {
     };
   },
   pixelColorFn(hazard, raster) {
+    // 🔒 LOCKED — local COG pixel coloring, matches TiTiler colormap intent per hazard
     const { min, max } = this._getRange(raster);
-    const accent = this._hexToRgb(DefaultCogRegistry[hazard]?.accent);
+    const range = max - min || 1;
+
+    // 3-stop gradients mirroring TiTiler colormaps used for each hazard
+    const STOPS = {
+      banjir:    [ [0,  [215,48,39]],  [0.5,[254,224,182]], [1,  [49,130,189]] ], // rdbu_r: blue→white→red
+      gempa:     [ [0,  [255,255,255]],[0.5,[255,150,50]],  [1,  [20,20,20]]   ], // hot_r: white→orange→black
+      longsor:   [ [0,  [255,255,210]],[0.5,[254,153,41]],  [1,  [102,37,6]]   ], // ylorbr
+      kekeringan:[ [0,  [255,255,178]],[0.5,[253,141,60]],  [1,  [189,0,38]]   ], // ylorrd
+    };
+    const stops = STOPS[hazard] || [ [0,[240,240,250]], [0.5,[100,120,200]], [1,[10,30,80]] ];
+
+    const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+    const getColor = (t) => {
+      // Find which segment t falls in
+      for (let i = 0; i < stops.length - 1; i++) {
+        const [t0, c0] = stops[i];
+        const [t1, c1] = stops[i + 1];
+        if (t >= t0 && t <= t1) {
+          const seg = (t - t0) / (t1 - t0 || 1);
+          return [lerp(c0[0],c1[0],seg), lerp(c0[1],c1[1],seg), lerp(c0[2],c1[2],seg)];
+        }
+      }
+      return stops[stops.length - 1][1];
+    };
+
     return pixelValues => {
       const raw = Array.isArray(pixelValues) ? Number(pixelValues[0]) : Number(pixelValues);
       if (!Number.isFinite(raw)) return null;
       if (Number.isFinite(raster.noDataValue) && raw === Number(raster.noDataValue)) return null;
-      if (raw <= min) return null;
-      const t = Math.max(0, Math.min(1, (raw - min) / (max - min || 1)));
-      const r = Math.round(245 + (accent.r - 245) * t);
-      const g = Math.round(247 + (accent.g - 247) * t);
-      const b = Math.round(250 + (accent.b - 250) * t);
-      const a = Math.max(0.18, Math.min(0.9, 0.18 + (0.72 * t)));
+      if (raw <= min && min !== 0) return null;
+      const t = Math.max(0, Math.min(1, (raw - min) / range));
+      const [r, g, b] = getColor(t);
+      const a = Math.max(0.15, Math.min(0.92, 0.15 + 0.77 * t));
       return `rgba(${r},${g},${b},${a.toFixed(3)})`;
     };
   }
@@ -3908,13 +4259,22 @@ const HazardMapController = {
       if (loadedLocal) return true;
     }
     const encodedCogUrl = encodeURIComponent(AppConfig.floodCogUrl);
-    let minValue = 1, maxValue = 5;
+    // 🔒 LOCKED — rescale logic: use percentile_2/percentile_98 for proper color gradient stretch
+    let minValue = 0, maxValue = 1;
     try {
       const sr = await fetch(`${AppConfig.titilerBaseUrl}/cog/statistics?url=${encodedCogUrl}`);
       if (sr.ok) {
         const sj = await sr.json();
         const fb = sj['b1'] || sj[Object.keys(sj)[0]];
-        if (fb) { minValue = fb.min ?? minValue; maxValue = fb.max ?? maxValue; }
+        if (fb) {
+          // Prefer percentile stretch (avoids outlier compression)
+          minValue = fb.percentile_2  ?? fb.min ?? minValue;
+          maxValue = fb.percentile_98 ?? fb.max ?? maxValue;
+          // Safety: if range is degenerate, fall back to absolute min/max
+          if (minValue >= maxValue) { minValue = fb.min ?? 0; maxValue = fb.max ?? 1; }
+          // Last resort: widen to prevent solid-color rendering
+          if (minValue >= maxValue) { minValue = 0; maxValue = 1; }
+        }
       }
     } catch {}
 
@@ -3948,10 +4308,23 @@ const HazardMapController = {
       if (loadedLocal) return true;
     }
     const enc = encodeURIComponent(cogUrl);
-    let mn=1, mx=5;
+    // 🔒 LOCKED — rescale logic: use percentile_2/percentile_98 for proper color gradient stretch
+    let mn = 0, mx = 1;
     try {
       const sr = await fetch(`${AppConfig.titilerBaseUrl}/cog/statistics?url=${enc}`);
-      if (sr.ok) { const sj=await sr.json(); const fb=sj['b1']||sj[Object.keys(sj)[0]]; if(fb){mn=fb.min??mn;mx=fb.max??mx;} }
+      if (sr.ok) {
+        const sj = await sr.json();
+        const fb = sj['b1'] || sj[Object.keys(sj)[0]];
+        if (fb) {
+          // Prefer percentile stretch (avoids outlier compression → solid color)
+          mn = fb.percentile_2  ?? fb.min ?? mn;
+          mx = fb.percentile_98 ?? fb.max ?? mx;
+          // Safety: if range is degenerate, fall back to absolute min/max
+          if (mn >= mx) { mn = fb.min ?? 0; mx = fb.max ?? 1; }
+          // Last resort: ensure a visible range
+          if (mn >= mx) { mn = 0; mx = 1; }
+        }
+      }
     } catch {}
 
     const removeLayers = () => {
@@ -5269,6 +5642,7 @@ const DashboardOrchestrator = {
   _filteredIndustry: 'all',
   _filteredRisk: 'all',
   _searchTerm: '',
+  _activeHazard: 'all',   // ← active hazard filter for statistics
   chart: null,
   chartDist: null,
   _initialized: false,
@@ -5311,6 +5685,56 @@ const DashboardOrchestrator = {
     this._render();
   },
 
+  /* ── Hazard filter for statistics — called from chip click ── */
+  filterHazard(hazardKey, btn) {
+    this._activeHazard = hazardKey || 'all';
+    this._updateHazardChips(hazardKey);
+    // Sync → map filter (guarded: set flag to avoid re-entrant loop)
+    if (!this._syncingFromMap) {
+      this._syncingToMap = true;
+      try { HazardMapController.updateMapFilter('hazard', hazardKey); } catch(e) {}
+      this._syncingToMap = false;
+    }
+    this._render();
+  },
+
+  /* ── Called from map's updateMapFilter — sync stats without looping back ── */
+  syncHazardFilter(hazardKey) {
+    if (this._syncingToMap) return; // prevent echo loop
+    this._activeHazard = hazardKey || 'all';
+    this._updateHazardChips(hazardKey);
+    this._render();
+  },
+
+  /* ── Update chip active state in filter bar ── */
+  _updateHazardChips(hazardKey) {
+    document.querySelectorAll('.fchip-hz').forEach(b => b.classList.remove('active'));
+    const active = hazardKey === 'all'
+      ? document.querySelector('.fchip-hz[data-hz="all"]')
+      : document.querySelector(`.fchip-hz[data-hz="${hazardKey}"]`);
+    active?.classList.add('active');
+  },
+
+  /* ── Ensure dynamic hazard chips are rendered in filter bar ── */
+  _ensureDynamicChips() {
+    const wrap = document.getElementById('dashHazardDynamicChips');
+    if (!wrap) return;
+    try {
+      const custom = typeof HazardCatalog !== 'undefined' ? HazardCatalog.getCustomKeys() : [];
+      const existing = new Set([...wrap.querySelectorAll('.fchip-hz')].map(b => b.dataset.hz));
+      custom.forEach(key => {
+        if (existing.has(key)) return;
+        const meta = typeof getHazardMeta === 'function' ? getHazardMeta(key) : { label: key, icon: '⚠️' };
+        const btn = document.createElement('button');
+        btn.className = 'fchip-hz'; btn.dataset.hz = key;
+        btn.innerHTML = `${meta.icon || '⚠️'} ${meta.label || key}`;
+        btn.style.cssText = `--haz-key:${key}`;
+        btn.onclick = () => this.filterHazard(key, btn);
+        wrap.appendChild(btn);
+      });
+    } catch(e) {}
+  },
+
   _getVisible() {
     let assets = this.rawAssets;
     if (this._filteredIndustry !== 'all') assets = assets.filter(a => a.industri === this._filteredIndustry);
@@ -5328,20 +5752,34 @@ const DashboardOrchestrator = {
 
   _render() {
     const assets  = this._getVisible();
+    const hazard  = this._activeHazard || 'all';
     const fin     = FinancialRiskService.summary(assets);
     const located = assets.filter(a => a.latitude && a.longitude).length;
     const today   = assets.filter(a => { try { return new Date(a.date).toDateString() === new Date().toDateString(); } catch { return false; } }).length;
     const industr = [...new Set(assets.map(a => a.industri))].length;
 
+    /* Ensure dynamic chips rendered */
+    this._ensureDynamicChips();
+
+    /* Hazard-specific at-risk count */
+    const atRiskCount = hazard === 'all'
+      ? fin.atRisk
+      : assets.filter(a => HazardScoringService.normalize(Number(a[hazard] || 0)) >= (AppConfig.atRiskThreshold || 0.34)).length;
+    const atRiskPct = assets.length > 0 ? (atRiskCount / assets.length * 100).toFixed(0) : 0;
+
+    /* Hazard label for badges */
+    const hzLabel = hazard === 'all' ? null : (typeof getHazardLabel === 'function' ? getHazardLabel(hazard) : hazard);
+    const hzBadge = hzLabel ? `<span class="hz-filter-badge">${hzLabel}</span>` : '';
+
     /* Header */
     document.getElementById('hdrAssets').textContent = assets.length;
-    document.getElementById('hdrAtRisk').textContent  = fin.atRisk;
+    document.getElementById('hdrAtRisk').textContent  = atRiskCount;
 
     /* KPI row 1 */
     document.getElementById('statTotal').textContent    = assets.length;
     document.getElementById('statTotalSub').innerHTML   = `<b>${industr}</b> industri`;
-    document.getElementById('statAtRisk').textContent   = fin.atRisk;
-    document.getElementById('statAtRiskSub').innerHTML  = `<b>${(fin.proportion*100).toFixed(0)}%</b> dari portofolio`;
+    document.getElementById('statAtRisk').textContent   = atRiskCount;
+    document.getElementById('statAtRiskSub').innerHTML  = `<b>${atRiskPct}%</b> dari portofolio${hzLabel ? ` · ${hzLabel}` : ''}`;
     document.getElementById('statLocated').textContent  = located;
     document.getElementById('statLocatedSub').innerHTML = `<b>${assets.length > 0 ? Math.round(located/assets.length*100) : 0}%</b> dipetakan`;
     document.getElementById('statToday').textContent    = today;
@@ -5349,7 +5787,7 @@ const DashboardOrchestrator = {
     /* Financial KPIs */
     document.getElementById('finTotalValue').textContent = FinancialRiskService.formatRupiah(fin.totalValue);
     document.getElementById('finVaR').textContent        = FinancialRiskService.formatRupiah(fin.varValue);
-    document.getElementById('finVaRSub').textContent     = `${fin.atRisk} aset di zona berisiko`;
+    document.getElementById('finVaRSub').textContent     = `${atRiskCount} aset di zona berisiko`;
     document.getElementById('finExposure').textContent   = FinancialRiskService.formatRupiah(fin.exposure);
     document.getElementById('finProportion').textContent = `${(fin.proportion*100).toFixed(1)}%`;
     const varPct = fin.totalValue > 0 ? (fin.varValue/fin.totalValue*100) : 0;
@@ -5361,18 +5799,27 @@ const DashboardOrchestrator = {
     /* Insights */
     InsightEngine.render(assets, fin);
 
-    /* Top risk table */
-    this._renderTopRiskTable(assets);
+    /* Top risk table — hazard-aware */
+    this._renderTopRiskTable(assets, hazard);
 
-    /* Hazard financial table */
-    this._renderHazardFinTable(fin);
+    /* Hazard financial table — hazard-aware */
+    this._renderHazardFinTable(fin, hazard);
 
-    /* Hazard rank list */
-    this._renderHazardRank(fin);
+    /* Hazard rank list — hazard-aware */
+    this._renderHazardRank(fin, hazard);
 
-    /* Charts */
-    this._updateChart(assets);
-    this._updateDistChart(assets);
+    /* Charts — hazard-aware */
+    this._updateChart(assets, hazard);
+    this._updateDistChart(assets, hazard);
+
+    /* Panel header badges */
+    ['riskChart','riskDistChart'].forEach(cid => {
+      const head = document.getElementById(cid)?.closest('.panel')?.querySelector('.panel-head h3');
+      if (!head) return;
+      const existing = head.querySelector('.hz-filter-badge');
+      if (existing) existing.remove();
+      if (hzBadge) head.insertAdjacentHTML('beforeend', hzBadge);
+    });
 
     /* Grid */
     AssetGridController.setRows(assets);
@@ -5382,47 +5829,80 @@ const DashboardOrchestrator = {
 
     /* Hazard extract */
     HazardExtractController.updateAll(assets);
+
+    /* Map insight sidebar — update dengan asset & hazard terkini */
+    try {
+      const filterState = HazardMapController._mapFilterState || { ssp:'all', horizon:'all', hazard: hazard };
+      MapInsightPanel.render(assets, hazard, filterState);
+    } catch(e) {}
   },
 
-  _renderTopRiskTable(assets) {
-    const top = [...assets].sort((a,b) => HazardScoringService.maxHazard(b) - HazardScoringService.maxHazard(a)).slice(0,5);
-    const hNames = {banjir:'Banjir',gempa:'Gempa',longsor:'Longsor',kekeringan:'Kekeringan'};
-    document.getElementById('topRiskBody').innerHTML = top.length ? top.map((a,i) => {
-      const maxIdx = HazardScoringService.maxHazard(a);
-      const lbl    = HazardScoringService.getLevelLabel(maxIdx);
-      const domH   = ['banjir','gempa','longsor','kekeringan'].reduce((best,h) => HazardScoringService.normalize(a[h]) > HazardScoringService.normalize(a[best]) ? h : best, 'banjir');
+  _renderTopRiskTable(assets, hazard = 'all') {
+    const sortFn = hazard === 'all'
+      ? (a, b) => HazardScoringService.maxHazard(b) - HazardScoringService.maxHazard(a)
+      : (a, b) => HazardScoringService.normalize(Number(b[hazard]||0)) - HazardScoringService.normalize(Number(a[hazard]||0));
+    const top = [...assets].sort(sortFn).slice(0, 5);
+    const hNames = { banjir:'Banjir', gempa:'Gempa', longsor:'Longsor', kekeringan:'Kekeringan' };
+    /* Panel header update */
+    const panelHead = document.getElementById('topRiskBody')?.closest('.panel')?.querySelector('.panel-head h3');
+    if (panelHead) {
+      const existing = panelHead.querySelector('.hz-filter-badge');
+      if (existing) existing.remove();
+      if (hazard !== 'all') {
+        const lbl = typeof getHazardLabel === 'function' ? getHazardLabel(hazard) : (hNames[hazard] || hazard);
+        panelHead.insertAdjacentHTML('beforeend', `<span class="hz-filter-badge">${lbl}</span>`);
+      }
+    }
+    document.getElementById('topRiskBody').innerHTML = top.length ? top.map((a, i) => {
+      let dispIdx, dispH;
+      if (hazard === 'all') {
+        dispIdx = HazardScoringService.maxHazard(a);
+        dispH   = ['banjir','gempa','longsor','kekeringan'].reduce((best,h) => HazardScoringService.normalize(a[h]) > HazardScoringService.normalize(a[best]) ? h : best, 'banjir');
+      } else {
+        dispIdx = HazardScoringService.normalize(Number(a[hazard] || 0));
+        dispH   = hazard;
+      }
+      const lbl    = HazardScoringService.getLevelLabel(dispIdx);
       const rnkCls = lbl==='Tinggi'?'high':lbl==='Sedang'?'med':'low';
+      const hzName = typeof getHazardLabel === 'function' ? getHazardLabel(dispH) : (hNames[dispH] || dispH);
       return `<tr>
         <td style="font-weight:800;">${i+1}</td>
         <td style="font-weight:700;cursor:pointer;color:var(--accent);" onclick="AssetDetailController.open(${JSON.stringify(a).replace(/"/g,'&quot;')})">${a.nama||'—'}</td>
-        <td>${hNames[domH]}</td>
-        <td><span class="risk-badge ${rnkCls}">${maxIdx.toFixed(2)}</span></td>
+        <td>${hzName}</td>
+        <td><span class="risk-badge ${rnkCls}">${dispIdx.toFixed(2)}</span></td>
         <td>${FinancialRiskService.formatRupiah(a.nilaiAset)}</td>
       </tr>`;
     }).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--ink-3);padding:14px;">Tidak ada data</td></tr>';
   },
 
-  _renderHazardFinTable(fin) {
+  _renderHazardFinTable(fin, hazard = 'all') {
     const hNames = {banjir:'🌊 Banjir',gempa:'🌋 Gempa',longsor:'⛰️ Longsor',kekeringan:'☀️ Kekeringan'};
-    document.getElementById('hazardFinBody').innerHTML = Object.entries(fin.byHazard).map(([h,d]) =>
-      `<tr>
-        <td style="font-weight:700;">${hNames[h]}</td>
-        <td><span class="risk-badge ${d.count > 0 ? 'med' : 'low'}">${d.count}</span></td>
+    document.getElementById('hazardFinBody').innerHTML = Object.entries(fin.byHazard).map(([h,d]) => {
+      const isActive = hazard !== 'all' && h === hazard;
+      const rowStyle = isActive ? 'background:var(--accent-lt);' : '';
+      const nameStyle = isActive ? 'font-weight:800;color:var(--accent);' : 'font-weight:700;';
+      return `<tr style="${rowStyle}">
+        <td style="${nameStyle}">${isActive ? '▶ ' : ''}${typeof getHazardIcon==='function'?getHazardIcon(h)+' ':hNames[h]||h}${typeof getHazardLabel==='function'?getHazardLabel(h):(hNames[h]||h).replace(/[^\w\s]/gi,'').trim()}</td>
+        <td><span class="risk-badge ${d.count > 0 ? (isActive?'high':'med') : 'low'}">${d.count}</span></td>
         <td style="font-weight:700;">${FinancialRiskService.formatRupiah(d.value)}</td>
-      </tr>`).join('');
+      </tr>`;
+    }).join('');
   },
 
-  _renderHazardRank(fin) {
+  _renderHazardRank(fin, hazard = 'all') {
     const hNames = {banjir:'Banjir',gempa:'Gempa',longsor:'Longsor',kekeringan:'Kekeringan'};
     const sorted = Object.entries(fin.byHazard).sort((a,b) => b[1].value - a[1].value);
     document.getElementById('hazardRankList').innerHTML = sorted.map(([h,d],i) => {
       const pct = fin.totalValue > 0 ? (d.value/fin.totalValue*100).toFixed(0) : 0;
-      return `<div style="margin-bottom:10px;">
-        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:3px;">
-          <span>${i+1}. ${hNames[h]}</span><span style="color:var(--ink-3)">${pct}%</span>
+      const isActive = hazard !== 'all' && h === hazard;
+      const hazColor = h==='banjir'?'var(--banjir)':h==='gempa'?'var(--gempa)':h==='longsor'?'var(--longsor)':'var(--kekeringan)';
+      const hzName = typeof getHazardLabel==='function' ? getHazardLabel(h) : (hNames[h]||h);
+      return `<div style="margin-bottom:10px;${isActive?'background:var(--accent-lt);border-radius:6px;padding:6px 8px;margin-left:-8px;margin-right:-8px;':''}">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:${isActive?'800':'700'};margin-bottom:3px;color:${isActive?'var(--accent)':'inherit'};">
+          <span>${isActive?'▶ ':''} ${i+1}. ${hzName}</span><span style="color:${isActive?'var(--accent)':'var(--ink-3)'}">${pct}%</span>
         </div>
         <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
-          <div style="height:100%;width:${pct}%;background:${h==='banjir'?'var(--banjir)':h==='gempa'?'var(--gempa)':h==='longsor'?'var(--longsor)':'var(--kekeringan)'};border-radius:3px;"></div>
+          <div style="height:100%;width:${pct}%;background:${hazColor};border-radius:3px;opacity:${isActive?'1':'.55'};transition:width .3s,opacity .2s;"></div>
         </div>
       </div>`;
     }).join('');
@@ -5433,10 +5913,15 @@ const DashboardOrchestrator = {
       responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{ display:false } }
     };
+    const allKeys   = typeof getHazardKeys === 'function' ? getHazardKeys() : ['banjir','gempa','longsor','kekeringan'];
+    const allLabels = allKeys.map(k => typeof getHazardLabel === 'function' ? getHazardLabel(k) : k);
+    const allColors = allKeys.map(k => {
+      const base = { banjir:'#1e7fe0', gempa:'#d94d3f', longsor:'#92570a', kekeringan:'#b5820a' };
+      return base[k] || (typeof getHazardAccent === 'function' ? getHazardAccent(k) : '#1a56db');
+    });
     this.chart = new Chart(document.getElementById('riskChart'), {
       type:'bar',
-      data:{ labels:['Banjir','Gempa','Longsor','Kekeringan'],
-             datasets:[{ data:[0,0,0,0], backgroundColor:['#1e7fe0','#d94d3f','#92570a','#b5820a'], borderRadius:5, borderWidth:0 }] },
+      data:{ labels: allLabels, datasets:[{ data: allKeys.map(()=>0), backgroundColor: allColors, borderRadius:5, borderWidth:0 }] },
       options:{ ...chartDefaults, scales:{ x:{ticks:{color:'#8ea0bb',font:{size:11,family:'Montserrat',weight:'600'}},grid:{display:false},border:{color:'#dce4f0'}},
                 y:{max:1, ticks:{color:'#8ea0bb',font:{size:10}},grid:{color:'#f0f4fa'},border:{color:'#dce4f0'}} } }
     });
@@ -5447,16 +5932,32 @@ const DashboardOrchestrator = {
     });
   },
 
-  _updateChart(assets) {
+  _updateChart(assets, hazard = 'all') {
     const avg = f => assets.length ? assets.reduce((s,a) => s + HazardScoringService.normalize(a[f]),0)/assets.length : 0;
-    this.chart.data.datasets[0].data = [+avg('banjir').toFixed(3), +avg('gempa').toFixed(3), +avg('longsor').toFixed(3), +avg('kekeringan').toFixed(3)];
+    const baseColors = { banjir:'#1e7fe0', gempa:'#d94d3f', longsor:'#92570a', kekeringan:'#b5820a' };
+    const dimColors  = { banjir:'#a8d4f7', gempa:'#f2b3ae', longsor:'#cca875', kekeringan:'#e6c97a' };
+    const allKeys = typeof getHazardKeys === 'function' ? getHazardKeys() : ['banjir','gempa','longsor','kekeringan'];
+    const labels  = allKeys.map(k => typeof getHazardLabel === 'function' ? getHazardLabel(k) : k);
+    const data    = allKeys.map(k => +avg(k).toFixed(3));
+    const colors  = allKeys.map(k => {
+      if (hazard === 'all') return baseColors[k] || (typeof getHazardAccent==='function' ? getHazardAccent(k) : '#1a56db');
+      return k === hazard
+        ? (baseColors[k] || (typeof getHazardAccent==='function' ? getHazardAccent(k) : '#1a56db'))
+        : (dimColors[k] || '#c4d0e6');
+    });
+    this.chart.data.labels = labels;
+    this.chart.data.datasets[0].data = data;
+    this.chart.data.datasets[0].backgroundColor = colors;
     this.chart.update();
   },
 
-  _updateDistChart(assets) {
-    const h = assets.filter(a => HazardScoringService.getLevelLabel(HazardScoringService.maxHazard(a))==='Tinggi').length;
-    const m = assets.filter(a => HazardScoringService.getLevelLabel(HazardScoringService.maxHazard(a))==='Sedang').length;
-    const l = assets.filter(a => HazardScoringService.getLevelLabel(HazardScoringService.maxHazard(a))==='Rendah').length;
+  _updateDistChart(assets, hazard = 'all') {
+    const getScore = (a) => hazard === 'all'
+      ? HazardScoringService.maxHazard(a)
+      : HazardScoringService.normalize(Number(a[hazard] || 0));
+    const h = assets.filter(a => HazardScoringService.getLevelLabel(getScore(a)) === 'Tinggi').length;
+    const m = assets.filter(a => HazardScoringService.getLevelLabel(getScore(a)) === 'Sedang').length;
+    const l = assets.filter(a => HazardScoringService.getLevelLabel(getScore(a)) === 'Rendah').length;
     this.chartDist.data.datasets[0].data = [h, m, l];
     this.chartDist.update();
   }
@@ -7086,39 +7587,71 @@ DashboardOrchestrator.init = async function() {
   }
   await this.refresh();
 };
-DashboardOrchestrator._renderTopRiskTable = function(assets) {
-  const top = [...assets].sort((a,b) => HazardScoringService.maxHazard(b) - HazardScoringService.maxHazard(a)).slice(0,5);
-  document.getElementById('topRiskBody').innerHTML = top.length ? top.map((a,i) => {
-    const maxIdx = HazardScoringService.maxHazard(a);
-    const lbl = HazardScoringService.getLevelLabel(maxIdx);
-    const domKey = getHazardMaxKey(a);
+DashboardOrchestrator._renderTopRiskTable = function(assets, hazard = 'all') {
+  const sortFn = hazard === 'all'
+    ? (a, b) => HazardScoringService.maxHazard(b) - HazardScoringService.maxHazard(a)
+    : (a, b) => HazardScoringService.normalize(Number(b[hazard]||0)) - HazardScoringService.normalize(Number(a[hazard]||0));
+  const top = [...assets].sort(sortFn).slice(0, 5);
+  const panelHead = document.getElementById('topRiskBody')?.closest('.panel')?.querySelector('.panel-head h3');
+  if (panelHead) {
+    const existing = panelHead.querySelector('.hz-filter-badge');
+    if (existing) existing.remove();
+    if (hazard !== 'all') panelHead.insertAdjacentHTML('beforeend', `<span class="hz-filter-badge">${getHazardLabel(hazard)}</span>`);
+  }
+  document.getElementById('topRiskBody').innerHTML = top.length ? top.map((a, i) => {
+    let dispIdx, dispH;
+    if (hazard === 'all') { dispIdx = HazardScoringService.maxHazard(a); dispH = getHazardMaxKey(a); }
+    else { dispIdx = HazardScoringService.normalize(Number(a[hazard]||0)); dispH = hazard; }
+    const lbl = HazardScoringService.getLevelLabel(dispIdx);
     const rnkCls = lbl==='Tinggi'?'high':lbl==='Sedang'?'med':'low';
-    return `<tr><td style="font-weight:800;">${i+1}</td><td style="font-weight:700;cursor:pointer;color:var(--accent);" onclick="AssetDetailController.open(${JSON.stringify(a).replace(/"/g,'&quot;')})">${a.nama||'—'}</td><td>${getHazardLabel(domKey)}</td><td><span class="risk-badge ${rnkCls}">${maxIdx.toFixed(2)}</span></td><td>${FinancialRiskService.formatRupiah(a.nilaiAset)}</td></tr>`;
+    return `<tr><td style="font-weight:800;">${i+1}</td><td style="font-weight:700;cursor:pointer;color:var(--accent);" onclick="AssetDetailController.open(${JSON.stringify(a).replace(/"/g,'&quot;')})">${a.nama||'—'}</td><td>${getHazardLabel(dispH)}</td><td><span class="risk-badge ${rnkCls}">${dispIdx.toFixed(2)}</span></td><td>${FinancialRiskService.formatRupiah(a.nilaiAset)}</td></tr>`;
   }).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--ink-3);padding:14px;">Tidak ada data</td></tr>';
 };
-DashboardOrchestrator._renderHazardFinTable = function(fin) {
-  document.getElementById('hazardFinBody').innerHTML = Object.entries(fin.byHazard).map(([key, data]) => `<tr><td style="font-weight:700;">${getHazardIcon(key)} ${getHazardLabel(key)}</td><td><span class="risk-badge ${data.count > 0 ? 'med' : 'low'}">${data.count}</span></td><td style="font-weight:700;">${FinancialRiskService.formatRupiah(data.value)}</td></tr>`).join('');
+DashboardOrchestrator._renderHazardFinTable = function(fin, hazard = 'all') {
+  document.getElementById('hazardFinBody').innerHTML = Object.entries(fin.byHazard).map(([key, data]) => {
+    const isActive = hazard !== 'all' && key === hazard;
+    const rowStyle = isActive ? 'background:var(--accent-lt);' : '';
+    return `<tr style="${rowStyle}"><td style="font-weight:${isActive?'800':'700'};color:${isActive?'var(--accent)':'inherit'};">${isActive?'▶ ':''}${getHazardIcon(key)} ${getHazardLabel(key)}</td><td><span class="risk-badge ${data.count > 0 ? (isActive?'high':'med') : 'low'}">${data.count}</span></td><td style="font-weight:700;">${FinancialRiskService.formatRupiah(data.value)}</td></tr>`;
+  }).join('');
 };
-DashboardOrchestrator._renderHazardRank = function(fin) {
+DashboardOrchestrator._renderHazardRank = function(fin, hazard = 'all') {
   const sorted = Object.entries(fin.byHazard).sort((a,b) => b[1].value - a[1].value);
   document.getElementById('hazardRankList').innerHTML = sorted.map(([key,data],i) => {
     const pct = fin.totalValue > 0 ? (data.value/fin.totalValue*100).toFixed(0) : 0;
-    return `<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:3px;"><span>${i+1}. ${getHazardLabel(key)}</span><span style="color:var(--ink-3)">${pct}%</span></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${getHazardAccent(key)};border-radius:3px;"></div></div></div>`;
+    const isActive = hazard !== 'all' && key === hazard;
+    return `<div style="margin-bottom:10px;${isActive?'background:var(--accent-lt);border-radius:6px;padding:6px 8px;margin-left:-8px;margin-right:-8px;':''}"><div style="display:flex;justify-content:space-between;font-size:11px;font-weight:${isActive?'800':'700'};margin-bottom:3px;color:${isActive?'var(--accent)':'inherit'};"><span>${isActive?'▶ ':''} ${i+1}. ${getHazardLabel(key)}</span><span style="color:${isActive?'var(--accent)':'var(--ink-3)'}">${pct}%</span></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${getHazardAccent(key)};border-radius:3px;opacity:${isActive?'1':'.55'};"></div></div></div>`;
   }).join('');
 };
 DashboardOrchestrator._initCharts = function() {
   const chartDefaults = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } };
-  this.chart = new Chart(document.getElementById('riskChart'), { type:'bar', data:{ labels:getHazardKeys().map(getHazardLabel), datasets:[{ data:getHazardKeys().map(() => 0), backgroundColor:getHazardKeys().map(getHazardAccent), borderRadius:5, borderWidth:0 }] }, options:{ ...chartDefaults, scales:{ x:{ticks:{color:'#8ea0bb',font:{size:11,family:'Montserrat',weight:'600'}},grid:{display:false},border:{color:'#dce4f0'}}, y:{max:1, ticks:{color:'#8ea0bb',font:{size:10}},grid:{color:'#f0f4fa'},border:{color:'#dce4f0'}} } } });
+  const allKeys = getHazardKeys();
+  this.chart = new Chart(document.getElementById('riskChart'), { type:'bar', data:{ labels:allKeys.map(getHazardLabel), datasets:[{ data:allKeys.map(()=>0), backgroundColor:allKeys.map(getHazardAccent), borderRadius:5, borderWidth:0 }] }, options:{ ...chartDefaults, scales:{ x:{ticks:{color:'#8ea0bb',font:{size:11,family:'Montserrat',weight:'600'}},grid:{display:false},border:{color:'#dce4f0'}}, y:{max:1, ticks:{color:'#8ea0bb',font:{size:10}},grid:{color:'#f0f4fa'},border:{color:'#dce4f0'}} } } });
   this.chartDist = new Chart(document.getElementById('riskDistChart'), { type:'doughnut', data:{ labels:['Tinggi','Sedang','Rendah'], datasets:[{data:[0,0,0],backgroundColor:['#dc2626','#d97706','#0e9f6e'],borderWidth:2,borderColor:'#fff'}] }, options:{ ...chartDefaults, plugins:{ legend:{ display:true, position:'right', labels:{ font:{size:11,family:'Montserrat'}, color:'#4a5f7a' } } } } });
 };
-DashboardOrchestrator._updateChart = function(assets) {
-  const labels = getHazardKeys().map(getHazardLabel);
-  const colors = getHazardKeys().map(getHazardAccent);
-  const values = getHazardKeys().map(key => assets.length ? +(assets.reduce((s,a) => s + HazardScoringService.normalize(getHazardRawScoreForAsset(a, key)),0) / assets.length).toFixed(3) : 0);
+DashboardOrchestrator._updateChart = function(assets, hazard = 'all') {
+  const allKeys = getHazardKeys();
+  const baseColors = { banjir:'#1e7fe0', gempa:'#d94d3f', longsor:'#92570a', kekeringan:'#b5820a' };
+  const dimColors  = { banjir:'#a8d4f7', gempa:'#f2b3ae', longsor:'#cca875', kekeringan:'#e6c97a' };
+  const labels = allKeys.map(getHazardLabel);
+  const values = allKeys.map(key => assets.length ? +(assets.reduce((s,a) => s + HazardScoringService.normalize(getHazardRawScoreForAsset(a, key)),0) / assets.length).toFixed(3) : 0);
+  const colors = allKeys.map(key => {
+    if (hazard === 'all') return baseColors[key] || getHazardAccent(key);
+    return key === hazard ? (baseColors[key] || getHazardAccent(key)) : (dimColors[key] || '#c4d0e6');
+  });
   this.chart.data.labels = labels;
   this.chart.data.datasets[0].data = values;
   this.chart.data.datasets[0].backgroundColor = colors;
   this.chart.update();
+};
+DashboardOrchestrator._updateDistChart = function(assets, hazard = 'all') {
+  const getScore = (a) => hazard === 'all'
+    ? HazardScoringService.maxHazard(a)
+    : HazardScoringService.normalize(Number(a[hazard]||0));
+  const h = assets.filter(a => HazardScoringService.getLevelLabel(getScore(a))==='Tinggi').length;
+  const m = assets.filter(a => HazardScoringService.getLevelLabel(getScore(a))==='Sedang').length;
+  const l = assets.filter(a => HazardScoringService.getLevelLabel(getScore(a))==='Rendah').length;
+  this.chartDist.data.datasets[0].data = [h, m, l];
+  this.chartDist.update();
 };
 
 const _originalExcelSaveAll = ExcelImportController.saveAll.bind(ExcelImportController);
@@ -7213,6 +7746,175 @@ setTimeout(() => {
   font-weight:700;
 }
 </style>
+
+<!-- ================================================================
+     MAP INSIGHT PANEL — sidebar stats terikat COG filter
+================================================================ -->
+<script>
+/* =========================================================================
+   MAP INSIGHT PANEL
+   Render ringkasan statistik aset di sidebar peta risiko,
+   terikat pada state filter COG (SSP · horizon · hazard).
+   🔒 COG layer/opacity logic tidak disentuh di sini.
+========================================================================= */
+const MapInsightPanel = {
+
+  _lastAssets: [],
+  _lastHazard: 'all',
+  _lastState:  { ssp:'all', horizon:'all', hazard:'all' },
+
+  /* ── Entry point: dipanggil dari DashboardOrchestrator._render() dan updateMapFilter ── */
+  render(assets, hazard, filterState) {
+    this._lastAssets = assets || this._lastAssets;
+    this._lastHazard = hazard != null ? hazard : this._lastHazard;
+    this._lastState  = filterState || this._lastState;
+
+    this._renderFilterBadge();
+    this._renderBody();
+  },
+
+  /* ── Badge filter aktif di header sidebar ── */
+  _renderFilterBadge() {
+    const el = document.getElementById('misFilterBadge');
+    if (!el) return;
+    const { ssp, horizon, hazard } = this._lastState;
+    const hzLabel = hazard !== 'all'
+      ? (typeof getHazardLabel === 'function' ? getHazardLabel(hazard) : hazard)
+      : 'Semua Bencana';
+    const hzIcon  = hazard !== 'all' && typeof getHazardIcon === 'function' ? getHazardIcon(hazard) : '🌐';
+
+    el.innerHTML = [
+      `<span class="map-insight-filter-pill${hazard !== 'all' ? ' active-hz' : ''}">${hzIcon} ${hzLabel}</span>`,
+      ssp !== 'all'     ? `<span class="map-insight-filter-pill">📈 ${ssp}</span>` : '',
+      horizon !== 'all' ? `<span class="map-insight-filter-pill">📅 ${horizon}</span>` : '',
+    ].join('');
+  },
+
+  /* ── Body utama: KPI, distribusi, top-5 aset, legend ── */
+  _renderBody() {
+    const el = document.getElementById('mapInsightBody');
+    if (!el) return;
+    const assets  = this._lastAssets;
+    const hazard  = this._lastHazard;
+    const threshold = typeof AppConfig !== 'undefined' ? (AppConfig.atRiskThreshold || 0.34) : 0.34;
+
+    if (!assets.length) {
+      el.innerHTML = `<div class="mis-empty">Belum ada data aset.<br>Tambahkan aset terlebih dahulu.</div>`;
+      return;
+    }
+
+    /* ── Scoring helper ── */
+    const normalize = v => typeof HazardScoringService !== 'undefined'
+      ? HazardScoringService.normalize(Number(v || 0))
+      : Math.min(Math.max(Number(v || 0) / 5, 0), 1);
+    const getScore = a => hazard === 'all'
+      ? (typeof HazardScoringService !== 'undefined' ? HazardScoringService.maxHazard(a) : 0)
+      : normalize(Number(a[hazard] || 0));
+    const getLevel = score => score >= 0.67 ? 'Tinggi' : score >= 0.34 ? 'Sedang' : 'Rendah';
+
+    /* ── KPI computation ── */
+    const total   = assets.length;
+    const atRisk  = assets.filter(a => getScore(a) >= threshold).length;
+    const avgIdx  = total ? assets.reduce((s,a) => s + getScore(a), 0) / total : 0;
+    const totalVal= assets.reduce((s,a) => s + Number(a.nilaiAset || 0), 0);
+    const riskVal = assets.filter(a => getScore(a) >= threshold)
+                          .reduce((s,a) => s + Number(a.nilaiAset || 0), 0);
+    const fmtRp   = v => {
+      if (v >= 1e12) return `${(v/1e12).toFixed(1)}T`;
+      if (v >= 1e9)  return `${(v/1e9).toFixed(1)}M`;
+      if (v >= 1e6)  return `${(v/1e6).toFixed(0)}jt`;
+      return v.toLocaleString('id-ID');
+    };
+
+    /* ── Distribution ── */
+    const high = assets.filter(a => getLevel(getScore(a)) === 'Tinggi').length;
+    const med  = assets.filter(a => getLevel(getScore(a)) === 'Sedang').length;
+    const low  = assets.filter(a => getLevel(getScore(a)) === 'Rendah').length;
+    const distPct = n => total > 0 ? Math.round(n / total * 100) : 0;
+
+    /* ── Top 5 assets sorted by score ── */
+    const top5 = [...assets]
+      .sort((a, b) => getScore(b) - getScore(a))
+      .slice(0, 5);
+
+    /* ── Legend: visible hazard layers ── */
+    const visibleKeys = typeof HazardMapController !== 'undefined' && HazardMapController.getVisibleHazardKeys
+      ? HazardMapController.getVisibleHazardKeys()
+      : (typeof getHazardKeys === 'function' ? getHazardKeys() : []);
+
+    const hzLabel = hazard !== 'all'
+      ? (typeof getHazardLabel === 'function' ? getHazardLabel(hazard) : hazard)
+      : 'Semua';
+
+    /* ── Render ── */
+    el.innerHTML = `
+      <div class="mis-section-title">KPI Portofolio · ${hzLabel}</div>
+      <div class="mis-kpi-grid">
+        <div class="mis-kpi">
+          <div class="mis-kpi-val">${total}</div>
+          <div class="mis-kpi-lbl">Total Aset</div>
+        </div>
+        <div class="mis-kpi" style="border-color:rgba(220,38,38,.3);">
+          <div class="mis-kpi-val" style="color:#fca5a5;">${atRisk}</div>
+          <div class="mis-kpi-lbl">At Risk</div>
+          <div class="mis-kpi-sub">${total > 0 ? Math.round(atRisk/total*100) : 0}% portofolio</div>
+        </div>
+        <div class="mis-kpi">
+          <div class="mis-kpi-val" style="color:#fcd34d;">${avgIdx.toFixed(2)}</div>
+          <div class="mis-kpi-lbl">Rata-rata Indeks</div>
+        </div>
+        <div class="mis-kpi" style="border-color:rgba(217,119,6,.25);">
+          <div class="mis-kpi-val" style="font-size:13px;color:#fde68a;">Rp${fmtRp(riskVal)}</div>
+          <div class="mis-kpi-lbl">Nilai At Risk</div>
+        </div>
+      </div>
+
+      <div class="mis-section-title">Distribusi Tingkat Risiko</div>
+      <div class="mis-dist-row">
+        <div class="mis-dist-label"><span>🔴 Tinggi</span><span>${high} aset · ${distPct(high)}%</span></div>
+        <div class="mis-dist-bar"><div class="mis-dist-fill" style="width:${distPct(high)}%;background:#dc2626;"></div></div>
+      </div>
+      <div class="mis-dist-row">
+        <div class="mis-dist-label"><span>🟡 Sedang</span><span>${med} aset · ${distPct(med)}%</span></div>
+        <div class="mis-dist-bar"><div class="mis-dist-fill" style="width:${distPct(med)}%;background:#d97706;"></div></div>
+      </div>
+      <div class="mis-dist-row">
+        <div class="mis-dist-label"><span>🟢 Rendah</span><span>${low} aset · ${distPct(low)}%</span></div>
+        <div class="mis-dist-bar"><div class="mis-dist-fill" style="width:${distPct(low)}%;background:#0e9f6e;"></div></div>
+      </div>
+
+      <div class="mis-section-title">Top 5 Aset Risiko Tertinggi</div>
+      ${top5.length ? top5.map((a, i) => {
+        const score = getScore(a);
+        const lbl   = getLevel(score);
+        const cls   = lbl === 'Tinggi' ? 'high' : lbl === 'Sedang' ? 'med' : 'low';
+        return `<div class="mis-asset-item" onclick="AssetDetailController?.open(${JSON.stringify(a).replace(/"/g,'&quot;')})">
+          <div class="mis-asset-name">${i+1}. ${a.nama || '—'}</div>
+          <div class="mis-asset-meta">
+            <span class="mis-asset-badge ${cls}">${score.toFixed(2)}</span>
+            <span>${a.jenisAset || '—'}</span>
+          </div>
+        </div>`;
+      }).join('') : `<div class="mis-empty">Tidak ada data aset.</div>`}
+
+      ${visibleKeys.length ? `
+      <div class="mis-section-title">Layer COG Aktif</div>
+      ${visibleKeys.map(key => {
+        const cfg = typeof CogConfigService !== 'undefined' ? CogConfigService.get(key) : null;
+        const accent = typeof getHazardAccent === 'function' ? getHazardAccent(key) : '#1a56db';
+        const icon   = typeof getHazardIcon  === 'function' ? getHazardIcon(key)   : '⚠️';
+        const label  = typeof getHazardLabel === 'function' ? getHazardLabel(key)  : key;
+        const meta   = cfg ? `${cfg.variableName||'-'} · ${cfg.sspScenario||'-'} · ${cfg.timeHorizon||'-'}` : '';
+        return `<div class="mis-legend-row">
+          <div class="mis-leg-dot" style="background:${accent};"></div>
+          <div><div style="font-weight:700;color:rgba(255,255,255,.8);">${icon} ${label}</div>${meta ? `<div style="font-size:9px;color:rgba(255,255,255,.35);margin-top:1px;">${meta}</div>` : ''}</div>
+        </div>`;
+      }).join('')}` : ''}
+    `;
+  }
+};
+</script>
+
 <script>
 (function(){
   const HIDDEN_OPACITY_IDS = [
@@ -7317,6 +8019,13 @@ setTimeout(() => {
     }
     DynamicHazardUI.renderMapUi();
     this.applyMapLayerFilter();
+    // ── Sync hazard selection → dashboard statistics (COG layer logic untouched above) ──
+    try { DashboardOrchestrator.syncHazardFilter(this._mapFilterState.hazard); } catch(e) {}
+    // ── Update map insight sidebar ──
+    try {
+      const assets = typeof DashboardOrchestrator !== 'undefined' ? DashboardOrchestrator._getVisible() : [];
+      MapInsightPanel.render(assets, this._mapFilterState.hazard, this._mapFilterState);
+    } catch(e) {}
   };
 
   HazardMapController.setFilteredOpacity = function(rawValue) {
