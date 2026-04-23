@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portofolio &amp; Publikasi — Rinov Hub</title>
+  <meta name="description" content="Daftar portofolio Applied Research dan publikasi ilmiah Fundamental Research CESGS." />
+  <style>
+    :root{
+      --font-title: Helvetica, "Helvetica Neue", Arial, sans-serif;
+      --font-body: "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+      --bg-1:#f7fbff;
+      --bg-2:#edf7f4;
+      --surface:#ffffff;
+      --surface-soft:rgba(255,255,255,.78);
+      --text:#10263d;
+      --muted:#5c7189;
+      --line:rgba(16,38,61,.09);
+      --green:#148f84;
+      --green-soft:#e8f7f4;
+      --blue:#2b6fe5;
+      --blue-soft:#eaf1ff;
+      --gold:#b07a10;
+      --gold-soft:#fef7e0;
+      --gradient-main:linear-gradient(135deg,#148f84 0%,#2b6fe5 100%);
+      --gradient-gold:linear-gradient(135deg,#b07a10,#f0c040);
+      --shadow-lg:0 24px 60px rgba(19,47,84,.10);
+      --shadow-md:0 14px 36px rgba(19,47,84,.08);
+      --shadow-sm:0 6px 18px rgba(19,47,84,.07);
+      --radius-xl:32px;
+      --radius-lg:26px;
+      --radius-md:20px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:var(--font-body);
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(20,143,132,.10), transparent 34%),
+        radial-gradient(circle at top right, rgba(43,111,229,.08), transparent 32%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 46%, #f9fbff 100%);
+      min-height:100vh;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    .page{
+      width:min(1160px, calc(100% - 32px));
+      margin:0 auto;
+      padding:28px 0 60px;
+    }
+
+    /* Back nav */
+    .back-nav{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:28px;
+      padding:10px 16px;
+      border-radius:999px;
+      background:rgba(255,255,255,.85);
+      border:1px solid var(--line);
+      font-size:13px;
+      font-weight:700;
+      color:var(--muted);
+      transition:background .15s,color .15s;
+    }
+
+    .back-nav:hover{background:#fff;color:var(--text)}
+
+    .back-nav::before{
+      content:"←";
+      font-size:15px;
+    }
+
+    /* Header */
+    .page-header{
+      position:relative;
+      overflow:hidden;
+      border-radius:var(--radius-xl);
+      padding:36px 40px;
+      margin-bottom:28px;
+      background:
+        radial-gradient(circle at top left, rgba(176,122,16,.12), transparent 42%),
+        radial-gradient(circle at bottom right, rgba(240,192,64,.10), transparent 40%),
+        linear-gradient(180deg, rgba(255,255,255,.95) 0%, rgba(254,247,224,.90) 100%);
+      border:1px solid rgba(176,122,16,.14);
+      box-shadow:var(--shadow-lg);
+    }
+
+    .page-header::after{
+      content:"";
+      position:absolute;
+      inset:auto -48px -62px auto;
+      width:260px;height:260px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(240,192,64,.14), transparent 70%);
+      pointer-events:none;
+    }
+
+    .header-top{
+      display:flex;
+      align-items:center;
+      gap:20px;
+      margin-bottom:16px;
+    }
+
+    .header-icon{
+      width:72px;height:72px;
+      border-radius:22px;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-family:var(--font-title);
+      font-size:28px;
+      font-weight:800;
+      flex-shrink:0;
+      box-shadow:0 16px 30px rgba(19,47,84,.14);
+      background:var(--gradient-gold);
+    }
+
+    .header-eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(176,122,16,.10);
+      color:var(--gold);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    h1.page-title{
+      font-family:var(--font-title);
+      font-size:clamp(2.2rem,4vw,3.8rem);
+      line-height:.98;
+      color:#0f2438;
+      letter-spacing:-.04em;
+      margin:0;
+    }
+
+    .page-desc{
+      margin:12px 0 0;
+      font-size:15px;
+      line-height:1.85;
+      color:var(--muted);
+      max-width:640px;
+    }
+
+    /* Sections */
+    .sections{
+      display:grid;
+      gap:24px;
+    }
+
+    .section-block{
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      background:rgba(255,255,255,.96);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-md);
+      position:relative;
+    }
+
+    .section-block::before{
+      content:"";
+      position:absolute;
+      inset:0 auto auto 0;
+      width:100%;height:4px;
+    }
+
+    .section-block.applied::before{background:linear-gradient(135deg,#148f84,#57d1c4)}
+    .section-block.fundamental::before{background:linear-gradient(135deg,#2b6fe5,#7ea6ff)}
+
+    .section-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:26px 28px 20px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .section-title-wrap h2{
+      font-family:var(--font-title);
+      font-size:clamp(1.6rem,2.6vw,2.2rem);
+      line-height:1.04;
+      color:#10263d;
+      letter-spacing:-.04em;
+      margin:0 0 6px;
+    }
+
+    .section-title-wrap p{
+      margin:0;
+      font-size:13px;
+      line-height:1.7;
+      color:var(--muted);
+    }
+
+    .section-badge{
+      display:inline-flex;
+      align-items:center;
+      min-height:36px;
+      padding:0 16px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      flex-shrink:0;
+    }
+
+    .section-badge.applied{background:var(--green-soft);color:var(--green)}
+    .section-badge.fundamental{background:var(--blue-soft);color:var(--blue)}
+
+    /* Portfolio items */
+    .port-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:16px;
+      padding:22px 28px;
+    }
+
+    .port-item{
+      display:flex;
+      flex-direction:column;
+      border-radius:var(--radius-md);
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,#fff 0%,#f8fbff 100%);
+      overflow:hidden;
+      transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+      text-decoration:none;
+    }
+
+    .port-item:hover{
+      transform:translateY(-4px);
+      box-shadow:var(--shadow-md);
+    }
+
+    .port-item.applied-item:hover{border-color:rgba(20,143,132,.25)}
+
+    .port-item-bar{
+      height:3px;
+      background:linear-gradient(90deg,#148f84,#57d1c4);
+    }
+
+    .port-item-body{
+      padding:20px;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .port-item-icon{
+      width:48px;height:48px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-family:var(--font-title);
+      font-size:18px;
+      font-weight:800;
+      background:linear-gradient(135deg,#148f84,#57d1c4);
+      box-shadow:0 8px 18px rgba(20,143,132,.20);
+      margin-bottom:4px;
+    }
+
+    .port-item h3{
+      font-family:var(--font-title);
+      font-size:1.25rem;
+      line-height:1.1;
+      color:#10263d;
+      letter-spacing:-.03em;
+      margin:0;
+    }
+
+    .port-item p{
+      margin:0;
+      font-size:13px;
+      line-height:1.7;
+      color:var(--muted);
+      flex:1;
+    }
+
+    .port-item-cta{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      margin-top:4px;
+      font-size:12px;
+      font-weight:800;
+      color:var(--green);
+    }
+
+    .port-item-cta::after{content:"↗";font-size:13px}
+
+    .port-item.coming .port-item-bar{background:linear-gradient(90deg,#ccc,#e0e0e0)}
+    .port-item.coming .port-item-icon{background:linear-gradient(135deg,#8aab99,#b0c8bf)}
+    .port-item.coming .port-item-cta{color:var(--muted)}
+    .port-item.coming .port-item-cta::after{content:""}
+
+    /* Publication items */
+    .pub-list{
+      list-style:none;
+      margin:0;
+      padding:16px 28px 24px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .pub-item{
+      display:flex;
+      align-items:flex-start;
+      gap:16px;
+      padding:18px 20px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,#fff 0%,#f7faff 100%);
+      text-decoration:none;
+      color:inherit;
+      transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease;
+    }
+
+    .pub-item:hover{
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-sm);
+      border-color:rgba(43,111,229,.22);
+    }
+
+    .pub-num{
+      flex-shrink:0;
+      width:34px;height:34px;
+      border-radius:10px;
+      background:var(--blue-soft);
+      display:grid;
+      place-items:center;
+      font-family:var(--font-title);
+      font-size:14px;
+      font-weight:800;
+      color:var(--blue);
+      margin-top:2px;
+    }
+
+    .pub-content{flex:1}
+
+    .pub-title{
+      font-size:15px;
+      font-weight:700;
+      line-height:1.55;
+      color:#10263d;
+      margin:0 0 6px;
+      font-style:italic;
+    }
+
+    .pub-meta{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .pub-tag{
+      display:inline-flex;
+      align-items:center;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      background:var(--blue-soft);
+      color:var(--blue);
+    }
+
+    .pub-link-label{
+      font-size:12px;
+      font-weight:700;
+      color:var(--blue);
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    .pub-link-label::after{content:"↗";font-size:12px}
+
+    .pub-arrow{
+      flex-shrink:0;
+      width:32px;height:32px;
+      border-radius:10px;
+      display:grid;
+      place-items:center;
+      background:var(--blue-soft);
+      color:var(--blue);
+      font-size:16px;
+      margin-top:2px;
+      transition:background .15s;
+    }
+
+    .pub-item:hover .pub-arrow{background:var(--blue);color:#fff}
+
+    @media(max-width:980px){
+      .page{width:min(100% - 24px,980px);padding:18px 0 40px}
+      .page-header{padding:28px 28px}
+      .section-head{padding:22px 22px 18px}
+      .port-grid{padding:18px 22px}
+      .pub-list{padding:14px 22px 20px}
+    }
+
+    @media(max-width:640px){
+      .page{width:min(100% - 18px,640px);padding:14px 0 30px}
+      .page-header{padding:22px 20px;border-radius:22px}
+      .header-top{gap:14px}
+      .header-icon{width:56px;height:56px;border-radius:18px;font-size:22px}
+      h1.page-title{font-size:2rem}
+      .section-block{border-radius:22px}
+      .section-head{padding:18px 18px 14px;flex-direction:column;align-items:flex-start}
+      .port-grid{grid-template-columns:1fr;padding:14px 16px 18px;gap:12px}
+      .pub-list{padding:12px 16px 18px;gap:10px}
+      .pub-item{padding:14px 16px;gap:12px}
+      .pub-title{font-size:14px}
+    }
+
+    /* NAVY THEME OVERRIDES */
+    :root{
+      --bg-1:#ffffff;
+      --bg-2:#f7fbff;
+      --surface:#ffffff;
+      --surface-soft:rgba(255,255,255,.95);
+      --text:#10263d;
+      --muted:#6a7f96;
+      --line:rgba(16,38,61,.10);
+      --green:#1e66d0;
+      --green-soft:#edf4ff;
+      --blue:#1f5fbf;
+      --blue-soft:#eaf2ff;
+      --gold:#2f6fce;
+      --gold-soft:#eef4ff;
+      --gradient-main:linear-gradient(135deg,#0d355a 0%,#165186 52%,#2d79d5 100%);
+      --gradient-gold:linear-gradient(135deg,#123a63,#2d79d5);
+      --shadow-lg:0 24px 60px rgba(13,53,90,.12);
+      --shadow-md:0 14px 36px rgba(13,53,90,.10);
+      --shadow-sm:0 8px 20px rgba(13,53,90,.08);
+    }
+
+    body{
+      background:
+        radial-gradient(circle at top left, rgba(45,121,213,.10), transparent 34%),
+        radial-gradient(circle at top right, rgba(13,53,90,.08), transparent 32%),
+        linear-gradient(180deg,#ffffff 0%, #f7fbff 52%, #ffffff 100%);
+    }
+
+    .back-nav,
+    .section-block,
+    .port-item,
+    .pub-item{
+      background:#fff;
+      border:1px solid rgba(16,38,61,.10);
+      box-shadow:var(--shadow-sm);
+    }
+
+    .back-nav:hover,
+    .port-item:hover,
+    .pub-item:hover{
+      box-shadow:var(--shadow-md);
+    }
+
+    .page-header{
+      background:linear-gradient(135deg,#0c355d 0%, #124a7b 48%, #236ec7 100%);
+      border:1px solid rgba(24,95,191,.18);
+      box-shadow:0 26px 60px rgba(12,53,93,.18);
+    }
+
+    .page-header::after{
+      background:radial-gradient(circle, rgba(255,255,255,.18), transparent 70%);
+    }
+
+    .header-icon, .header-eyebrow{
+      background:rgba(255,255,255,.12);
+      color:#fff;
+      box-shadow:none;
+    }
+
+    h1.page-title, .page-desc{ color:#fff; }
+    .page-desc{ opacity:.9; }
+
+    .section-block.applied::before,
+    .section-block.fundamental::before,
+    .port-item-bar{
+      background:linear-gradient(90deg,#103d67,#2d79d5);
+    }
+
+    .section-badge.applied,
+    .section-badge.fundamental,
+    .pub-tag,
+    .port-item-cta{
+      background:#edf4ff;
+      color:#1f5fbf;
+    }
+
+    .port-item-icon,
+    .header-icon,
+    .pub-num,
+    .pub-arrow{
+      background:linear-gradient(135deg,#103d67,#2d79d5);
+      color:#fff;
+    }
+
+    .pub-item:hover .pub-arrow{ background:#1f5fbf; color:#fff; }
+
+    .section-title-wrap h2,
+    .port-item h3,
+    .pub-title{ color:#10263d; }
+
+    .section-title-wrap p,
+    .port-item p,
+    .pub-link-label{ color:#6a7f96; }
+
+    .port-item.applied-item:hover,
+    .pub-item:hover{ border-color:rgba(31,95,191,.22); }
+
+  
+/* ===================== TYPOGRAPHY UNIFORM OVERRIDE ===================== */
+:root{
+  --font-title:Helvetica, "Helvetica Neue", Arial, sans-serif;
+  --font-body:"Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+}
+body, button, input, select, textarea {
+  font-family: var(--font-body) !important;
+}
+h1, h2, h3, h4, .hero-title, .page-title, .section-title, .section-title-wrap h2, .nav-card h3, .collab-card h4 {
+  font-family: var(--font-title) !important;
+}
+.hero-copy,
+.hero-copy * {
+  color:#ffffff;
+}
+.nav-card,
+.nav-card h3,
+.collab-card,
+.collab-card h4,
+.logo-item,
+.footer-note,
+.footer-note strong,
+.page,
+body {
+  color: var(--text);
+}
+.nav-card p,
+.footer-note,
+.hint {
+  color: var(--muted) !important;
+}
+
+</style>
+
+<style>
+/* ===================== PORTFOLIO PASSCODE ACCESS ===================== */
+:root{
+  --passcode-title:Helvetica, "Helvetica Neue", Arial, sans-serif;
+  --passcode-body:"Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+}
+body.portfolio-locked{overflow:hidden;}
+body.portfolio-locked .page{visibility:hidden;pointer-events:none;}
+#portfolio-lock{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:linear-gradient(135deg,#0c355d 0%, #124a7b 48%, #236ec7 100%);
+}
+body:not(.portfolio-locked) #portfolio-lock{display:none;}
+.lock-card{
+  width:min(460px,100%);
+  border-radius:28px;
+  padding:28px;
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(16,38,61,.10);
+  box-shadow:0 28px 60px rgba(12,53,93,.24);
+  color:#10263d;
+}
+.lock-eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:#edf4ff;
+  color:#1f5fbf;
+  font:800 11px "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.lock-title{
+  margin:0 0 10px;
+  font-family:Helvetica, "Helvetica Neue", Arial, sans-serif;
+  font-size:32px;
+  line-height:1.02;
+  letter-spacing:-.03em;
+  color:#10263d;
+}
+.lock-desc{
+  margin:0 0 18px;
+  font:400 14px/1.8 "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  color:#5c7189;
+}
+.lock-form{display:grid;gap:12px;}
+.lock-input{
+  width:100%;
+  height:50px;
+  border-radius:16px;
+  border:1px solid rgba(16,38,61,.12);
+  padding:0 16px;
+  font:600 15px "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  color:#10263d;
+  background:#ffffff;
+  outline:none;
+}
+.lock-input:focus{border-color:#1f5fbf;box-shadow:0 0 0 3px rgba(31,95,191,.12);}
+.lock-btn{
+  height:50px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(135deg,#103d67,#2d79d5);
+  color:#ffffff;
+  font:700 14px "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  cursor:pointer;
+}
+.lock-error{
+  min-height:20px;
+  font:600 12px "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  color:#c13b3b;
+}
+.lock-note{
+  margin-top:10px;
+  font:400 12px/1.7 "Aptos Display", Aptos, "Segoe UI", Arial, sans-serif;
+  color:#6a7f96;
+}
+</style>
+
+</head>
+<body class="portfolio-locked">
+  
+  <div id="portfolio-lock" aria-hidden="false">
+    <div class="lock-card" role="dialog" aria-modal="true" aria-labelledby="portfolio-lock-title">
+      <div class="lock-eyebrow">Akses Portofolio</div>
+      <h2 class="lock-title" id="portfolio-lock-title">Masukkan passcode</h2>
+      <p class="lock-desc">Halaman portofolio ini dilindungi passcode. Masukkan kode yang benar untuk membuka seluruh isi halaman tanpa mengubah link portofolio yang sudah ada.</p>
+      <form class="lock-form" id="portfolio-lock-form">
+        <input class="lock-input" id="portfolio-passcode-input" type="password" inputmode="text" autocomplete="off" placeholder="Masukkan passcode" aria-label="Passcode" />
+        <button class="lock-btn" type="submit">Buka halaman</button>
+        <div class="lock-error" id="portfolio-lock-error" aria-live="polite"></div>
+      </form>
+      <div class="lock-note">Passcode bersifat case-sensitive dan harus diisi persis sesuai kode yang ditentukan.</div>
+    </div>
+  </div>
+
+  <main class="page">
+
+
+    <a class="back-nav" href="saturinov.html">Kembali ke Rinov Hub</a>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-top">
+        <div class="header-icon">P</div>
+        <div>
+          <div class="header-eyebrow">Rinov Hub</div>
+          <h1 class="page-title">Portofolio &amp; Publikasi</h1>
+        </div>
+      </div>
+      <p class="page-desc">
+        Kumpulan karya dan capaian Divisi Riset dan Inovasi CESGS — mulai dari portofolio consulting Applied Research hingga publikasi ilmiah Fundamental Research.
+      </p>
+    </div>
+
+    <div class="sections">
+
+      <!-- Applied Research Portfolios -->
+      <div class="section-block applied">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <h2>Portofolio Applied Research</h2>
+            <p>Dashboard dan laporan hasil consulting research bersama mitra industri.</p>
+          </div>
+          <div class="section-badge applied">Applied Research</div>
+        </div>
+                <div class="port-grid">
+
+          <a class="port-item applied-item" href="https://cpebrunair-debug.github.io/portofolio/dashboardindosat.html">
+            <div class="port-item-bar"></div>
+            <div class="port-item-body">
+              <div class="port-item-icon">IN</div>
+              <h3>Dashboard Indosat</h3>
+              <p>Hasil riset dan analisis consulting research bersama Indosat dalam kajian inovasi teknologi terapan.</p>
+              <div class="port-item-cta">Buka Dashboard</div>
+            </div>
+          </a>
+
+          <a class="port-item applied-item" href="https://cpebrunair-debug.github.io/portofolio/bulletinindosat">
+            <div class="port-item-bar"></div>
+            <div class="port-item-body">
+              <div class="port-item-icon">BL</div>
+              <h3>Bulletin Indosat</h3>
+              <p>Ringkasan bulletin dan materi portofolio terkait kolaborasi riset bersama Indosat.</p>
+              <div class="port-item-cta">Buka Halaman</div>
+            </div>
+          </a>
+
+          <a class="port-item applied-item" href="https://cpebrunair-debug.github.io/portofolio/bulletinpln">
+            <div class="port-item-bar"></div>
+            <div class="port-item-body">
+              <div class="port-item-icon">BP</div>
+              <h3>Bulletin PLN</h3>
+              <p>Ringkasan bulletin dan materi portofolio terkait kolaborasi riset bersama PLN.</p>
+              <div class="port-item-cta">Buka Halaman</div>
+            </div>
+          </a>
+
+          <a class="port-item applied-item" href="https://cpebrunair-debug.github.io/portofolio/dashboardpltst">
+            <div class="port-item-bar"></div>
+            <div class="port-item-body">
+              <div class="port-item-icon">PV</div>
+              <h3>Visualisasi PLTST</h3>
+              <p>Dashboard visualisasi PLTST untuk menampilkan insight dan hasil analisis proyek energi terapan.</p>
+              <div class="port-item-cta">Buka Dashboard</div>
+            </div>
+          </a>
+
+          <a class="port-item applied-item" href="https://cpebrunair-debug.github.io/saturinov/bcrip">
+            <div class="port-item-bar"></div>
+            <div class="port-item-body">
+              <div class="port-item-icon">BC</div>
+              <h3>BCRIP</h3>
+              <p>Business Climate Risk Intelligence Project.</p>
+              <div class="port-item-cta">Buka Halaman</div>
+            </div>
+          </a>
+
+
+          <div class="port-item coming">
+            <div class="port-item-bar"></div>
+            <div class="port-item-body">
+              <div class="port-item-icon">BI</div>
+              <h3>Dashboard Bank Indonesia</h3>
+              <p>Hasil riset dan analisis consulting research bersama Bank Indonesia dalam kajian kebijakan dan inovasi keuangan.</p>
+              <div class="port-item-cta">Segera Hadir</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Fundamental Research Publications -->
+      <div class="section-block fundamental">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <h2>Publikasi Fundamental Research</h2>
+            <p>Artikel ilmiah dan jurnal hasil riset kolaboratif CESGS yang telah dipublikasikan.</p>
+          </div>
+          <div class="section-badge fundamental">Fundamental Research</div>
+        </div>
+        <ul class="pub-list">
+
+          <li>
+            <a class="pub-item" href="https://www.mdpi.com/2071-1050/11/9/2483" target="_blank" rel="noopener">
+              <div class="pub-num">01</div>
+              <div class="pub-content">
+                <p class="pub-title">Carbon emissions, firm size, and corporate governance structure: Evidence from the mining and agricultural industries in Indonesia</p>
+                <div class="pub-meta">
+                  <span class="pub-tag">Sustainability</span>
+                  <span class="pub-link-label">MDPI</span>
+                </div>
+              </div>
+              <div class="pub-arrow">↗</div>
+            </a>
+          </li>
+
+          <li>
+            <a class="pub-item" href="https://onlinelibrary.wiley.com/doi/abs/10.1002/csr.2230" target="_blank" rel="noopener">
+              <div class="pub-num">02</div>
+              <div class="pub-content">
+                <p class="pub-title">Impact of corporate social responsibility on financial expert CEOs' turnover in heavily polluting companies in Bangladesh</p>
+                <div class="pub-meta">
+                  <span class="pub-tag">CSR</span>
+                  <span class="pub-link-label">Wiley Online Library</span>
+                </div>
+              </div>
+              <div class="pub-arrow">↗</div>
+            </a>
+          </li>
+
+          <li>
+            <a class="pub-item" href="https://www.mdpi.com/1911-8074/19/1/25" target="_blank" rel="noopener">
+              <div class="pub-num">03</div>
+              <div class="pub-content">
+                <p class="pub-title">The Role of Sustainability Assurance in Enhancing Carbon Disclosure Transparency: Evidence from the ASEAN-5 Emerging Economies</p>
+                <div class="pub-meta">
+                  <span class="pub-tag">Journal of Risk and Financial Management</span>
+                  <span class="pub-link-label">MDPI</span>
+                </div>
+              </div>
+              <div class="pub-arrow">↗</div>
+            </a>
+          </li>
+
+          <li>
+            <a class="pub-item" href="https://scholar.google.com/citations?view_op=view_citation&hl=id&user=oTpDHrwAAAAJ&citation_for_view=oTpDHrwAAAAJ:d1gkVwhDpl0C" target="_blank" rel="noopener">
+              <div class="pub-num">04</div>
+              <div class="pub-content">
+                <p class="pub-title">Measuring intellectual capital trends in positivism research: a literature review</p>
+                <div class="pub-meta">
+                  <span class="pub-tag">Intellectual Capital</span>
+                  <span class="pub-link-label">Google Scholar</span>
+                </div>
+              </div>
+              <div class="pub-arrow">↗</div>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+  </main>
+
+
+<script>
+(function(){
+  var PASSCODE = '*123#';
+  var STORAGE_KEY = 'rinov_portfolio_unlock';
+  var body = document.body;
+  var overlay = document.getElementById('portfolio-lock');
+  var form = document.getElementById('portfolio-lock-form');
+  var input = document.getElementById('portfolio-passcode-input');
+  var error = document.getElementById('portfolio-lock-error');
+
+  function unlockPage() {
+    sessionStorage.setItem(STORAGE_KEY, 'ok');
+    body.classList.remove('portfolio-locked');
+    overlay.setAttribute('aria-hidden', 'true');
+    error.textContent = '';
+    input.value = '';
+  }
+
+  function keepLocked() {
+    body.classList.add('portfolio-locked');
+    overlay.setAttribute('aria-hidden', 'false');
+  }
+
+  if (sessionStorage.getItem(STORAGE_KEY) === 'ok') {
+    unlockPage();
+  } else {
+    keepLocked();
+    window.setTimeout(function(){ input.focus(); }, 60);
+  }
+
+  form.addEventListener('submit', function(event){
+    event.preventDefault();
+    if (input.value === PASSCODE) {
+      unlockPage();
+      return;
+    }
+    keepLocked();
+    error.textContent = 'Passcode salah. Gunakan kode yang tepat untuk membuka halaman.';
+    input.focus();
+    input.select();
+  });
+})();
+</script>
+
+</body>
+</html>
