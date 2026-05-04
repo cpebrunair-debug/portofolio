@@ -493,7 +493,7 @@
   <!-- HEADER -->
   <header class="top">
     <div class="brand">
-      <div class="eyebrow">Multiplier Ekonomi · Prioritas 1 · v8 · LK1 v2 terkoneksi</div>
+      <div class="eyebrow">Multiplier Ekonomi · Prioritas 1 · v9 · TKDN-fix</div>
       <h1 class="title">Dampak <em>makroekonomi</em><br/>PLTS Terapung 5.222 MWp.</h1>
       <p class="lede">Model <b>Type II Output Multiplier</b> berbasis tabel I-O BPS untuk <b>20 waduk Prioritas 1 (Percepatan Utama)</b> hasil klasterisasi K-Means. Kapasitas <b>MWp</b> diambil dari <b>LK1 v2 RUPTL</b> (per-row terkoneksi: nama+koord+luas+MWp) untuk 11 waduk; 9 waduk PLTA besar (Saguling, Tangga, Bakaru, Koto Panjang, dll) memakai rumus PLN yang sama dengan luas dari literatur Kemen PUPR/RUPTL. Indeks <b>GPR</b> dan <b>TPU</b> dari <i>Caldara-Iacoviello (Federal Reserve)</i>.</p>
     </div>
@@ -603,7 +603,7 @@
     <div class="panel">
       <div class="panel-head">
         <span class="label">Sensitivitas Multiplier · TKDN 5% – 80%</span>
-        <span class="meta" id="sens-meta">Type II × Total Output</span>
+        <span class="meta" id="sens-meta">Multiplier × Output × Tenaga Kerja</span>
       </div>
       <div class="chart-host">
         <div style="position:relative;height:280px"><canvas id="chart-sensitivity"></canvas></div>
@@ -709,7 +709,7 @@
       <div class="left">
         Sumber waduk: <b>Klasterisasi K-Means (k=4)</b> atas 108 waduk Indonesia (file <i>prioritas_plts_terapung_k4.xlsx</i>) — diambil 20 waduk <b>Prioritas 1 (Percepatan Utama)</b>. Centroid: teoritis 0,6378 · praktikal 0,5682. Kapasitas <b>MWp</b> diambil dari <b>LK1 v2 terkoneksi</b> (<i>LK1_THEORETICAL_POTENTIAL_terkoneksi_v2</i>) yang sudah memperbaiki konsistensi nama-koordinat-data per-row, untuk 11 waduk yang tersedia. Untuk 9 waduk PLTA besar yang tidak ada di LK1 (Tangga, Bakaru, Mrica, Tukul, Song Putri, Saguling, Baliem, Koto Panjang, Wamena), digunakan rumus PLN yang sama: <b>Kap = ρ × α × Luas = 1 MWp/Ha × 20% × Luas Ha</b> dengan luas waduk dari literatur Kemen PUPR/RUPTL — ditandai oranye di popup peta. Energi tahunan menggunakan capacity factor 18,5% (rerata regional Indonesia). <b>Fase pengembangan ditentukan berdasarkan kapasitas MWp.</b> Indeks <b>GPR</b> dan <b>TPU</b> dari Caldara &amp; Iacoviello (Federal Reserve, 2022). Multiplier mengikuti standar Leontief.
       </div>
-      <div class="right">build · macro · v8 · LK1-v2 terkoneksi</div>
+      <div class="right">build · macro · v9 · sensitivity-fixed</div>
     </div>
     <div class="copyright">
       <div class="org">
@@ -1874,20 +1874,23 @@ const sensitivityChart = new Chart(sensCtx, {
     scales:{
       x:{
         grid:{color:'rgba(255,255,255,.08)',drawTicks:false},
-        ticks:{font:{size:10.5,weight:'600'},color:'#bcc8da', callback:v=> v+'%'},
+        ticks:{font:{size:10.5,weight:'600'},color:'#bcc8da'},
         border:{color:'#2c5aa0'},
+        title:{display:true, text:'TKDN rata-rata tertimbang', color:'#bcc8da', font:{size:11, weight:'700'}},
       },
       y:{
         position:'left',
         grid:{color:'rgba(255,255,255,.08)'},
-        ticks:{font:{size:10.5,weight:'600'},color:'#f5c518', callback:v=> v.toFixed(1)+'×'},
+        ticks:{font:{size:10.5,weight:'600'},color:'#f5c518', callback:v=> v.toFixed(2)+'×'},
         border:{display:false}, beginAtZero:false,
+        title:{display:true, text:'Type II Multiplier', color:'#f5c518', font:{size:11, weight:'700'}},
       },
       y1:{
         position:'right',
         grid:{display:false},
-        ticks:{font:{size:10.5,weight:'600'},color:'#3a8e9c', callback:v=> v.toFixed(0)+'T'},
+        ticks:{font:{size:10.5,weight:'600'},color:'#3a8e9c', callback:v=> v.toFixed(0)+' T'},
         border:{display:false}, beginAtZero:true,
+        title:{display:true, text:'Output Rp Triliun', color:'#3a8e9c', font:{size:11, weight:'700'}},
       },
     },
   },
@@ -2118,24 +2121,33 @@ function computeSensitivity(){
 
 function updateSensitivity(){
   const sens = computeSensitivity();
-  sensitivityChart.data.labels = sens.labels;
+  // labels are TKDN percentages (5, 10, 15, ..., 70, 80)
+  sensitivityChart.data.labels = sens.labels.map(l => l + '%');
   sensitivityChart.data.datasets = [
     {
-      label:'Type II', data: sens.mults,
+      label:'Type II Multiplier', data: sens.mults,
       type:'line',
       borderColor:'#f5c518', borderWidth:2.5,
-      backgroundColor:'rgba(245,197,24,0.15)',
+      backgroundColor:'rgba(245,197,24,0.10)',
       pointRadius:3, pointHoverRadius:5,
       pointBackgroundColor:'#f5c518', pointBorderColor:'#163a72',
-      tension:0.25, fill:true, yAxisID:'y',
+      tension:0.25, fill:false, yAxisID:'y', order:1,
     },
     {
       label:'Total Output (Rp T)', data: sens.totalOuts,
       type:'bar',
-      backgroundColor:'rgba(58,142,156,.5)',
+      backgroundColor:'rgba(58,142,156,.55)',
       hoverBackgroundColor:'rgba(58,142,156,.85)',
       borderColor:'#3a8e9c', borderWidth:0,
       yAxisID:'y1', order:5,
+    },
+    {
+      label:'TK terserap (×100)', data: sens.tks,
+      type:'bar',
+      backgroundColor:'rgba(211,90,46,.55)',
+      hoverBackgroundColor:'rgba(211,90,46,.85)',
+      borderColor:'#d35a2e', borderWidth:0,
+      yAxisID:'y1', order:6,
     },
   ];
   sensitivityChart.update('none');
