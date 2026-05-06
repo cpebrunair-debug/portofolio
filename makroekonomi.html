@@ -1532,7 +1532,6 @@
           </div>
         </div>
       </div>
-    </div>
 
     <!-- F. SENSITIVITAS LCOE PER KURS -->
     <div class="row-1" style="margin-bottom:22px;">
@@ -2839,7 +2838,7 @@ const GLOSSARY = [
 const tabBtns = document.querySelectorAll('nav.tabs button');
 const tabPanels = document.querySelectorAll('.tab-panel');
 let mapInited = false;
-let chartsInited = {ringkasan:false, multiplier:false, tkdn:false, risiko:false, portofolio:false};
+let chartsInited = {ringkasan:false, multiplier:false, tkdn:false, portofolio:false};
 
 tabBtns.forEach(btn => btn.addEventListener('click', () => {
   const tab = btn.dataset.tab;
@@ -2853,7 +2852,6 @@ tabBtns.forEach(btn => btn.addEventListener('click', () => {
   if(tab === 'portofolio'){ setTimeout(initPortofolioCharts, 80); }
   if(tab === 'multiplier'){ setTimeout(initMultiplierCharts, 80); }
   if(tab === 'tkdn'){ setTimeout(initTkdnCharts, 80); }
-  if(tab === 'risiko'){ setTimeout(initRisikoCharts, 80); }
   window.scrollTo({top:0, behavior:'smooth'});
 }));
 
