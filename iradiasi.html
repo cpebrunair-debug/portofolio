@@ -379,10 +379,11 @@
   .pv-formula .var-y{color:var(--yellow);font-weight:700}
 
   .pv-inputs{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
     background:var(--cobalt-line);
     border-bottom:1px solid var(--cobalt-line);
   }
+  @media (max-width:760px){.pv-inputs{grid-template-columns:repeat(2,1fr)}}
   .pv-input{
     background:var(--cobalt);padding:11px 14px;
     display:flex;flex-direction:column;gap:5px;
@@ -463,6 +464,60 @@
     margin-left:auto;
   }
   .config-strip .formula-mini b{color:var(--yellow);font-weight:700}
+
+
+  .method-note{
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:1px;margin:-4px 0 20px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .method-note .method-card{
+    background:rgba(234,240,246,.92);
+    padding:14px 16px;color:var(--ink);
+  }
+  .method-note .method-card.primary{
+    background:var(--yellow);
+    border-top:3px solid var(--yellow-deep);
+  }
+  .method-note .k{
+    font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--cobalt);font-weight:700;margin-bottom:6px;
+  }
+  .method-note .method-card.primary .k{color:var(--yellow-deep);}
+  .method-note .formula{
+    font-family:'Helvetica Neue', Helvetica, monospace;
+    font-size:12px;font-weight:700;color:var(--ink);line-height:1.45;
+  }
+  .method-note .desc{
+    margin-top:6px;font-size:11.5px;color:var(--ink-2);font-weight:500;line-height:1.45;
+  }
+  .method-note .desc b{color:var(--cobalt);font-weight:700;}
+  @media (max-width:760px){.method-note{grid-template-columns:1fr}}
+
+  .pv-models{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:var(--cobalt-line);
+    border-top:1px solid var(--cobalt-line);
+  }
+  .model-cell{
+    background:var(--cobalt);padding:12px 14px;color:var(--ink-on-cobalt);
+  }
+  .model-cell.hero{background:var(--yellow);color:var(--ink);}
+  .model-cell .k{
+    font-size:8.8px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-on-cobalt-3);font-weight:700;margin-bottom:6px;
+  }
+  .model-cell.hero .k{color:var(--yellow-deep);}
+  .model-cell .v{
+    font-weight:700;font-size:20px;line-height:1;color:var(--ink-on-cobalt);
+  }
+  .model-cell.hero .v{color:var(--ink);}
+  .model-cell .v small{font-size:10.5px;font-weight:500;color:var(--ink-on-cobalt-2);margin-left:3px;}
+  .model-cell.hero .v small{color:var(--ink-2);}
+  .model-cell .sub{font-size:10.5px;color:var(--ink-on-cobalt-2);margin-top:5px;line-height:1.35;}
+  .model-cell.hero .sub{color:var(--ink-2);}
+  @media (max-width:760px){.pv-models{grid-template-columns:1fr}}
 
   .pv-input.disabled{opacity:.5;}
   .pv-input.disabled input{cursor:not-allowed;background:rgba(0,0,0,.18);}
@@ -685,7 +740,7 @@
     <div class="brand">
       <div class="eyebrow">PLTS Terapung · Atlas Surya · 2016 — 2025 · v11</div>
       <h1 class="title">Potensi <em>PLTS Terapung</em><br/>108 Waduk Indonesia.</h1>
-      <p class="lede">Estimasi potensi teoretis pembangkit fotovoltaik terapung berdasarkan radiasi <b>GHI</b> per jam selama 10 tahun, dengan metode RUPTL PLN: <b>kapasitas = ρ × α × Luas</b>, <b>energi = kapasitas × GHI × PR</b>. Lengkap dengan kalkulator interaktif dan metrik stabilitas suplai.</p>
+      <p class="lede">Estimasi potensi teoretis PLTS terapung berdasarkan radiasi <b>GHI</b> per jam selama 10 tahun. Model utama memakai asumsi sederhana PLN: <b>kapasitas = α × Luas × 1 MWp/ha</b>, lalu <b>energi = kapasitas × GHI × PR</b>. Model teknis disediakan sebagai pembanding berbasis konversi luas ha ke m², efisiensi panel, packing factor, dan PR.</p>
     </div>
     <div class="meta-strip">
       <div>periode <b id="m-period">—</b></div>
@@ -707,11 +762,24 @@
       </div>
     </div>
     <div class="formula-mini">
-      <b>Kap</b> = α × Luas × pf × 2,1
+      <b>PLN</b> Kap = α × Luas(ha) × 1 MWp/ha
+      <span style="color:var(--ink-on-cobalt-3); margin:0 6px">·</span>
+      <b>Teknis</b> Kap = Luas(ha) × 10.000 × α × pf × η ÷ 1.000
       <span style="color:var(--ink-on-cobalt-3); margin:0 6px">·</span>
       <b>E</b> = Kap × GHI × PR
-      <span style="color:var(--ink-on-cobalt-3); margin:0 6px">·</span>
-      <b>PVOUT</b> = GHI × PR
+    </div>
+  </section>
+
+  <section class="method-note">
+    <div class="method-card primary">
+      <div class="k">Model utama · asumsi sederhana PLN</div>
+      <div class="formula">Kapasitas = α × Luas Waduk (ha) × 1 MWp/ha</div>
+      <div class="desc">Ini menjadi angka utama dashboard. <b>Packing factor tidak mengubah model PLN</b>; faktor itu hanya dibuka di model teknis pembanding.</div>
+    </div>
+    <div class="method-card">
+      <div class="k">Model pembanding · hitungan teknis sendiri</div>
+      <div class="formula">Kap = Luas(ha) × 10.000 m²/ha × α × pf × η × 1 kW/m² ÷ 1.000<br/>E = GHI × Luas(ha) × 10.000 × α × pf × η × PR</div>
+      <div class="desc">Dengan η = 21% dan pf = 47,62%, kapasitasnya ≈ 1 MWp/ha. <b>PR masuk ke energi</b>, bukan ke kapasitas, agar tidak double counting.</div>
     </div>
   </section>
 
@@ -791,23 +859,31 @@
       <div class="panel">
         <div class="panel-head">
           <span class="label">Kalkulator PVOUT</span>
-          <span class="meta">parameter sistem</span>
+          <span class="meta">parameter sistem · η bisa diubah</span>
         </div>
         <div class="pv-formula">
-          <span><span class="tag">PVOUT</span><span class="var-y">GHI</span> <span class="op">×</span> <span class="var-y">PR</span></span>
+          <span><span class="tag">PLN</span>Kap = <span class="var-y">α</span> <span class="op">×</span> Luas(ha) <span class="op">× 1 MWp/ha</span></span>
           <span class="op">·</span>
-          <span><span class="tag">KAP</span><span class="var-y">α</span> <span class="op">×</span> Luas <span class="op">×</span> <span class="var-y">pf</span> <span class="op">× 2,1</span> <span class="op">[η=21% × 10]</span></span>
+          <span><span class="tag">TEKNIS</span>Kap = Luas(ha) <span class="op">× 10.000</span> <span class="op">×</span> <span class="var-y">α</span> <span class="op">×</span> <span class="var-y">pf</span> <span class="op">× η × 1 kW/m² ÷ 1.000</span></span>
           <span class="op">·</span>
-          <span><span class="tag">E</span>Kap <span class="op">×</span> <span class="var-y">GHI</span> <span class="op">×</span> <span class="var-y">PR</span></span>
+          <span><span class="tag">E</span>Kap <span class="op">×</span> GHI <span class="op">×</span> <span class="var-y">PR</span></span>
         </div>
         <div class="pv-inputs">
+          <div class="pv-input">
+            <label>Efisiensi panel <span class="badge">η</span></label>
+            <div class="input-row">
+              <input type="number" id="pv-eta" min="0" max="100" step="1" value="21"/>
+              <span class="unit">%</span>
+            </div>
+            <div class="hint">bisa diubah; masuk di model teknis</div>
+          </div>
           <div class="pv-input">
             <label>Packing factor <span class="badge">pf</span></label>
             <div class="input-row">
               <input type="number" id="pv-pf" min="0" max="100" step="0.01" value="47.62"/>
               <span class="unit">%</span>
             </div>
-            <div class="hint">η panel = 21% (Tiger Neo, terkunci)</div>
+            <div class="hint">untuk model teknis; model PLN tetap 1 MWp/ha</div>
           </div>
           <div class="pv-input">
             <label>Cakupan <span class="badge">α</span></label>
@@ -826,14 +902,31 @@
         </div>
         <div class="pv-results">
           <div class="pv-result hero">
-            <div class="k">Energi Harian</div>
+            <div class="k">Energi Harian · Model PLN</div>
             <div class="v"><span id="pv-energy-d">—</span><small id="pv-energy-d-unit">—/hari</small></div>
             <div class="sub" id="pv-energy-d-sub">—</div>
           </div>
           <div class="pv-result hero">
-            <div class="k">Energi Tahunan</div>
+            <div class="k">Energi Tahunan · Model PLN</div>
             <div class="v"><span id="pv-energy-y">—</span><small id="pv-energy-y-unit">—/thn</small></div>
             <div class="sub" id="pv-rumah">—</div>
+          </div>
+        </div>
+        <div class="pv-models">
+          <div class="model-cell hero">
+            <div class="k">Model Utama PLN</div>
+            <div class="v"><span id="pln-kap">—</span><small>MWp</small></div>
+            <div class="sub">Energi tahunan: <span id="pln-energy-y">—</span> <span id="pln-energy-y-unit">—</span></div>
+          </div>
+          <div class="model-cell">
+            <div class="k">Model Teknis Pembanding</div>
+            <div class="v"><span id="tech-kap">—</span><small>MWp</small></div>
+            <div class="sub">Energi tahunan: <span id="tech-energy-y">—</span> <span id="tech-energy-y-unit">—</span><br/>Memakai η = 21%, pf, α, GHI, dan PR</div>
+          </div>
+          <div class="model-cell">
+            <div class="k">Selisih Teknis vs PLN</div>
+            <div class="v"><span id="model-diff">—</span><small>%</small></div>
+            <div class="sub" id="model-diff-sub">—</div>
           </div>
         </div>
       </div>
@@ -989,7 +1082,7 @@
   <footer>
     <div class="row1">
       <div class="left">
-        Sumber: data GHI per jam, 2016 — 2025 (10 tahun, 87.672 jam observasi). Kapasitas: <b>Kap = α × Luas × pf × 2,1</b> dengan η panel = 21% (Jinko Tiger Neo monokristalin, terkunci) dan packing factor pf = 47,62% (ekuivalen ρ_PLN=1 MWp/Ha pada η=21%). Energi: Kap × GHI × PR. Intermitensi: |ΔGHI|/1000 W·m⁻² × 100% (STC reference). Estimasi konsumsi rumah tangga: 1.300 kWh/thn.
+        Sumber: data GHI per jam, 2016 — 2025 (10 tahun, 87.672 jam observasi). Model utama kapasitas memakai asumsi sederhana PLN: <b>Kap_PLN = α × Luas(ha) × 1 MWp/ha</b>. Model pembanding teknis: <b>Kap_Teknis = Luas(ha) × 10.000 m²/ha × α × pf × η × 1 kW/m² ÷ 1.000</b>; energi teknis ekuivalen: <b>E = GHI × Luas(ha) × 10.000 × α × pf × η × PR</b>. η panel default = 21% dan pf default = 47,62% sehingga setara ≈ 1 MWp/ha; keduanya dapat diubah pada kalkulator. PR tidak dimasukkan ke kapasitas. Intermitensi: |ΔGHI|/1000 W·m⁻² × 100% (STC reference). Estimasi konsumsi rumah tangga: 1.300 kWh/thn.
       </div>
       <div class="right">build · v11 · Excel-updated · helvetica · cobalt-yellow</div>
     </div>
@@ -1183,7 +1276,7 @@ function buildPopup(r){
     <div class="popup-name">${r.name}</div>
     <div class="popup-row"><span>GHI harian</span><b>${fmt(dailyKwh,2)} kWh/m²</b></div>
     <div class="popup-row"><span>PVOUT (PR=${Math.round(state.pv.pr*100)}%)</span><b>${fmt(dailyKwh*state.pv.pr,2)} kWh/kWp</b></div>
-    <div class="popup-row"><span>kapasitas</span><b>${fmt(kapMWp, kapMWp>=100?0:1)} MWp</b></div>
+    <div class="popup-row"><span>kapasitas PLN</span><b>${fmt(kapMWp, kapMWp>=100?0:1)} MWp</b></div>
     <div class="popup-row"><span>cv harian</span><b>${fmt(r.stability.cv_daily*100,1)}%</b></div>
   `;
 }
@@ -1396,9 +1489,6 @@ function aggregateRange(daily, fromIdx, toIdx, mode){
   }
 }
 
-// Panel efficiency hardcoded (Jinko Tiger Neo monocrystalline 2024, per LK1 reference)
-const ETA_PANEL = 0.21;
-
 // ---------- state ----------
 let state = {
   reservoir: null,
@@ -1406,7 +1496,7 @@ let state = {
   toIdx: N_DAYS - 1,
   agg: 'monthly',
   energyUnit: 'GWh',
-  pv: { alpha:0.20, pr:0.85, pf:0.47619048 },
+  pv: { alpha:0.20, pr:0.85, pf:0.47619048, eta:0.21 },
 };
 
 // ---------- unit & capacity helpers ----------
@@ -1424,10 +1514,31 @@ function fmtEnergy(kWh){
   return fmt(v, dec);
 }
 
-// Capacity in MWp — Teknis formula with η=21% hardcoded as ETA_PANEL × 10 = 2.1
-function computeKapMWp(area_ha){
+// Capacity helpers
+// Model utama PLN: 1 MWp/ha atas area waduk yang dipakai (α × luas ha).
+const PLN_DENSITY_MWP_PER_HA = 1;
+function computeKapPLNMWp(area_ha){
   if(!area_ha) return 0;
-  return state.pv.alpha * area_ha * state.pv.pf * (ETA_PANEL * 10);  // MWp
+  return state.pv.alpha * area_ha * PLN_DENSITY_MWP_PER_HA;
+}
+
+// Model pembanding teknis:
+// luas ha → m², dikalikan coverage, packing factor, efisiensi panel, dan STC 1 kW/m².
+// Kap_kWp = area_ha × 10.000 × α × pf × η × 1 kW/m²
+// Kap_MWp = Kap_kWp ÷ 1.000 = area_ha × α × pf × η × 10
+function computeKapTechnicalMWp(area_ha){
+  if(!area_ha) return 0;
+  return (area_ha * 10000 * state.pv.alpha * state.pv.pf * state.pv.eta) / 1000;
+}
+
+// Backward-compatible alias: all headline numbers use the PLN model.
+function computeKapMWp(area_ha){
+  return computeKapPLNMWp(area_ha);
+}
+
+function signedFmtPct(v, d=2){
+  if(!isFinite(v)) return '—';
+  return `${v>=0?'+':''}${fmt(v, d)}`;
 }
 
 // ---------- updateAll ----------
@@ -1450,11 +1561,17 @@ function updateAll(){
   const pvoutDaily = meanGhiDaily * pr;                   // kWh/kWp/day
   const pvoutAnnual = ghiAnnual * pr;                      // kWh/kWp/year
 
-  // Kapasitas — sesuai metode terpilih
-  const kapMWp = computeKapMWp(r.area_ha || 0);
+  // Kapasitas dan energi — model utama PLN
+  const kapMWp = computeKapPLNMWp(r.area_ha || 0);
   const kapKWp = kapMWp * 1000;
   const energyDaily_kWh = kapKWp * pvoutDaily;             // kWh/day
   const energyAnnual_kWh = kapKWp * pvoutAnnual;           // kWh/year
+
+  // Model pembanding teknis: hasil wajar jika mendekati PLN saat pf × η × 10 ≈ 1.
+  const techKapMWp = computeKapTechnicalMWp(r.area_ha || 0);
+  const techKapKWp = techKapMWp * 1000;
+  const techEnergyDaily_kWh = techKapKWp * pvoutDaily;     // kWh/day
+  const techEnergyAnnual_kWh = techKapKWp * pvoutAnnual;   // kWh/year
 
   // ---- Update reservoir header ----
   document.getElementById('r-tag').textContent = `lokasi · #${r.no} · ${r.tz}`;
@@ -1522,7 +1639,7 @@ function updateAll(){
   document.getElementById('pv-energy-d').textContent  = fmtEnergy(energyDaily_kWh);
   document.getElementById('pv-energy-d-unit').textContent = `${state.energyUnit}/hari`;
   document.getElementById('pv-energy-d-sub').textContent =
-    `${fmt(kapMWp, kapMWp>=100?0:1)} MWp × ${fmt(pvoutDaily,2)} kWh/kWp`;
+    `PLN: ${fmt(kapMWp, kapMWp>=100?0:1)} MWp × ${fmt(pvoutDaily,2)} kWh/kWp`;
   document.getElementById('pv-energy-y').textContent  = fmtEnergy(energyAnnual_kWh);
   document.getElementById('pv-energy-y-unit').textContent = `${state.energyUnit}/thn`;
   const setaraRumah = energyAnnual_kWh / 1300;
@@ -1531,12 +1648,27 @@ function updateAll(){
       ? `≈ ${fmtInt(Math.round(setaraRumah))} rumah tangga`
       : '—';
 
+  // ---- Perbandingan model kapasitas ----
+  const diffPct = kapMWp ? ((techKapMWp - kapMWp) / kapMWp) * 100 : NaN;
+  const diffEnergy_kWh = techEnergyAnnual_kWh - energyAnnual_kWh;
+  document.getElementById('pln-kap').textContent = fmt(kapMWp, kapMWp>=100?0:1);
+  document.getElementById('pln-energy-y').textContent = fmtEnergy(energyAnnual_kWh);
+  document.getElementById('pln-energy-y-unit').textContent = `${state.energyUnit}/thn`;
+  document.getElementById('tech-kap').textContent = fmt(techKapMWp, techKapMWp>=100?0:1);
+  document.getElementById('tech-energy-y').textContent = fmtEnergy(techEnergyAnnual_kWh);
+  document.getElementById('tech-energy-y-unit').textContent = `${state.energyUnit}/thn`;
+  document.getElementById('model-diff').textContent = signedFmtPct(diffPct, 2);
+  document.getElementById('model-diff-sub').textContent =
+    isFinite(diffEnergy_kWh)
+      ? `Δ energi tahunan: ${signedFmtPct(diffEnergy_kWh / UNIT_FACTOR[state.energyUnit], 2)} ${state.energyUnit}/thn`
+      : '—';
+
   // ---- Stability ----
   renderStability(r);
 
   // map meta
   document.getElementById('map-meta').textContent =
-    `${r.name.toLowerCase()} · ${fmt(pvoutDaily,2)} kWh/kWp·hari · ${fmt(kapMWp,0)} MWp`;
+    `${r.name.toLowerCase()} · ${fmt(pvoutDaily,2)} kWh/kWp·hari · ${fmt(kapMWp,0)} MWp PLN`;
 }
 
 // ---------- stability ----------
@@ -1673,11 +1805,12 @@ function bindPvInput(id, key, scale=0.01){
   el.addEventListener('input', () => {
     const v = parseFloat(el.value);
     if(!isFinite(v) || v < 0) return;
-    state.pv[key] = v * scale;
+    state.pv[key] = Math.min(v, 100) * scale;
     updateAll();
     if(typeof renderStabilityLists === 'function') renderStabilityLists();
   });
 }
+bindPvInput('pv-eta',   'eta',   0.01);
 bindPvInput('pv-pf',    'pf',    0.01);
 bindPvInput('pv-alpha', 'alpha', 0.01);
 bindPvInput('pv-pr',    'pr',    0.01);

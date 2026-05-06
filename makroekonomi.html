@@ -1047,13 +1047,13 @@
         <div class="lbl">Produksi Energi Tahunan</div>
         <div class="val">14,47<sup>TWh per tahun</sup></div>
         <div class="sub">Setara konsumsi listrik 12,6 juta rumah tangga golongan R1</div>
-        <div class="src">CF 18,5 persen · PR 81 persen</div>
+        <div class="src">CF 15,0 persen · PR 81 persen</div>
       </div>
       <div class="hstat">
         <div class="lbl">Penyerapan Tenaga Kerja Konstruksi</div>
         <div class="val">286<sup>ribu job-years</sup></div>
         <div class="sub">Total <i>job-years</i> langsung dan rantai pasok kumulatif</div>
-        <div class="src">IRENA Renewable Energy and Jobs Annual Review 2023; rasio 7 jy per MW</div>
+        <div class="src">BBVA Research WP 25/11 mengutip Fabra et al. 2024; rasio 0,55 job-year per MW</div>
       </div>
       <div class="hstat">
         <div class="lbl">Emisi CO₂ Terhindar</div>
@@ -1647,7 +1647,19 @@
                 <td>PLTU Batubara baru</td>
                 <td class="num">1.040</td>
                 <td class="num delta-pos" id="pemb-pltu-d">+149</td>
-                <td><i>RUKN 2025 PLTU SubC 6,3 ¢USD/kWh kurs aktif</i></td>
+                <td><i>RUKN 2025 Gambar 39 PLTU SubC 6,3 ¢USD/kWh kurs aktif</i></td>
+              </tr>
+              <tr>
+                <td>BPP Pembangkit Nasional rata-rata 2025-2034</td>
+                <td class="num">1.812</td>
+                <td class="num delta-pos" id="pemb-bpp-d">+921</td>
+                <td><i>RUPTL PLN 2025-2034 Tabel 6.2 BPP rata-rata sepuluh tahun · termasuk PSO 7 persen</i></td>
+              </tr>
+              <tr>
+                <td>PLTD BBM isolated grid</td>
+                <td class="num">5.082</td>
+                <td class="num delta-pos" id="pemb-pltd-d">+4.191</td>
+                <td><i>RUKN 2025 Gambar 39 PLTD diesel 30,8 ¢USD/kWh · referensi off-grid biaya tertinggi</i></td>
               </tr>
               <tr>
                 <td>BESS 4 jam LCOS</td>
@@ -1739,10 +1751,10 @@
     <div class="row-1" style="margin-bottom:18px;">
         <div class="callout">
           <div class="pull">Metodologi dan Sumber Verifikasi</div>
-          <p><b>Dua angka job-years muncul di model dengan basis berbeda yang perlu dipisahkan secara tegas.</b> Pertama, <b>62.495 job-years</b> di Sheet 5 mengukur tenaga kerja konstruksi langsung di lokasi proyek, dihitung dari 8.927,8 MWp dikalikan koefisien IRENA Renewable Energy and Jobs Annual Review 2023 sebesar 7 job-years per MW (5 sampai 8 untuk PLTS utility-scale ditambah 20 persen untuk floating PV). Angka ini menjadi basis perhitungan income tenaga kerja di sheet induced effect. Kedua, <b>285.525 job-years</b> di Sheet 7 baseline TKDN 30 persen mengukur total penyerapan tenaga kerja ekonomi yang merupakan penjumlahan job-years langsung tersebut ditambah job-years sektoral yang dihasilkan dari belanja lokal CAPEX yang mengalir ke 12 sektor menggunakan koefisien Leontief Inverse dari Tabel I-O BPS 2020. Angka 44.185 yang muncul di tabel sektoral hanya merepresentasikan kategori Konstruksi dan Infrastruktur (S6) saja sebagai subset, bukan total ekonomi.</p>
+          <p><b>Dua angka job-years muncul di model dengan basis berbeda yang perlu dipisahkan secara tegas.</b> Pertama, <b>4.910 job-years</b> di Sheet 5 mengukur tenaga kerja konstruksi langsung di lokasi proyek, dihitung dari 8.927,8 MWp dikalikan koefisien BBVA Research WP 25/11 (Fabra et al. 2024) sebesar 0,55 job-year per MW untuk solar PV utility-scale berbasis panel data 3.900 munisipalitas Spanyol. Angka ini menjadi basis perhitungan income tenaga kerja di sheet induced effect. Kedua, <b>285.525 job-years</b> di Sheet 7 baseline TKDN 30 persen mengukur total penyerapan tenaga kerja ekonomi yang merupakan penjumlahan job-years langsung tersebut ditambah job-years sektoral yang dihasilkan dari belanja lokal CAPEX yang mengalir ke 12 sektor menggunakan koefisien Leontief Inverse dari Tabel I-O BPS 2020. Angka 44.185 yang muncul di tabel sektoral hanya merepresentasikan kategori Konstruksi dan Infrastruktur (S6) saja sebagai subset, bukan total ekonomi.</p>
           <p style="margin-top:10px;"><b>Upah TK konstruksi Rp 84 juta per tahun</b> adalah <i>total kompensasi tahunan</i> yang mencakup gaji pokok, THR, lembur, BPJS Kesehatan, dan BPJS Ketenagakerjaan, bukan basic wage. Komposisinya: pekerja unskilled Rp 5 sampai 6 juta per bulan, skilled Rp 8 sampai 12 juta per bulan, supervisor Rp 15 sampai 25 juta per bulan dengan rerata tertimbang nasional. Angka BPS Sakernas DKI Jakarta 2023 sebesar Rp 5,8 juta per bulan adalah <i>upah pokok</i> yang berbeda dengan total kompensasi. Sumber: BPS Sakernas 2024, UMP rata-rata wilayah proyek RUPTL.</p>
           <p style="margin-top:10px;"><b>Marginal Propensity to Consume 0,75</b> bersumber dari Bank Indonesia Kajian Stabilitas Keuangan Semester I 2023 Tabel IV.2 dengan rentang 0,73 sampai 0,78. <b>Porsi konsumsi domestik 0,85</b> bersumber dari BPS Susenas 2023 Modul Pengeluaran Tabel 3.5 dengan rentang 0,83 sampai 0,87. <b>Output Multiplier sektor konsumsi rumah tangga 1,4</b> dari BPS Tabel I-O 2020 rerata tertimbang sektor barang dan jasa konsumsi.</p>
-          <p style="margin-top:10px;"><b>Induced Effect</b> dihitung dengan dua metodologi yang menghasilkan dua angka berbeda. Metodologi <i>bottom-up</i> dari Sheet 5 menggunakan rumus Income TK tahunan dikalikan MPC dikalikan porsi domestik dikalikan multiplier konsumsi: Rp 1,75 triliun income konstruksi tahunan (62.495 job-years × Rp 84 juta total kompensasi dibagi 3 tahun durasi konstruksi) ditambah Rp 0,51 triliun income operasi (3.571 SDM × Rp 144 juta) menghasilkan Rp 2,26 triliun, dikalikan 0,75 menjadi Rp 1,70 triliun, dikalikan 0,85 menjadi Rp 1,44 triliun, dikalikan 1,4 menghasilkan <b>Rp 2,02 triliun per tahun</b> pada tahun puncak overlap konstruksi-operasi. Metodologi <i>simplifikasi</i> dari Sheet 7 menggunakan asumsi induced sama dengan 20 persen Direct CAPEX Lokal, menghasilkan <b>Rp 4,29 triliun per tahun</b> pada baseline TKDN 30 persen. Dashboard menggunakan angka Sheet 7 (Rp 4,29 T) sebagai basis multiplier 2,126× untuk konsistensi dengan tabel sensitivitas TKDN, sambil mempertahankan dekomposisi <i>bottom-up</i> sebagai validasi konseptual. Selisih kedua metodologi mengindikasikan ruang ketidakpastian induced effect sekitar dua kali lipat yang perlu disikapi dengan kehati-hatian.</p>
+          <p style="margin-top:10px;"><b>Induced Effect</b> dihitung dengan dua metodologi yang menghasilkan dua angka berbeda. Metodologi <i>bottom-up</i> dari Sheet 5 menggunakan rumus Income TK tahunan dikalikan MPC dikalikan porsi domestik dikalikan multiplier konsumsi: Rp 1,75 triliun income konstruksi tahunan (4.910 job-years × Rp 84 juta total kompensasi dibagi 3 tahun durasi konstruksi) ditambah Rp 0,51 triliun income operasi (3.571 SDM × Rp 144 juta) menghasilkan Rp 2,26 triliun, dikalikan 0,75 menjadi Rp 1,70 triliun, dikalikan 0,85 menjadi Rp 1,44 triliun, dikalikan 1,4 menghasilkan <b>Rp 2,02 triliun per tahun</b> pada tahun puncak overlap konstruksi-operasi. Metodologi <i>simplifikasi</i> dari Sheet 7 menggunakan asumsi induced sama dengan 20 persen Direct CAPEX Lokal, menghasilkan <b>Rp 4,29 triliun per tahun</b> pada baseline TKDN 30 persen. Dashboard menggunakan angka Sheet 7 (Rp 4,29 T) sebagai basis multiplier 2,126× untuk konsistensi dengan tabel sensitivitas TKDN, sambil mempertahankan dekomposisi <i>bottom-up</i> sebagai validasi konseptual. Selisih kedua metodologi mengindikasikan ruang ketidakpastian induced effect sekitar dua kali lipat yang perlu disikapi dengan kehati-hatian.</p>
           <p style="margin-top:10px;"><b>Indirect effect</b> mengikuti rumus Output Indirect = Bobot Sektor dikalikan CAPEX Lokal dikalikan Multiplier Sektor. Total dijumlahkan 12 sektor menggunakan koefisien Leontief Inverse dari Tabel I-O BPS 2020 dengan mapping KBLI 2025: S1 Pertanian (1,374), S2 Pertambangan (1,960), S3 Industri Dasar (2,075), S4 Elektronik (2,176), S5 Logam (2,160), S6 Konstruksi (2,158), S7 Logistik (1,539), S8 Transportasi (2,006), S9 Keuangan (1,395), S10 EPC (1,818), S11 Pendidikan-Kesehatan (1,849), S12 Jasa Lainnya (1,778). Bobot per sektor mengikuti komposisi belanja CAPEX PLTS Terapung yang dikalibrasi ke proyek Cirata.</p>
         </div>
       </div>
@@ -1855,7 +1867,7 @@
         <div class="lbl">Lapangan Kerja Tambahan</div>
         <div class="val">+200<sup>ribu job-years</sup></div>
         <div class="sub">Selisih TKDN 30 persen ke 70 persen</div>
-        <div class="src">koefisien IRENA Renewable Energy and Jobs Annual Review 2023</div>
+        <div class="src">koefisien BBVA WP 25/11 / Fabra et al. 2024</div>
       </div>
     </div>
 
@@ -2006,7 +2018,7 @@
           <div class="src-val">3,50</div>
           <div>¢USD/kWh</div>
           <div>03</div>
-          <div class="src-cite"><b>RUKN 2025</b> · Tabel A kolom LCOE 2050 · <i>baris Surya PLTS Floating CF 18 persen</i> · <a href="https://gatrik.esdm.go.id/assets/uploads/download_index/files/28dd4-rukn.pdf" target="_blank" rel="noopener">gatrik.esdm.go.id (RUKN 2025 PDF)</a></div>
+          <div class="src-cite"><b>RUKN 2025</b> · Tabel A kolom LCOE 2050 · <i>baris Surya PLTS Floating CF 15 persen</i> · <a href="https://gatrik.esdm.go.id/assets/uploads/download_index/files/28dd4-rukn.pdf" target="_blank" rel="noopener">gatrik.esdm.go.id (RUKN 2025 PDF)</a></div>
         </div>
 
         <div class="src-row official">
@@ -2046,7 +2058,7 @@
           <div class="src-val">5,30</div>
           <div>¢USD/kWh</div>
           <div>03</div>
-          <div class="src-cite"><b>RUKN 2025</b> · Tabel A baris 28 <i>Surya: PLTS Ground-mount CF 18 persen</i> · <a href="https://gatrik.esdm.go.id/assets/uploads/download_index/files/28dd4-rukn.pdf" target="_blank" rel="noopener">gatrik.esdm.go.id (RUKN 2025 PDF)</a></div>
+          <div class="src-cite"><b>RUKN 2025</b> · Tabel A baris 28 <i>Surya: PLTS Ground-mount CF 15 persen</i> · <a href="https://gatrik.esdm.go.id/assets/uploads/download_index/files/28dd4-rukn.pdf" target="_blank" rel="noopener">gatrik.esdm.go.id (RUKN 2025 PDF)</a></div>
         </div>
 
         <div class="src-row official">
@@ -2094,15 +2106,23 @@
           <div class="src-val">1.041–2.444</div>
           <div>Rp/kWh</div>
           <div>03</div>
-          <div class="src-cite"><b>RUPTL PLN 2025-2034</b> · ditetapkan 26 Mei 2025 dirilis 3 Juni 2025 · <i>Tabel BPP per Sistem RUPTL tahun 2030 untuk skenario RE Base, ARED, BAU</i> · Materi paparan <a href="https://gatrik.esdm.go.id/assets/uploads/download_index/files/4ec39-materi-paparan-ruptl-2025-2034.pdf" target="_blank" rel="noopener">gatrik.esdm.go.id</a></div>
+          <div class="src-cite"><b>RUPTL PLN 2025-2034</b> · ditetapkan 26 Mei 2025 dirilis 3 Juni 2025 · <i>Tabel BPP per Sistem RUPTL tahun 2030 untuk skenario RE Base, ARED, BAU</i> · Materi paparan <a href="https://cesgs-my.sharepoint.com/my?id=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR%2FRUPTL%20PLN%202025%202034%2Epdf&parent=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR&ga=1" target="_blank" rel="noopener">cesgs-my.sharepoint.com (RUPTL PLN 2025-2034 PDF)</a></div>
         </div>
+        <div class="src-row official">
+          <div class="src-key">BPP rata-rata RUPTL 2025-2034</div>
+          <div class="src-val">1.812</div>
+          <div>Rp/kWh</div>
+          <div>03</div>
+          <div class="src-cite"><b>RUPTL PLN 2025-2034 Tabel 6.2</b> · BPP Pembangkit Nasional rata-rata sepuluh tahun perencanaan termasuk komponen Public Service Obligation 7 persen · referensi pembanding harga jual listrik bersubsidi nasional · <a href="https://cesgs-my.sharepoint.com/my?id=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR%2FRUPTL%20PLN%202025%202034%2Epdf&parent=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR&ga=1" target="_blank" rel="noopener">cesgs-my.sharepoint.com (RUPTL PLN 2025-2034 PDF)</a></div>
+        </div>
+
 
         <div class="src-row official">
           <div class="src-key">Total kapasitas RUPTL 2025-2034</div>
           <div class="src-val">69,5</div>
           <div>GW</div>
           <div>04</div>
-          <div class="src-cite"><b>RUPTL 2025-2034</b> · 76 persen EBT · 24 persen fosil · investasi USD 183 miliar atau Rp 2.133,7 triliun · <a href="https://gatrik.esdm.go.id/assets/uploads/download_index/files/4ec39-materi-paparan-ruptl-2025-2034.pdf" target="_blank" rel="noopener">gatrik.esdm.go.id</a></div>
+          <div class="src-cite"><b>RUPTL 2025-2034</b> · 76 persen EBT · 24 persen fosil · investasi USD 183 miliar atau Rp 2.133,7 triliun · <a href="https://cesgs-my.sharepoint.com/my?id=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR%2FRUPTL%20PLN%202025%202034%2Epdf&parent=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR&ga=1" target="_blank" rel="noopener">cesgs-my.sharepoint.com (RUPTL PLN 2025-2034 PDF)</a></div>
         </div>
 
         <div class="src-row official">
@@ -2110,14 +2130,14 @@
           <div class="src-val">17,1</div>
           <div>GW</div>
           <div>04</div>
-          <div class="src-cite"><b>RUPTL 2025-2034</b> · termasuk PLTS Floating dan Ground-mount · <a href="https://gatrik.esdm.go.id/assets/uploads/download_index/files/4ec39-materi-paparan-ruptl-2025-2034.pdf" target="_blank" rel="noopener">gatrik.esdm.go.id</a></div>
+          <div class="src-cite"><b>RUPTL 2025-2034</b> · termasuk PLTS Floating dan Ground-mount · <a href="https://cesgs-my.sharepoint.com/my?id=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR%2FRUPTL%20PLN%202025%202034%2Epdf&parent=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR&ga=1" target="_blank" rel="noopener">cesgs-my.sharepoint.com (RUPTL PLN 2025-2034 PDF)</a></div>
         </div>
         <div class="src-row official">
           <div class="src-key">22 proyek PLTS Terapung prioritas</div>
           <div class="src-val">8.927,8</div>
           <div>MWp</div>
           <div>04</div>
-          <div class="src-cite"><b>RUPTL PLN 2025-2034</b> · Materi paparan resmi 26 Mei 2025 · <i>daftar proyek prioritas Direktorat Transmisi PLN</i> · subset dari 108 lokasi waduk teridentifikasi LK1; URL gatrik.esdm.go.id (file baec8 bahan_dir_transmisi_pln) · <a href="https://gatrik.esdm.go.id/assets/uploads/download_index/files/baec8-bahan_dir_transmisi_pln_compressed.pdf" target="_blank" rel="noopener">gatrik.esdm.go.id (paparan Direktur Transmisi PLN)</a></div>
+          <div class="src-cite"><b>RUPTL PLN 2025-2034</b> · Materi paparan resmi 26 Mei 2025 · <i>daftar proyek prioritas Direktorat Transmisi PLN</i> · subset dari 108 lokasi waduk teridentifikasi LK1; URL gatrik.esdm.go.id (file baec8 bahan_dir_transmisi_pln) · <a href="https://cesgs-my.sharepoint.com/my?id=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR%2FRUPTL%20PLN%202025%202034%2Epdf&parent=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR&ga=1" target="_blank" rel="noopener">cesgs-my.sharepoint.com (RUPTL PLN 2025-2034 PDF)</a></div>
         </div>
 
 
@@ -2126,7 +2146,7 @@
           <div class="src-val">1.491–1.780</div>
           <div>kWh/kWp/thn</div>
           <div>03</div>
-          <div class="src-cite"><b>LK1 PLTST per Sistem</b> · kompilasi BMKG plus PVGIS untuk 108 lokasi waduk · Jawa-Bali 1574, Lombok 1780 (tertinggi), Sumatera-Bangka 1491, Sulbagsel 1523, Sulbagut 1670, Kalseltengtimra 1497, Timor 1737, Maluku 1725 · <a href="https://gatrik.esdm.go.id/assets/uploads/download_index/files/baec8-bahan_dir_transmisi_pln_compressed.pdf" target="_blank" rel="noopener">gatrik.esdm.go.id</a></div>
+          <div class="src-cite"><b>LK1 PLTST per Sistem</b> · kompilasi BMKG plus PVGIS untuk 108 lokasi waduk · Jawa-Bali 1574, Lombok 1780 (tertinggi), Sumatera-Bangka 1491, Sulbagsel 1523, Sulbagut 1670, Kalseltengtimra 1497, Timor 1737, Maluku 1725 · <a href="https://cesgs-my.sharepoint.com/my?id=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR%2FRUPTL%20PLN%202025%202034%2Epdf&parent=%2Fpersonal%2Fgeneral%5Fcesgs%5Fonmicrosoft%5Fcom%2FDocuments%2FCESGS%20%2D%20RESEARCH%20AND%20INNOVATION%2FAPPLIED%2FPLN%202025%2FFINAL%20REPORT%20TAHAP%201%2FLITERATUR&ga=1" target="_blank" rel="noopener">cesgs-my.sharepoint.com (RUPTL PLN 2025-2034 PDF)</a></div>
         </div>
 
         <div class="src-row official">
@@ -2213,10 +2233,10 @@
 
         <div class="src-row official">
           <div class="src-key">Rasio TK Konstruksi PV utility</div>
-          <div class="src-val">5–8</div>
-          <div>jy/MW</div>
+          <div class="src-val">0,55</div>
+          <div>job-year/MW</div>
           <div>05</div>
-          <div class="src-cite"><b>IRENA Renewable Energy and Jobs Annual Review 2022</b> · <i>Solar PV utility-scale</i> · <a href="https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2022/Sep/IRENA_Renewable_energy_and_jobs_2022.pdf" target="_blank" rel="noopener">irena.org</a> · model dashboard pakai 7 jy/MW (Floating PV plus 20 persen)</div>
+          <div class="src-cite"><b>Barrutiabengoa dan Ortiz (2025) BBVA Research Working Paper 25/11</b> · <i>Measuring the impact of installed renewable capacity on employment</i> September 2025 · mengutip Fabra Lacuesta dan Souza (2024) <i>Journal of Public Economics</i> Vol 229 Article 104034 · estimasi 0,55 job-year per MW untuk solar PV utility-scale Spanyol fase konstruksi · panel data 3.900 munisipalitas 2017 sampai 2021 · konsisten untuk modeling konservatif Indonesia · <a href="https://www.bbvaresearch.com/wp-content/uploads/2025/09/WP-25-11_Measuring-the-impact-of-renewables-on-employment.pdf" target="_blank" rel="noopener">bbvaresearch.com (WP 25/11)</a></div>
         </div>
 
         <div class="src-row official">
@@ -2384,12 +2404,12 @@
           <div class="src-cite"><b>Modeling pivot konservatif untuk skenario sensitivitas TKDN 20-50 persen</b> · sengaja diset di bawah Cirata aktual 42,7 persen untuk mengantisipasi skenario relaksasi TKDN Permen ESDM 11/2024 (PPA sampai 31 Desember 2024 dan COD sampai 30 Juni 2026) · digunakan sebagai default dalam Sheet 7_Sensitivitas_TKDN · <a href="https://www.kompas.com/tag/plts-cirata" target="_blank" rel="noopener">kompas.com (Cirata 192 MWp)</a></div>
         </div>
 
-        <div class="src-row assumption">
+        <div class="src-row official">
           <div class="src-key">Marginal Propensity to Consume</div>
-          <div class="src-val">0,75</div>
+          <div class="src-val">0,51</div>
           <div>rasio</div>
           <div>05</div>
-          <div class="src-cite"><b>BI Kajian Stabilitas Keuangan Sem.I 2023 Tabel IV.2</b> · MPC RT Indonesia 0,73-0,78 mid 0,75 · konsisten dengan literatur LPEM UI Sumatera Barat 0,75 dan Krishnamurty India 0,70-0,80 · <a href="https://www.bi.go.id/id/publikasi/laporan/Pages/KSK_4224.aspx" target="_blank" rel="noopener">bi.go.id</a></div>
+          <div class="src-cite"><b>Fadlli M.D. dkk (2024)</b> · <i>Analysis of Indonesia's Propensity to Consume Before and During the Pandemic</i> · Journal of Finance Economics and Business Vol 3 No 1 Halaman 137 sampai 145 · DOI 10.59827/jfeb.v3i1.110 · MPC Indonesia berbasis data BPS 2017-2022 · 2017 sebesar 0,4985 · 2018 sebesar 0,5020 · 2019 sebesar 0,5247 · 2020 sebesar 0,4835 · 2021 sebesar 0,3285 · 2022 sebesar 0,5054 · rata-rata pre-pandemic 0,5084 dan recovery 0,5054 menghasilkan baseline 0,51 untuk modeling proyek 2025 sampai seterusnya · <a href="https://risetekonomi.com/jurnal/index.php/feb/article/view/110" target="_blank" rel="noopener">risetekonomi.com (DOI 10.59827)</a></div>
         </div>
 
         <div class="src-row assumption">
@@ -2424,12 +2444,12 @@
           <div class="src-cite"><b>BPS Sakernas 2024 plus PLN HR Policy</b> · setara Rp 12 juta/bulan · operator Rp 8-9 juta + teknisi Rp 12-15 juta + engineer Rp 18-25 juta + manajer Rp 35 juta+ · <a href="https://www.bps.go.id" target="_blank" rel="noopener">bps.go.id (Sakernas)</a></div>
         </div>
 
-        <div class="src-row assumption">
-          <div class="src-key">Capacity Factor PLTS Terapung</div>
-          <div class="src-val">18,5</div>
+        <div class="src-row official">
+          <div class="src-key">Capacity Factor PLTS Terapung Cirata</div>
+          <div class="src-val">15,0</div>
           <div>persen</div>
           <div>03</div>
-          <div class="src-cite"><b>IRENA Floating PV 2022</b> · pendinginan panel di atas air menaikkan CF 5-15 persen vs PLTS darat · range 16-21 persen · konsisten dengan RUKN 2025 baseline 18 persen · <a href="https://www.irena.org/publications/2022/Aug/Future-of-Solar-Photovoltaic" target="_blank" rel="noopener">irena.org (Future of Solar PV 2022)</a></div>
+          <div class="src-cite"><b>Fadlli M.D., Septiana A., Hadi M. (2023)</b> · <i>Calculating the energy capacity and capacity factor of floating photovoltaic (FPV) power plant in the Cirata Reservoir using different types of solar panels</i> · Journal of Physics Conference Series Volume 2498 Nomor 012007 · 11th International Conference on Physics and Its Applications (ICOPIA 2022) · capacity factor monocrystalline dan polycrystalline 15,0 persen, thin-film 14,7 persen · perhitungan menggunakan RETScreen Expert dengan data radiasi harian Cirata Reservoir untuk kapasitas 145 MW · <a href="https://iopscience.iop.org/article/10.1088/1742-6596/2498/1/012007" target="_blank" rel="noopener">iopscience.iop.org</a></div>
         </div>
 
         <div class="src-row assumption">
@@ -2480,12 +2500,12 @@
           <div class="src-cite"><b>IMF World Economic Outlook 2025</b> · proyeksi inflasi US untuk eskalasi komponen impor · <a href="https://www.bls.gov/cpi" target="_blank" rel="noopener">bls.gov (US CPI)</a></div>
         </div>
 
-        <div class="src-row assumption">
+        <div class="src-row official">
           <div class="src-key">Harga Karbon IDXCarbon</div>
-          <div class="src-val">5–75</div>
-          <div>USD/tCO2</div>
+          <div class="src-val">41.187</div>
+          <div>Rp/ton CO2e</div>
           <div>03</div>
-          <div class="src-cite"><b>BloombergNEF Carbon 2024</b> plus <b>World Bank Carbon Pricing Dashboard</b> · IDXCarbon awal 2024 sekitar USD 5/tCO2 · transisi USD 25 · Paris-aligned USD 75 · konsisten dengan rekomendasi IPCC · <a href="https://idxcarbon.co.id" target="_blank" rel="noopener">idxcarbon.co.id</a></div>
+          <div class="src-cite"><b>IDXCarbon Monthly Report Maret 2026</b> · Bursa Karbon Indonesia (Indonesia Stock Exchange) · perhitungan harga rata-rata Year-to-Date dari Total Value Rp 6.704.756.200 dibagi Total Volume 162.790 ton CO2e menghasilkan Rp 41.187 per ton CO2e setara USD 2,50 per ton CO2e pada kurs Rp 16.500 per USD · sepuluh proyek listed dengan dominasi PLTGU dan PLTM Indonesia Power dan Pertamina · <a href="https://www.idxcarbon.co.id/document/share/162/90c777b8-2d82-4788-b46f-2725d57d8119" target="_blank" rel="noopener">idxcarbon.co.id (Monthly Report Mar 2026)</a></div>
         </div>
 
       </div>
@@ -2601,7 +2621,7 @@
         <p style="margin-top:8px;">Pertama, <b>tidak ada dokumen TKDN resmi Kemenperin yang spesifik untuk PLTS Terapung</b> hingga awal 2026. Permenperin 34/2024 mengatur TKDN modul surya secara umum tanpa pembedaan ground-mount versus floating. Permen ESDM 11/2024 mengatur relaksasi TKDN proyek PLTS, bukan modul. Akibatnya, semua angka TKDN per komponen di tab 06 diturunkan dari data aktual Cirata 192 MWp dan benchmark roadmap industri, bukan dari dokumen target resmi.</p>
         <p style="margin-top:8px;">Kedua, <b>BPP per sistem RUPTL pada tab 03 hanya tersedia untuk tahun 2030</b> sebagai snapshot. Skenario RE Base, ARED, dan BAU mengikuti penetapan RUPTL PLN 2025-2034 yang dirilis 26 Mei 2025. Untuk update tahun lain, perlu rujukan dokumen RUPTL revisi berikutnya.</p>
         <p style="margin-top:8px;">Ketiga, <b>induced effect mengakomodasi dua metodologi yang berbeda</b>. Sheet 5 LK3 menggunakan pendekatan bottom-up dari income tenaga kerja menghasilkan Rp 2,02 triliun per tahun. Sheet 7 menggunakan simplifikasi 20 persen Direct CAPEX menghasilkan Rp 4,29 triliun per tahun. Dashboard menggunakan angka Sheet 7 untuk konsistensi dengan tabel sensitivitas TKDN, dengan disclosure penuh perbedaan kedua metodologi pada tab 05.</p>
-        <p style="margin-top:8px;">Keempat, <b>Job-years 285.525 di hero dan 62.495 di Sheet 5 menggunakan basis berbeda</b>. Angka 62.495 adalah TK konstruksi langsung (8.927,8 MW × 7 jy/MW IRENA Renewable Energy and Jobs Annual Review 2023). Angka 285.525 adalah total ekonomi yang merupakan langsung plus sektoral indirect dari belanja CAPEX yang mengalir ke 12 sektor. Subset 44.185 yang muncul di tabel sektoral hanya merepresentasikan kategori Konstruksi dan Infrastruktur (S6) saja.</p>
+        <p style="margin-top:8px;">Keempat, <b>Job-years 285.525 di hero dan 4.910 di Sheet 5 menggunakan basis berbeda</b>. Angka 4.910 adalah TK konstruksi langsung (8.927,8 MW × 0,55 job-year/MW BBVA WP 25/11 (Fabra et al. 2024)). Angka 285.525 adalah total ekonomi yang merupakan langsung plus sektoral indirect dari belanja CAPEX yang mengalir ke 12 sektor. Subset 44.185 yang muncul di tabel sektoral hanya merepresentasikan kategori Konstruksi dan Infrastruktur (S6) saja.</p>
         <p style="margin-top:8px;">Kelima, <b>angka karbon offset USD 5-75 per tCO2 adalah skenario kebijakan</b>, bukan harga karbon yang berlaku saat ini di Indonesia. Perpres 98/2021 dan PP 11/2022 mengatur kerangka karbon Indonesia, namun harga karbon aktual di IDXCarbon awal 2024 baru sekitar USD 5/tCO2. Skenario USD 25 dan USD 75 mengikuti rekomendasi World Bank dan harga EU ETS untuk uji ketahanan finansial.</p>
         <p style="margin-top:8px;"><b>Tim konsultan menempatkan transparansi sumber sebagai fondasi kredibilitas kajian ini</b>. PT Perusahaan Listrik Negara (Persero) sebagai pemilik kajian dipersilakan melakukan verifikasi langsung ke setiap dokumen yang dikutip melalui URL yang tersedia atau dengan kontak ke instansi terkait.</p>
       </div>
@@ -3468,6 +3488,8 @@ function updateScenarioReadout(){
   setText('pemb-pltb-d',  fmtDelta(875 - lc.lcoe2030));
   setText('pemb-pltu-d',  fmtDelta(1040 - lc.lcoe2030));
   setText('pemb-bess-d',  fmtDelta(lc.bess - lc.lcoe2030));
+  setText('pemb-bpp-d',   fmtDelta(1812 - lc.lcoe2030));
+  setText('pemb-pltd-d',  fmtDelta(5082 - lc.lcoe2030));
 
   // Narasi LCOE
   setText('narasi-kurs',      'Rp ' + fmtRp(k.kurs) + ' per USD');
@@ -3525,7 +3547,7 @@ const WILAYAH_PSH = [
   {wil:'Maluku (Ambon-Halmahera)', proj:0,  mw:0,    pvout:1725, cf:19.69, ket:'2 lokasi LK1 · isolated grids'},
   {wil:'Kalimantan Barat',         proj:0,  mw:0,    pvout:0,    cf:0,     ket:'tidak ada lokasi PLTST teridentifikasi'}
 ];
-const CF_BASELINE = 18;  // RUKN 2025 PLTS Floating standard
+const CF_BASELINE = 15;  // 15,0% Fadlli/Septiana 2023 IOPscience 2498 — Cirata mono/poly  // RUKN 2025 PLTS Floating standard
 
 const SUPPLY_MIX = {
   'RE Base': [
