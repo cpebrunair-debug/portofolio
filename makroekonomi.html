@@ -1750,7 +1750,7 @@
     <div class="row-1" style="margin-bottom:18px;">
         <div class="callout">
           <div class="pull">Metodologi dan Sumber Verifikasi</div>
-          <p><b>Dua angka job-years muncul di model dengan basis berbeda yang perlu dipisahkan secara tegas.</b> Pertama, <b>4.910 job-years</b> di Sheet 5 mengukur tenaga kerja konstruksi langsung di lokasi proyek, dihitung dari 8.927,8 MWp dikalikan koefisien BBVA Research WP 25/11 (Fabra et al. 2024) sebesar 0,55 job-year per MW untuk solar PV utility-scale berbasis panel data 3.900 munisipalitas Spanyol. Angka ini menjadi basis perhitungan income tenaga kerja di sheet induced effect. Kedua, <b>285.525 job-years</b> di Sheet 7 baseline TKDN 30 persen mengukur total penyerapan tenaga kerja ekonomi yang merupakan penjumlahan job-years langsung tersebut ditambah job-years sektoral yang dihasilkan dari belanja lokal CAPEX yang mengalir ke 12 sektor menggunakan koefisien Leontief Inverse dari Tabel I-O BPS 2020. Angka 44.185 yang muncul di tabel sektoral hanya merepresentasikan kategori Konstruksi dan Infrastruktur (S6) saja sebagai subset, bukan total ekonomi.</p>
+          <p><b>Dua angka job-years muncul di model dengan basis berbeda yang perlu dipisahkan secara tegas.</b> Pertama, <b>4.910 job-years</b> di Sheet 5 mengukur tenaga kerja konstruksi langsung di lokasi proyek, dihitung dari 8.927,8 MWp dikalikan koefisien BBVA Research WP 25/11 (Fabra et al. 2024) sebesar 0,55 job-year per MW untuk solar PV utility-scale berbasis panel data 3.900 munisipalitas Spanyol. Angka ini menjadi basis perhitungan income tenaga kerja di sheet induced effect. Kedua, <b>218.767 job-years</b> di Sheet 7 baseline TKDN 30 persen mengukur total penyerapan tenaga kerja ekonomi yang merupakan penjumlahan job-years langsung tersebut ditambah job-years sektoral yang dihasilkan dari belanja lokal CAPEX yang mengalir ke 12 sektor menggunakan koefisien Leontief Inverse dari Tabel I-O BPS 2020. Angka 44.185 yang muncul di tabel sektoral hanya merepresentasikan kategori Konstruksi dan Infrastruktur (S6) saja sebagai subset, bukan total ekonomi.</p>
           <p style="margin-top:10px;"><b>Upah TK konstruksi Rp 84 juta per tahun</b> adalah <i>total kompensasi tahunan</i> yang mencakup gaji pokok, THR, lembur, BPJS Kesehatan, dan BPJS Ketenagakerjaan, bukan basic wage. Komposisinya: pekerja unskilled Rp 5 sampai 6 juta per bulan, skilled Rp 8 sampai 12 juta per bulan, supervisor Rp 15 sampai 25 juta per bulan dengan rerata tertimbang nasional. Angka BPS Sakernas DKI Jakarta 2023 sebesar Rp 5,8 juta per bulan adalah <i>upah pokok</i> yang berbeda dengan total kompensasi. Sumber: BPS Sakernas 2024, UMP rata-rata wilayah proyek RUPTL.</p>
           <p style="margin-top:10px;"><b>Marginal Propensity to Consume 0,75</b> bersumber dari Bank Indonesia Kajian Stabilitas Keuangan Semester I 2023 Tabel IV.2 dengan rentang 0,73 sampai 0,78. <b>Porsi konsumsi domestik 0,85</b> bersumber dari BPS Susenas 2023 Modul Pengeluaran Tabel 3.5 dengan rentang 0,83 sampai 0,87. <b>Output Multiplier sektor konsumsi rumah tangga 1,4</b> dari BPS Tabel I-O 2020 rerata tertimbang sektor barang dan jasa konsumsi.</p>
           <p style="margin-top:10px;"><b>Induced Effect</b> dihitung dengan dua metodologi yang menghasilkan dua angka berbeda. Metodologi <i>bottom-up</i> dari Sheet 5 menggunakan rumus Income TK tahunan dikalikan MPC dikalikan porsi domestik dikalikan multiplier konsumsi: Rp 1,75 triliun income konstruksi tahunan (4.910 job-years × Rp 84 juta total kompensasi dibagi 3 tahun durasi konstruksi) ditambah Rp 0,51 triliun income operasi (3.571 SDM × Rp 144 juta) menghasilkan Rp 2,26 triliun, dikalikan 0,75 menjadi Rp 1,70 triliun, dikalikan 0,85 menjadi Rp 1,44 triliun, dikalikan 1,4 menghasilkan <b>Rp 2,02 triliun per tahun</b> pada tahun puncak overlap konstruksi-operasi. Metodologi <i>simplifikasi</i> dari Sheet 7 menggunakan asumsi induced sama dengan 20 persen Direct CAPEX Lokal, menghasilkan <b>Rp 4,29 triliun per tahun</b> pada baseline TKDN 30 persen. Dashboard menggunakan angka Sheet 7 (Rp 4,29 T) sebagai basis multiplier 2,126× untuk konsistensi dengan tabel sensitivitas TKDN, sambil mempertahankan dekomposisi <i>bottom-up</i> sebagai validasi konseptual. Selisih kedua metodologi mengindikasikan ruang ketidakpastian induced effect sekitar dua kali lipat yang perlu disikapi dengan kehati-hatian.</p>
@@ -1786,8 +1786,8 @@
           </div>
           <div class="decomp-row" style="margin-top:8px;border-top:1px dashed var(--cobalt-line);padding-top:11px;">
             <div class="lbl" style="color:var(--ink-on-cobalt-3);">Memo: Nilai Tambah Bruto<small>kontribusi PDB rantai pasok</small></div>
-            <div class="bar-wrap"><div class="bar" style="background:var(--plum);width:38%;"></div></div>
-            <div class="val" style="color:var(--ink-on-cobalt-2);">14,87</div>
+            <div class="bar-wrap"><div class="bar" style="background:var(--plum);width:31%;"></div></div>
+            <div class="val" style="color:var(--ink-on-cobalt-2);">14,17</div>
           </div>
         </div>
       </div>
@@ -1795,7 +1795,7 @@
         <div class="pull">Mekanisme Multiplier</div>
         <p>Analisis menunjukkan tiga jalur transmisi dampak ekonomi. <i>Direct effect</i> menangkap belanja lokal CAPEX yang dibobot oleh TKDN pivot modeling 30 persen sebagai skenario konservatif (vs Cirata aktual bottom-up 42,7 persen), menghasilkan stimulus awal Rp 21,43 triliun. <i>Indirect effect</i> menyalurkan permintaan ke 12 sektor agregasi BPS melalui koefisien <i>Leontief Inverse</i>, dengan kontribusi terbesar pada sektor konstruksi 18 persen, jasa lainnya 13 persen, dan industri pengolahan dasar 12 persen.</p>
         <p>Hasil perhitungan mengindikasikan <i>induced effect</i> sebesar Rp 4,29 triliun per tahun pada periode peak overlap konstruksi dan operasi, dihitung dari pendapatan tenaga kerja yang dibelanjakan kembali ke ekonomi domestik dengan <i>marginal propensity to consume</i> 0,75 dan porsi konsumsi domestik 0,85, mengikuti metodologi I-O baku Miller dan Blair.</p>
-        <p>Kajian ini menegaskan bahwa Nilai Tambah Bruto Rp 14,87 triliun dari rantai pasok merupakan kontribusi langsung ke PDB nasional, di luar perhitungan output yang mengandung input antara. Tim konsultan merancang pemisahan ini agar tidak terjadi <i>double counting</i> ketika rekapitulasi dampak makro disampaikan ke Kementerian Keuangan dan Bappenas.</p>
+        <p>Kajian ini menegaskan bahwa Nilai Tambah Bruto Rp 14,17 triliun dari rantai pasok merupakan kontribusi langsung ke PDB nasional, di luar perhitungan output yang mengandung input antara. Tim konsultan merancang pemisahan ini agar tidak terjadi <i>double counting</i> ketika rekapitulasi dampak makro disampaikan ke Kementerian Keuangan dan Bappenas.</p>
       </div>
     </div>
 
@@ -2620,7 +2620,7 @@
         <p style="margin-top:8px;">Pertama, <b>tidak ada dokumen TKDN resmi Kemenperin yang spesifik untuk PLTS Terapung</b> hingga awal 2026. Permenperin 34/2024 mengatur TKDN modul surya secara umum tanpa pembedaan ground-mount versus floating. Permen ESDM 11/2024 mengatur relaksasi TKDN proyek PLTS, bukan modul. Akibatnya, semua angka TKDN per komponen di tab 06 diturunkan dari data aktual Cirata 192 MWp dan benchmark roadmap industri, bukan dari dokumen target resmi.</p>
         <p style="margin-top:8px;">Kedua, <b>BPP per sistem RUPTL pada tab 03 hanya tersedia untuk tahun 2030</b> sebagai snapshot. Skenario RE Base, ARED, dan BAU mengikuti penetapan RUPTL PLN 2025-2034 yang dirilis 26 Mei 2025. Untuk update tahun lain, perlu rujukan dokumen RUPTL revisi berikutnya.</p>
         <p style="margin-top:8px;">Ketiga, <b>induced effect mengakomodasi dua metodologi yang berbeda</b>. Sheet 5 LK3 menggunakan pendekatan bottom-up dari income tenaga kerja menghasilkan Rp 2,02 triliun per tahun. Sheet 7 menggunakan simplifikasi 20 persen Direct CAPEX menghasilkan Rp 4,29 triliun per tahun. Dashboard menggunakan angka Sheet 7 untuk konsistensi dengan tabel sensitivitas TKDN, dengan disclosure penuh perbedaan kedua metodologi pada tab 05.</p>
-        <p style="margin-top:8px;">Keempat, <b>Job-years 285.525 di hero dan 4.910 di Sheet 5 menggunakan basis berbeda</b>. Angka 4.910 adalah TK konstruksi langsung (8.927,8 MW × 0,55 job-year/MW BBVA WP 25/11 (Fabra et al. 2024)). Angka 285.525 adalah total ekonomi yang merupakan langsung plus sektoral indirect dari belanja CAPEX yang mengalir ke 12 sektor. Subset 44.185 yang muncul di tabel sektoral hanya merepresentasikan kategori Konstruksi dan Infrastruktur (S6) saja.</p>
+        <p style="margin-top:8px;">Keempat, <b>Job-years 218.767 di hero dan 4.910 di Sheet 5 menggunakan basis berbeda</b>. Angka 4.910 adalah TK konstruksi langsung (8.927,8 MW × 0,55 job-year/MW BBVA WP 25/11 (Fabra et al. 2024)). Angka 218.767 adalah total ekonomi yang merupakan langsung plus sektoral indirect dari belanja CAPEX yang mengalir ke 12 sektor. Subset 44.185 yang muncul di tabel sektoral hanya merepresentasikan kategori Konstruksi dan Infrastruktur (S6) saja.</p>
         <p style="margin-top:8px;">Kelima, <b>angka karbon offset USD 5-75 per tCO2 adalah skenario kebijakan</b>, bukan harga karbon yang berlaku saat ini di Indonesia. Perpres 98/2021 dan PP 11/2022 mengatur kerangka karbon Indonesia, namun harga karbon aktual di IDXCarbon awal 2024 baru sekitar USD 5/tCO2. Skenario USD 25 dan USD 75 mengikuti rekomendasi World Bank dan harga EU ETS untuk uji ketahanan finansial.</p>
         <p style="margin-top:8px;"><b>Tim konsultan menempatkan transparansi sumber sebagai fondasi kredibilitas kajian ini</b>. PT Perusahaan Listrik Negara (Persero) sebagai pemilik kajian dipersilakan melakukan verifikasi langsung ke setiap dokumen yang dikutip melalui URL yang tersedia atau dengan kontak ke instansi terkait.</p>
       </div>
@@ -2722,28 +2722,29 @@ const PHASE_LABEL = {short:"Pendek", medium:"Menengah", long:"Panjang"};
 const PHASE_COLOR = {short:"#f5c518", medium:"#3a8e9c", long:"#d35a2e"};
 
 const SECTORS = [
-  {code:"S1", nm:"Pertanian, Kehutanan, Perikanan", bobot:1, mult:1.30, ntb:0.55, tk:35, output:61.4, ntb_v:112.5, tk_v:7160},
-  {code:"S2", nm:"Pertambangan & Energi Primer", bobot:4, mult:1.35, ntb:0.58, tk:4.5, output:286.4, ntb_v:474.6, tk_v:3682},
-  {code:"S3", nm:"Industri Pengolahan Dasar", bobot:12, mult:1.40, ntb:0.61, tk:6.5, output:981.9, ntb_v:1497.4, tk_v:15956},
-  {code:"S4", nm:"Industri Manufaktur Elektronik", bobot:8, mult:1.45, ntb:0.64, tk:4.5, output:736.4, ntb_v:1047.3, tk_v:7364},
-  {code:"S5", nm:"Industri Manufaktur Logam Besi", bobot:9, mult:1.50, ntb:0.67, tk:4.0, output:920.5, ntb_v:1233.5, tk_v:7364},
-  {code:"S6", nm:"Konstruksi & Infrastruktur", bobot:18, mult:1.55, ntb:0.70, tk:12, output:2025.1, ntb_v:2577.5, tk_v:44185},
-  {code:"S7", nm:"Perdagangan & Logistik", bobot:11, mult:1.60, ntb:0.73, tk:18, output:1350.1, ntb_v:1642.6, tk_v:40503},
-  {code:"S8", nm:"Transportasi", bobot:6, mult:1.65, ntb:0.76, tk:9, output:797.8, ntb_v:932.8, tk_v:11046},
-  {code:"S9", nm:"Jasa Keuangan & Asuransi", bobot:5, mult:1.70, ntb:0.79, tk:3.5, output:716.0, ntb_v:808.0, tk_v:3580},
-  {code:"S10", nm:"Jasa Teknik & EPC", bobot:10, mult:1.75, ntb:0.82, tk:7, output:1534.2, ntb_v:1677.4, tk_v:14319},
-  {code:"S11", nm:"Jasa Pendidikan & Kesehatan", bobot:3, mult:1.80, ntb:0.85, tk:16, output:490.9, ntb_v:521.6, tk_v:9819},
-  {code:"S12", nm:"Jasa Lainnya", bobot:13, mult:1.85, ntb:0.88, tk:10, output:2260.4, ntb_v:2340.2, tk_v:26593}
+  {code:"S1", nm:"Pertanian, Kehutanan, Perikanan", bobot:1, mult:1.3743, ntb:0.55, tk:35, output:80.2, ntb_v:44.1, tk_v:2807},
+  {code:"S2", nm:"Pertambangan & Energi Primer", bobot:4, mult:1.96, ntb:0.58, tk:4.5, output:822.9, ntb_v:477.3, tk_v:3703},
+  {code:"S3", nm:"Industri Pengolahan Dasar", bobot:12, mult:2.0747, ntb:0.61, tk:6.5, output:2763.7, ntb_v:1685.9, tk_v:17964},
+  {code:"S4", nm:"Industri Manufaktur Elektronik", bobot:8, mult:2.1762, ntb:0.64, tk:4.5, output:2016.5, ntb_v:1290.5, tk_v:9074},
+  {code:"S5", nm:"Industri Manufaktur Logam Besi", bobot:9, mult:2.1601, ntb:0.67, tk:4.0, output:2237.5, ntb_v:1499.1, tk_v:8950},
+  {code:"S6", nm:"Konstruksi & Infrastruktur", bobot:18, mult:2.1579, ntb:0.7, tk:12, output:4466.5, ntb_v:3126.5, tk_v:53598},
+  {code:"S7", nm:"Perdagangan & Logistik", bobot:11, mult:1.5388, ntb:0.73, tk:18, output:1270.1, ntb_v:927.2, tk_v:22862},
+  {code:"S8", nm:"Transportasi", bobot:6, mult:2.0057, ntb:0.76, tk:9, output:1293.1, ntb_v:982.8, tk_v:11638},
+  {code:"S9", nm:"Jasa Keuangan & Asuransi", bobot:5, mult:1.395, ntb:0.79, tk:3.5, output:423.2, ntb_v:334.4, tk_v:1481},
+  {code:"S10", nm:"Jasa Teknik & EPC", bobot:10, mult:1.8177, ntb:0.82, tk:6.5, output:1752.3, ntb_v:1436.9, tk_v:11390},
+  {code:"S11", nm:"Jasa Pendidikan & Kesehatan", bobot:3, mult:1.8485, ntb:0.85, tk:16, output:545.5, ntb_v:463.7, tk_v:8728},
+  {code:"S12", nm:"Jasa Lainnya", bobot:13, mult:1.7775, ntb:0.88, tk:10, output:2166.0, ntb_v:1906.1, tk_v:21660}
 ];
 
 const TKDN_LEVELS = [20,25,30,35,40,45,50,55,60,65,70];
 const TKDN_DATA = {
-  belanja: [14284,17856,21427,24998,28569,32140,35711,39282,42853,46425,49996],
-  direct:  [14284,17856,21427,24998,28569,32140,35711,39282,42853,46425,49996],
-  indirect:[13223,16529,19835,23140,26446,29752,33058,36363,39669,42975,46281],
-  induced: [2857,3571,4285,5000,5714,6428,7142,7856,8571,9285,9999],
-  total:   [30364,37956,45547,53138,60729,68320,75911,83502,91093,98684,106276],
-  jobyears:[211182,248354,285525,322697,359869,397041,434212,471384,508556,545728,582900]
+  belanja: [14285,17856,21427,24998,28569,32140,35712,39283,42854,46425,49996],
+  direct:  [14285,17856,21427,24998,28569,32140,35712,39283,42854,46425,49996],
+  indirect:[13225,16532,19838,23144,26451,29757,33063,36370,39676,42982,46289],
+  induced: [2860,3575,4290,5005,5720,6435,7150,7865,8580,9295,10010],
+  total:   [30370,37963,45555,53147,60740,68332,75925,83518,91110,98702,106295],
+  ntb:     [9450,11812,14174,16537,18899,21262,23624,25987,28349,30711,33074],
+  jobyears:[145845,182306,218767,255228,291689,328151,364612,401073,437534,473995,510456]
 };
 
 const TKDN_COMP = [
